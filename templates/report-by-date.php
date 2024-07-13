@@ -21,9 +21,9 @@ if ( file_exists( $file_to_include ) ) {
             <option value="last-month"><?php esc_html_e('Last Month', 'wooprofit'); ?></option>
             <!-- Add more options as needed -->
         </select>
-        <input class="" type="text" id="start_date" placeholder="Start Date">
-        <input class="" type="text" id="end_date" placeholder="End Date">
-        <button class="" type="submit" class="button button-primary">Filter</button>
+        <input type="text" id="start_date" placeholder="Start Date">
+        <input type="text" id="end_date" placeholder="End Date">
+        <button type="submit" class="button button-primary">Filter</button>
     </form>
 </div>
 
@@ -37,10 +37,6 @@ if ( file_exists( $file_to_include ) ) {
             <p>Total Sales</p>
             <div id="total-sales"></div>
         </div>
-      <!--  <div class="woocommerce-summary__item-container col">
-            <p>Net Sales</p>
-            <div id="net-sales"></div>
-        </div>-->
         <div class="woocommerce-summary__item-container col">
             <p>Average Order Value</p>
             <div id="average-order-value"></div>

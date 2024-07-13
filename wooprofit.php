@@ -19,8 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-require_once __DIR__ . '/vendor/autoload.php';
-
 const WOOPROFIT_COST_SETTINGS_PLUGIN_FILE = __FILE__;
 
 class Wooprofit {
@@ -75,7 +73,7 @@ class Wooprofit {
 	}
 
 	function wooprofit_settings_action_links( $links ) {
-		$settings_link = '<a href="' . esc_url(admin_url( 'admin.php?page=wc-settings&tab=wooprofit' )) . '">' . __( 'Settings', 'wooprofit' ) . '</a>';
+		$settings_link = '<a href="' . esc_url(admin_url( 'admin.php?page=wc-settings&tab=wooprofit' )) . '">' . esc_html( 'Settings', 'wooprofit' ) . '</a>';
 		array_unshift( $links, $settings_link );
 
 		return $links;
@@ -308,7 +306,7 @@ class Wooprofit {
 		include_once plugin_dir_path( __FILE__ ) . 'templates/dashboard.php';
 	}
 
-	/* Date range */
+	/** Date range */
 
 	function custom_get_orders_by_date_range(): void {
 
@@ -338,12 +336,10 @@ class Wooprofit {
 		if ( ! empty( $orders ) ) {
 			$total_orders = count( $orders );
 			$total_sales  = 0;
-			$net_sales    = 0;
 			$total_cost   = 0;
 
 			foreach ( $orders as $order ) {
 				$total_sales += $order->get_total();
-				$net_sales   += $order->get_total() - $order->get_total_tax();
 
 				foreach ( $order->get_items() as $item ) {
 					$product_id   = $item->get_product_id();
@@ -353,7 +349,7 @@ class Wooprofit {
 				}
 			}
 
-			$total_profit        = $net_sales - $total_cost;
+			$total_profit        = $total_sales - $total_cost;
 			$profit_percentage   = $total_sales ? ($total_profit / $total_sales) * 100 : 0;
 			$profit_class        = $total_profit > 0 ? 'profit-positive' : 'profit-negative';
 			$average_order_value = $total_orders ? $total_sales / $total_orders : 0;
@@ -363,7 +359,6 @@ class Wooprofit {
 			echo json_encode( array(
 				'total_orders'        => $total_orders,
 				'total_sales'         => wc_price( $total_sales ),
-				'net_sales'           => wc_price( $net_sales ),
 				'total_cost'          => wc_price( $total_cost ),
 				'average_order_value' => wc_price( $average_order_value ),
 				'profit'              => wc_price( $total_profit ),
@@ -376,7 +371,6 @@ class Wooprofit {
 			echo json_encode( array(
 				'total_orders'        => 0,
 				'total_sales'         => wc_price( 0 ),
-				'net_sales'           => wc_price( 0 ),
 				'total_cost'          => wc_price( 0 ),
 				'average_order_value' => wc_price( 0 ),
 				'profit'              => wc_price( 0 ),
@@ -389,8 +383,6 @@ class Wooprofit {
 		wp_reset_postdata();
 		wp_die();
 	}
-
-
 }
 
 new Wooprofit();
