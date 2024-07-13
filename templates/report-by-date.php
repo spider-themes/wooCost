@@ -21,9 +21,13 @@ if ( file_exists( $file_to_include ) ) {
             <option value="last-month"><?php esc_html_e('Last Month', 'wooprofit'); ?></option>
             <!-- Add more options as needed -->
         </select>
-        <input type="text" id="start_date" placeholder="Start Date">
-        <input type="text" id="end_date" placeholder="End Date">
-        <button type="submit" class="button button-primary">Filter</button>
+
+        <label for="start_date"><?php esc_html_e('Start Date', 'wooprofit'); ?></label>
+        <input type="text" id="start_date" name="start_date" autocomplete="off" placeholder="Start Date">
+        <label for="end_date"><?php esc_html_e('End Date', 'wooprofit'); ?></label>
+        <input type="text" id="end_date" name="end_date" autocomplete="off" placeholder="End Date">
+        <button type="submit" class="button button-primary" id="filter-button">Filter</button>
+
     </form>
 </div>
 
@@ -60,7 +64,6 @@ if ( file_exists( $file_to_include ) ) {
                 <div id="profit"></div>
                 <div id="profit-percentage"></div>
             </div>
-
         </div>
 
     </ul>

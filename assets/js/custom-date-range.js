@@ -37,7 +37,7 @@
                     startDate = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
                     endDate = today.toISOString().split('T')[0];
                     break;
-                    case 'last-month':
+                case 'last-month':
                     const firstDayLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
                     const lastDayLastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
                     startDate = firstDayLastMonth.toISOString().split('T')[0];
@@ -47,8 +47,6 @@
                     startDate = today.toISOString().split('T')[0];
                     endDate = startDate;
             }
-
-            console.log(`Start Date: ${startDate}, End Date: ${endDate}`); // Debugging
 
             $('#start_date').val(startDate);
             $('#end_date').val(endDate);
@@ -68,37 +66,46 @@
                 return;
             }
 
-            $.ajax({
-                url: ajax_params.ajaxurl,
-                method: 'POST',
-                data: {
-                    action: 'get_orders_by_date_range',
-                    start_date: startDate,
-                    end_date: endDate
-                },
-                success: function(response) {
+            function loadData() {
+                var start_date = $('#start_date').val();
+                var end_date = $('#end_date').val();
+                var date_range = $('#date-range-select').val();
 
-                    const data = JSON.parse(response);
+                $.ajax({
+                    url: ajax_params.ajaxurl,
+                    method: 'POST',
+                    data: {
+                        action: 'get_orders_by_date_range',
+                        start_date: start_date,
+                        end_date: end_date,
+                        date_range: date_range
+                    },
+                    success: function (response) {
 
-                    $('#orders-list').html(data.total_orders);
-                    $('#total-sales').html(data.total_sales);
-                    $('#net-sales').html(data.net_sales);
-                    $('#total-cost').html(data.total_cost);
-                    $('#average-order-value').html(data.average_order_value);
-                    $('#profit').html(data.profit).attr('class', data.profit_class);
-                    $('#average-profit').html(data.average_profit);
-                    $('#average-order-profit').html(data.average_order_profit);
-                    // $('#profit-percentage').html(data.profit_percentage);
-                    $('#profit-percentage').html(`(<span id="profit-percentage">${data.profit_percentage}</span>)`);
-                },
-                error: function(error) {
-                    console.log('Error:', error);
-                }
-            });
+                        const data = JSON.parse(response);
+
+                        $('#orders-list').html(data.total_orders);
+                        $('#total-sales').html(data.total_sales);
+                        $('#net-sales').html(data.net_sales);
+                        $('#total-cost').html(data.total_cost);
+                        $('#average-order-value').html(data.average_order_value);
+                        $('#profit').html(data.profit).attr('class', data.profit_class);
+                        $('#average-profit').html(data.average_profit);
+                        $('#average-order-profit').html(data.average_order_profit);
+                        $('#profit-percentage').html(`(<span id="profit-percentage">${data.profit_percentage}</span>)`);
+                    },
+                    error: function (error) {
+                        console.log('Error:', error);
+                    }
+                });
+            }
+            $('#start_date').change(loadData);
+            $('#end_date').change(loadData);
+            // Trigger loadData on filter button click
+            $('#filter-button').click(loadData);
+            $('#date-range-select').change(loadData);
         });
-
         $('#date-range-select').val('today').change();
     });
-
 
 })(jQuery);

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 Plugin Name: WooProfit
 Plugin URI: https://spider-themes.net/wooprofit/
 Description: Effortlessly track and analyze product costs and profits in WooCommerce, empowering smarter financial decisions and enhanced profitability.
@@ -173,7 +173,6 @@ class Wooprofit {
 
 	function wooprofit_total_cost_amount(): float|int {
 		$total_cost = 0;
-
 		// Ensure WooCommerce is active
 		if ( class_exists( 'WooCommerce' ) ) {
 			$args = array(
