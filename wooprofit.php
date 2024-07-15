@@ -1,19 +1,19 @@
 <?php
 /**
-Plugin Name: WooProfit
-Plugin URI: https://spider-themes.net/wooprofit/
-Description: Effortlessly track and analyze product costs and profits in WooCommerce, empowering smarter financial decisions and enhanced profitability.
-Version: 1.0.0
-Requires at least: 5.7
-Requires PHP: 7.4
-Author: spider-themes
-Author URI: https://spider-themes.net
-Text Domain: wooprofit
-Domain Path: /languages
-Copyright: © 2024 Spider Themes
-License: GNU General Public License v3.0
-License URI: http://www.gnu.org/licenses/gpl-3.0.html
-*/
+ * Plugin Name: WooProfit
+ * Plugin URI: https://spider-themes.net/wooprofit/
+ * Description: Effortlessly track and analyze product costs and profits in WooCommerce, empowering smarter financial decisions and enhanced profitability.
+ * Version: 1.0.0
+ * Requires at least: 5.7
+ * Requires PHP: 7.4
+ * Author: spider-themes
+ * Author URI: https://spider-themes.net
+ * Text Domain: wooprofit
+ * Domain Path: /languages
+ * Copyright: © 2024 Spider Themes
+ * License: GNU General Public License v3.0
+ * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -38,7 +38,7 @@ class Wooprofit {
 		/**
 		 * Enqueue Assets
 		 */
-		add_action( 'admin_enqueue_scripts', [ $this, 'wooprofit_assetsloader' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'wooprofit_assets_load' ] );
 
 		/**
 		 * add custom cost field
@@ -65,15 +65,15 @@ class Wooprofit {
 		add_filter( 'plugin_action_links_' . plugin_basename( WOOPROFIT_COST_SETTINGS_PLUGIN_FILE ), array( $this, 'wooprofit_settings_action_links' ) );
 
 		/**
-		 *Date range
+		 * Date range
 		 */
-		add_action( 'wp_ajax_get_orders_by_date_range', [ $this, 'custom_get_orders_by_date_range' ] );
-		add_action( 'wp_ajax_nopriv_get_orders_by_date_range', [ $this, 'custom_get_orders_by_date_range' ] );
+		add_action( 'wp_ajax_get_orders_by_date_range', [ $this, 'get_orders_by_date_range' ] );
+		add_action( 'wp_ajax_nopriv_get_orders_by_date_range', [ $this, 'get_orders_by_date_range' ] );
 
 	}
 
 	function wooprofit_settings_action_links( $links ) {
-		$settings_link = '<a href="' . esc_url(admin_url( 'admin.php?page=wc-settings&tab=wooprofit' )) . '">' . esc_html( 'Settings', 'wooprofit' ) . '</a>';
+		$settings_link = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=wooprofit' ) ) . '">' . esc_html( 'Settings', 'wooprofit' ) . '</a>';
 		array_unshift( $links, $settings_link );
 
 		return $links;
@@ -88,26 +88,33 @@ class Wooprofit {
 		return $settings;
 	}
 
-	function wooprofit_assetsloader( $hook ): void {
+	/**
+	 * Asset loading
+	 */
+	function wooprofit_assets_load( $hook ): void {
 		$assets_dir = plugins_url( 'assets/', __FILE__ );
-
 		wp_enqueue_style( 'wooprofit-style', $assets_dir . 'css/style.css' );
 		wp_enqueue_style( 'wooprofit-nice', $assets_dir . 'css/nice-select.css' );
+
 		if ( $hook == 'post.php' || $hook == 'post-new.php' ) {
 			global $post_type;
 			if ( $post_type == 'product' ) {
 				wp_enqueue_script( 'wooprofit', $assets_dir . 'js/profit-show.js', array( 'jquery' ), '1.0', true );
 			}
 		}
+
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 		wp_enqueue_style( 'jquery-ui', '//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css' );
 		wp_enqueue_script( 'custom-date-range-script', $assets_dir . 'js/custom-date-range.js', array( 'jquery' ), '1.0', true );
 		wp_enqueue_script( 'nice-select', $assets_dir . 'js/jquery.nice-select.min.js', array(), '1.0', true );
-
 		wp_localize_script( 'custom-date-range-script', 'ajax_params', array(
 			'ajaxurl' => admin_url( 'admin-ajax.php' ),
-			));
+		) );
 	}
+
+	/**
+	 * Set Submenu to Woocommerce Analytics
+	 */
 	function wooprofit_admin_menu(): void {
 		add_submenu_page(
 			'wc-admin&path=/analytics/overview',
@@ -119,7 +126,7 @@ class Wooprofit {
 		);
 	}
 
-	function wooprofit_total_stock_amount(): ?int {
+	function wooprofit_total_stock(): ?int {
 		$total_stock = 0;
 		// Ensure WooCommerce is active
 		if ( class_exists( 'WooCommerce' ) ) {
@@ -142,10 +149,9 @@ class Wooprofit {
 		}
 
 		return $total_stock;
-
 	}
 
-	function wooprofit_total_price_amount() {
+	function wooprofit_total_price() {
 		$total_price = 0;
 
 		// Ensure WooCommerce is active
@@ -171,7 +177,7 @@ class Wooprofit {
 		return $total_price;
 	}
 
-	function wooprofit_total_cost_amount(): float|int {
+	function wooprofit_total_cost(): float|int {
 		$total_cost = 0;
 		// Ensure WooCommerce is active
 		if ( class_exists( 'WooCommerce' ) ) {
@@ -199,9 +205,8 @@ class Wooprofit {
 		return $total_cost;
 	}
 
-	function wooprofit_total_profit_amount(): float|int {
-
-		return $this->wooprofit_total_price_amount() - $this->wooprofit_total_cost_amount();
+	function wooprofit_total_profit(): float|int {
+		return $this->wooprofit_total_price() - $this->wooprofit_total_cost();
 	}
 
 	//  cost field
@@ -215,11 +220,14 @@ class Wooprofit {
 				'description' => __( 'Enter the cost price of the product.', 'wooprofit' )
 			)
 		);
-		echo '<p id="product_profit_display" class="form-field description">' . esc_html( 'Profit: 0.00 (' . esc_html(get_woocommerce_currency_symbol() ). ' 0.00%)',
-				'wooprofit' ) . '</p>';
+		echo '<p id="product_profit_display" class="form-field description">'
+		     . esc_html( 'Profit: 0.00 (' . esc_html( get_woocommerce_currency_symbol() ) . ' 0.00%)', 'wooprofit' ) . '</p>';
+
 	}
 
-	// Save cost field
+	/**
+	 * Save cost field
+	 */
 	function save_cost_field( $post_id ): void {
 		$product_cost = isset( $_POST['_product_cost'] ) ? sanitize_text_field( $_POST['_product_cost'] ) : '';
 		update_post_meta( $post_id, '_product_cost', $product_cost );
@@ -255,7 +263,7 @@ class Wooprofit {
 		if ( 'product_cost' === $column ) {
 			$product_cost = get_post_meta( $post_id, '_product_cost', true );
 			if ( $product_cost !== '' ) {
-				echo esc_html( number_format( (float) $product_cost, 2 ) . esc_html(get_woocommerce_currency_symbol()) );
+				echo esc_html( number_format( (float) $product_cost, 2 ) . esc_html( get_woocommerce_currency_symbol() ) );
 			} else {
 				echo '-';
 			}
@@ -268,7 +276,8 @@ class Wooprofit {
 			if ( $product_price && $product_cost !== '' ) {
 				$profit            = $product_price - $product_cost;
 				$profit_percentage = ( $product_cost > 0 ) ? ( $profit / $product_cost ) * 100 : 0;
-				echo esc_html( number_format( (float) $profit, 2 ) . esc_html(get_woocommerce_currency_symbol()) . ' (' . number_format( $profit_percentage, 2 ) . '%)' );
+				echo esc_html( number_format( (float) $profit, 2 ) . esc_html( get_woocommerce_currency_symbol() ) . ' (' . number_format( $profit_percentage,
+						2 ) . '%)' );
 			} else {
 				echo '-';
 			}
@@ -278,6 +287,7 @@ class Wooprofit {
 	function make_cost_and_profit_column_sortable( $columns ) {
 		$columns['product_cost']   = 'product_cost';
 		$columns['product_profit'] = 'product_profit';
+
 		return $columns;
 	}
 
@@ -307,8 +317,85 @@ class Wooprofit {
 
 	/** Date range */
 
-	function custom_get_orders_by_date_range(): void {
+	function get_orders_by_date_range(): void {
 
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_die( esc_html( 'You do not have sufficient permissions to access this page.', 'wooprit' ) );
+		}
+
+		$start_date = isset( $_POST['start_date'] ) ? sanitize_text_field( $_POST['start_date'] ) : '';
+		$end_date   = isset( $_POST['end_date'] ) ? sanitize_text_field( $_POST['end_date'] ) : '';
+
+		if ( ! $start_date || ! $end_date ) {
+			echo json_encode( [
+				'error'   => true,
+				'message' => __( 'Please select a valid date range.', 'wooprofit' ),
+			] );
+			wp_die();
+		}
+
+		$args = array(
+			'limit'        => - 1,
+			'status'       => array( 'wc-completed', 'wc-processing', 'wc-on-hold' ),
+			'date_created' => $start_date . '...' . $end_date,
+		);
+
+		$orders = wc_get_orders( $args );
+
+		if ( ! empty( $orders ) ) {
+			$total_orders = count( $orders );
+			$total_sales  = 0;
+			$total_cost   = 0;
+
+			foreach ( $orders as $order ) {
+				$total_sales += $order->get_total();
+
+				foreach ( $order->get_items() as $item ) {
+					$product_id   = $item->get_product_id();
+					$product_cost = get_post_meta( $product_id, '_product_cost', true );
+					$product_cost = $product_cost ? floatval( $product_cost ) : 0;
+					$total_cost   += $product_cost * $item->get_quantity();
+				}
+			}
+
+
+			$total_profit         = $total_sales - $total_cost;
+			$profit_percentage    = $total_sales ? ( $total_profit / $total_sales ) * 100 : 0;
+			$profit_class         = $total_profit > 0 ? 'profit-positive' : 'profit-negative';
+			$average_order_value  = $total_orders ? $total_sales / $total_orders : 0;
+			$average_profit       = $total_profit / ( ( strtotime( $end_date ) - strtotime( $start_date ) ) / ( 60 * 60 * 24 ) + 1 );
+			$average_order_profit = $total_orders ? $total_profit / $total_orders : 0;
+
+
+			echo json_encode( array(
+				'total_orders'         => $total_orders,
+				'total_sales'          => wc_price( $total_sales ),
+				'total_cost'           => wc_price( $total_cost ),
+				'average_order_value'  => wc_price( $average_order_value ),
+				'profit'               => wc_price( $total_profit ),
+				'profit_percentage'    => round( $profit_percentage, 2 ) . '%',
+				'profit_class'         => $profit_class,
+				'average_profit'       => wc_price( $average_profit ),
+				'average_order_profit' => wc_price( $average_order_profit ),
+			) );
+		} else {
+			echo json_encode( array(
+				'total_orders'         => 0,
+				'total_sales'          => wc_price( 0 ),
+				'total_cost'           => wc_price( 0 ),
+				'average_order_value'  => wc_price( 0 ),
+				'profit'               => wc_price( 0 ),
+				'profit_percentage'    => '0%',
+				'profit_class'         => 'profit-negative',
+				'average_profit'       => wc_price( 0 ),
+				'average_order_profit' => wc_price( 0 ),
+			) );
+		}
+		wp_reset_postdata();
+		wp_die();
+	}
+
+	/*function get_orders_by_date_range(): void {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			wp_die( esc_html( 'You do not have sufficient permissions to access this page.', 'wooprit' ) );
 		}
@@ -332,56 +419,54 @@ class Wooprofit {
 
 		$orders = wc_get_orders( $args );
 
-		if ( ! empty( $orders ) ) {
-			$total_orders = count( $orders );
-			$total_sales  = 0;
-			$total_cost   = 0;
+		$dates = [];
+		$total_orders = 0;
+		$total_sales  = 0;
+		$total_cost   = 0;
+		$data_points = [];
 
-			foreach ( $orders as $order ) {
-				$total_sales += $order->get_total();
-
-				foreach ( $order->get_items() as $item ) {
-					$product_id   = $item->get_product_id();
-					$product_cost = get_post_meta( $product_id, '_product_cost', true );
-					$product_cost = $product_cost ? floatval( $product_cost ) : 0;
-					$total_cost += $product_cost * $item->get_quantity();
-				}
+		foreach ( $orders as $order ) {
+			$date = $order->get_date_created()->date('Y-m-d');
+			if (!isset($data_points[$date])) {
+				$data_points[$date] = [
+					'orders' => 0,
+					'sales' => 0,
+					'cost' => 0,
+					'profit' => 0
+				];
 			}
 
-			$total_profit        = $total_sales - $total_cost;
-			$profit_percentage   = $total_sales ? ($total_profit / $total_sales) * 100 : 0;
-			$profit_class        = $total_profit > 0 ? 'profit-positive' : 'profit-negative';
-			$average_order_value = $total_orders ? $total_sales / $total_orders : 0;
-			$average_profit      = $total_profit / ((strtotime($end_date) - strtotime($start_date)) / (60 * 60 * 24) + 1);
-			$average_order_profit = $total_orders ? $total_profit / $total_orders : 0;
+			$data_points[$date]['orders'] += 1;
+			$data_points[$date]['sales'] += $order->get_total();
 
-			echo json_encode( array(
-				'total_orders'        => $total_orders,
-				'total_sales'         => wc_price( $total_sales ),
-				'total_cost'          => wc_price( $total_cost ),
-				'average_order_value' => wc_price( $average_order_value ),
-				'profit'              => wc_price( $total_profit ),
-				'profit_percentage'   => round( $profit_percentage, 2 ) . '%',
-				'profit_class'        => $profit_class,
-				'average_profit'      => wc_price( $average_profit ),
-				'average_order_profit' => wc_price( $average_order_profit ),
-			) );
-		} else {
-			echo json_encode( array(
-				'total_orders'        => 0,
-				'total_sales'         => wc_price( 0 ),
-				'total_cost'          => wc_price( 0 ),
-				'average_order_value' => wc_price( 0 ),
-				'profit'              => wc_price( 0 ),
-				'profit_percentage'   => '0%',
-				'profit_class'        => 'profit-negative',
-				'average_profit'      => wc_price( 0 ),
-				'average_order_profit' => wc_price( 0 ),
-			) );
+			foreach ( $order->get_items() as $item ) {
+				$product_id   = $item->get_product_id();
+				$product_cost = get_post_meta( $product_id, '_product_cost', true );
+				$product_cost = $product_cost ? floatval( $product_cost ) : 0;
+				$data_points[$date]['cost'] += $product_cost * $item->get_quantity();
+			}
+
+			$data_points[$date]['profit'] = $data_points[$date]['sales'] - $data_points[$date]['cost'];
 		}
+
+		$labels = array_keys($data_points);
+		$orders_data = array_column($data_points, 'orders');
+		$sales_data = array_column($data_points, 'sales');
+		$cost_data = array_column($data_points, 'cost');
+		$profit_data = array_column($data_points, 'profit');
+
+		echo json_encode( array(
+			'labels' => $labels,
+			'orders_data' => $orders_data,
+			'sales_data' => $sales_data,
+			'cost_data' => $cost_data,
+			'profit_data' => $profit_data,
+		));
 		wp_reset_postdata();
 		wp_die();
-	}
+	}*/
+
+
 }
 
 new Wooprofit();

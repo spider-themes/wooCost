@@ -65,6 +65,6 @@ if ( file_exists( $file_to_include ) ) {
                 <div id="profit-percentage"></div>
             </div>
         </div>
-
     </ul>
+
 </div>

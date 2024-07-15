@@ -1,11 +1,10 @@
 ;(function ($) {
-
     'use strict'
 
-    jQuery(document).ready(function ($) {
+    jQuery(document).ready(function($) {
         $('select').niceSelect();
 
-        $('#date-range-select').on('change', function () {
+        $('#date-range-select').on('change', function() {
             const selectedRange = $(this).val();
             const today = new Date();
             let startDate, endDate;
@@ -52,13 +51,11 @@
             $('#end_date').val(endDate);
         });
 
-
         $('#start_date, #end_date').datepicker({
             dateFormat: 'yy-mm-dd'
         });
 
-
-        $("#custom-date-range-form").submit(function (event) {
+        $("#custom-date-range-form").submit(function(event) {
             event.preventDefault();
             const startDate = $('#start_date').val();
             const endDate = $('#end_date').val();
@@ -83,25 +80,76 @@
                         date_range: date_range
                     },
                     success: function (response) {
-
                         const data = JSON.parse(response);
 
-                        $('#orders-list').html(data.total_orders);
-                        $('#total-sales').html(data.total_sales);
-                        $('#net-sales').html(data.net_sales);
-                        $('#total-cost').html(data.total_cost);
-                        $('#average-order-value').html(data.average_order_value);
-                        $('#profit').html(data.profit).attr('class', data.profit_class);
-                        $('#average-profit').html(data.average_profit);
-                        $('#average-order-profit').html(data.average_order_profit);
+                        $('#orders-list').html(data.orders_data.reduce((a, b) => a + b, 0));
+                        $('#total-sales').html(data.sales_data.reduce((a, b) => a + b, 0));
+                        $('#net-sales').html(data.sales_data.reduce((a, b) => a + b, 0));
+                        $('#total-cost').html(data.cost_data.reduce((a, b) => a + b, 0));
+                        $('#average-order-value').html(data.sales_data.reduce((a, b) => a + b, 0) / data.orders_data.length);
+                        $('#profit').html(data.profit_data.reduce((a, b) => a + b, 0)).attr('class', data.profit_class);
+                        $('#average-profit').html(data.profit_data.reduce((a, b) => a + b, 0) / data.orders_data.length);
+                        $('#average-order-profit').html(data.profit_data.reduce((a, b) => a + b, 0) / data.orders_data.length);
                         $('#profit-percentage').html(`(<span id="profit-percentage">${data.profit_percentage}</span>)`);
 
-
-                        // renderChart(data.labels, data.orders_data, data.sales_data, data.cost_data, data.profit_data);
-
+                        // Render the chart
+                        renderChart(data.labels, data.orders_data, data.sales_data, data.cost_data, data.profit_data);
                     },
                     error: function (error) {
                         console.log('Error:', error);
+                    }
+                });
+            }
+
+            function renderChart(labels, ordersData, salesData, costData, profitData) {
+                var ctx = document.getElementById('profitChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Total Orders',
+                                data: ordersData,
+                                borderColor: 'blue',
+                                fill: false
+                            },
+                            {
+                                label: 'Total Sales',
+                                data: salesData,
+                                borderColor: 'green',
+                                fill: false
+                            },
+                            {
+                                label: 'Total Cost',
+                                data: costData,
+                                borderColor: 'red',
+                                fill: false
+                            },
+                            {
+                                label: 'Total Profit',
+                                data: profitData,
+                                borderColor: 'purple',
+                                fill: false
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Date'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Amount'
+                                }
+                            }
+                        }
                     }
                 });
             }
@@ -112,63 +160,6 @@
             $('#filter-button').click(loadData);
             $('#date-range-select').change(loadData);
         });
-
         $('#date-range-select').val('today').change();
-
-        /*function renderChart(labels, ordersData, salesData, costData, profitData) {
-            var ctx = document.getElementById('profitChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Total Orders',
-                            data: ordersData,
-                            borderColor: 'blue',
-                            fill: false
-                        },
-                        {
-                            label: 'Total Sales',
-                            data: salesData,
-                            borderColor: 'green',
-                            fill: false
-                        },
-                        {
-                            label: 'Total Cost',
-                            data: costData,
-                            borderColor: 'red',
-                            fill: false
-                        },
-                        {
-                            label: 'Total Profit',
-                            data: profitData,
-                            borderColor: 'purple',
-                            fill: false
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Date'
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Amount'
-                            }
-                        }
-                    }
-                }
-            });
-        }*/
-
-
     });
-
 })(jQuery);
