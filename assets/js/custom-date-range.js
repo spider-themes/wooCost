@@ -95,10 +95,6 @@
                         $('#average-profit').html(data.average_profit);
                         $('#average-order-profit').html(data.average_order_profit);
                         $('#profit-percentage').html(`(<span id="profit-percentage">${data.profit_percentage}</span>)`);
-
-
-                        // renderChart(data.labels, data.orders_data, data.sales_data, data.cost_data, data.profit_data);
-
                     },
                     error: function (error) {
                         console.log('Error:', error);
@@ -114,60 +110,6 @@
         });
 
         $('#date-range-select').val('today').change();
-
-        /*function renderChart(labels, ordersData, salesData, costData, profitData) {
-            var ctx = document.getElementById('profitChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Total Orders',
-                            data: ordersData,
-                            borderColor: 'blue',
-                            fill: false
-                        },
-                        {
-                            label: 'Total Sales',
-                            data: salesData,
-                            borderColor: 'green',
-                            fill: false
-                        },
-                        {
-                            label: 'Total Cost',
-                            data: costData,
-                            borderColor: 'red',
-                            fill: false
-                        },
-                        {
-                            label: 'Total Profit',
-                            data: profitData,
-                            borderColor: 'purple',
-                            fill: false
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Date'
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Amount'
-                            }
-                        }
-                    }
-                }
-            });
-        }*/
-
 
     });
 

@@ -18,6 +18,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
+include_once (ABSPATH . 'wp-admin/includes/plugin.php');
 
 const WOOPROFIT_COST_SETTINGS_PLUGIN_FILE = __FILE__;
 
@@ -39,7 +40,6 @@ class Wooprofit {
 		 * Enqueue Assets
 		 */
 		add_action( 'admin_enqueue_scripts', [ $this, 'wooprofit_assets_load' ] );
-
 		/**
 		 * add custom cost field
 		 */
@@ -92,6 +92,8 @@ class Wooprofit {
 	 * Asset loading
 	 */
 	function wooprofit_assets_load( $hook ): void {
+		$plugin_data = get_plugin_data( __FILE__ );
+		$plugin_version = $plugin_data['Version'];
 		$assets_dir = plugins_url( 'assets/', __FILE__ );
 		wp_enqueue_style( 'wooprofit-style', $assets_dir . 'css/style.css' );
 		wp_enqueue_style( 'wooprofit-nice', $assets_dir . 'css/nice-select.css' );
@@ -99,14 +101,14 @@ class Wooprofit {
 		if ( $hook == 'post.php' || $hook == 'post-new.php' ) {
 			global $post_type;
 			if ( $post_type == 'product' ) {
-				wp_enqueue_script( 'wooprofit', $assets_dir . 'js/profit-show.js', array( 'jquery' ), '1.0', true );
+				wp_enqueue_script( 'wooprofit', $assets_dir . 'js/profit-show.js', array( 'jquery' ), $plugin_version, [ 'in_footer' => true, 'strategy' => 'defer'] );
 			}
 		}
 
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 		wp_enqueue_style( 'jquery-ui', '//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css' );
-		wp_enqueue_script( 'custom-date-range-script', $assets_dir . 'js/custom-date-range.js', array( 'jquery' ), '1.0', true );
-		wp_enqueue_script( 'nice-select', $assets_dir . 'js/jquery.nice-select.min.js', array(), '1.0', true );
+		wp_enqueue_script( 'custom-date-range-script', $assets_dir . 'js/custom-date-range.js', array( 'jquery' ), $plugin_version, ['in_footer' => true, 'strategy' => 'defer'] );
+		wp_enqueue_script( 'nice-select', $assets_dir . 'js/jquery.nice-select.min.js', array(), $plugin_version, ['in_footer' => true, 'strategy' => 'defer'] );
 		wp_localize_script( 'custom-date-range-script', 'ajax_params', array(
 			'ajaxurl' => admin_url( 'admin-ajax.php' ),
 		) );
@@ -118,8 +120,8 @@ class Wooprofit {
 	function wooprofit_admin_menu(): void {
 		add_submenu_page(
 			'wc-admin&path=/analytics/overview',
-			__( 'Profit', 'wooprofit' ),
-			__( 'Profit Margin', 'wooprofit' ),
+			esc_html( 'Profit', 'wooprofit' ),
+			esc_html( 'Profit Margin', 'wooprofit' ),
 			'manage_woocommerce',
 			'wc-analytics-profit',
 			[ $this, 'wooprofit_page' ]
@@ -214,10 +216,10 @@ class Wooprofit {
 		woocommerce_wp_text_input(
 			array(
 				'id'          => '_product_cost',
-				'label'       => __( 'Cost', 'wooprofit' ),
+				'label'       => esc_html( 'Cost', 'wooprofit' ),
 				'placeholder' => 'Enter the cost price',
 				'desc_tip'    => 'true',
-				'description' => __( 'Enter the cost price of the product.', 'wooprofit' )
+				'description' => esc_html( 'Enter the cost price of the product.', 'wooprofit' )
 			)
 		);
 		echo '<p id="product_profit_display" class="form-field description">'
@@ -320,7 +322,7 @@ class Wooprofit {
 	function get_orders_by_date_range(): void {
 
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_die( esc_html( 'You do not have sufficient permissions to access this page.', 'wooprit' ) );
+			wp_die( esc_html( 'You do not have sufficient permissions to access this page.', 'wooprofit' ) );
 		}
 
 		$start_date = isset( $_POST['start_date'] ) ? sanitize_text_field( $_POST['start_date'] ) : '';
@@ -329,7 +331,7 @@ class Wooprofit {
 		if ( ! $start_date || ! $end_date ) {
 			echo json_encode( [
 				'error'   => true,
-				'message' => __( 'Please select a valid date range.', 'wooprofit' ),
+				'message' => esc_html( 'Please select a valid date range.', 'wooprofit' ),
 			] );
 			wp_die();
 		}
@@ -394,79 +396,6 @@ class Wooprofit {
 		wp_reset_postdata();
 		wp_die();
 	}
-
-	/*function get_orders_by_date_range(): void {
-		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			wp_die( esc_html( 'You do not have sufficient permissions to access this page.', 'wooprit' ) );
-		}
-
-		$start_date = isset( $_POST['start_date'] ) ? sanitize_text_field( $_POST['start_date'] ) : '';
-		$end_date   = isset( $_POST['end_date'] ) ? sanitize_text_field( $_POST['end_date'] ) : '';
-
-		if ( ! $start_date || ! $end_date ) {
-			echo json_encode([
-				'error' => true,
-				'message' => __( 'Please select a valid date range.', 'wooprofit' ),
-			]);
-			wp_die();
-		}
-
-		$args = array(
-			'limit' => -1,
-			'status' => array( 'wc-completed', 'wc-processing', 'wc-on-hold' ),
-			'date_created' => $start_date . '...' . $end_date,
-		);
-
-		$orders = wc_get_orders( $args );
-
-		$dates = [];
-		$total_orders = 0;
-		$total_sales  = 0;
-		$total_cost   = 0;
-		$data_points = [];
-
-		foreach ( $orders as $order ) {
-			$date = $order->get_date_created()->date('Y-m-d');
-			if (!isset($data_points[$date])) {
-				$data_points[$date] = [
-					'orders' => 0,
-					'sales' => 0,
-					'cost' => 0,
-					'profit' => 0
-				];
-			}
-
-			$data_points[$date]['orders'] += 1;
-			$data_points[$date]['sales'] += $order->get_total();
-
-			foreach ( $order->get_items() as $item ) {
-				$product_id   = $item->get_product_id();
-				$product_cost = get_post_meta( $product_id, '_product_cost', true );
-				$product_cost = $product_cost ? floatval( $product_cost ) : 0;
-				$data_points[$date]['cost'] += $product_cost * $item->get_quantity();
-			}
-
-			$data_points[$date]['profit'] = $data_points[$date]['sales'] - $data_points[$date]['cost'];
-		}
-
-		$labels = array_keys($data_points);
-		$orders_data = array_column($data_points, 'orders');
-		$sales_data = array_column($data_points, 'sales');
-		$cost_data = array_column($data_points, 'cost');
-		$profit_data = array_column($data_points, 'profit');
-
-		echo json_encode( array(
-			'labels' => $labels,
-			'orders_data' => $orders_data,
-			'sales_data' => $sales_data,
-			'cost_data' => $cost_data,
-			'profit_data' => $profit_data,
-		));
-		wp_reset_postdata();
-		wp_die();
-	}*/
-
-
 }
 
 new Wooprofit();

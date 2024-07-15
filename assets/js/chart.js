@@ -153,7 +153,6 @@
                     }
                 });
             }
-
             $('#start_date').change(loadData);
             $('#end_date').change(loadData);
             // Trigger loadData on filter button click
