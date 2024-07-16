@@ -13,6 +13,7 @@
  * Copyright: © 2024 Spider Themes
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * Requires Plugins:  woocommerce
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -43,22 +44,22 @@ class Wooprofit {
 		/**
 		 * add custom cost field
 		 */
-		add_action( 'woocommerce_product_options_general_product_data', array( $this, 'add_cost_field' ) );
-		add_action( 'woocommerce_process_product_meta', array( $this, 'save_cost_field' ) );
-		add_filter( 'manage_product_posts_columns', array( $this, 'add_cost_and_profit_column_header' ), 20 );
-		add_action( 'manage_product_posts_custom_column', array( $this, 'populate_cost_and_profit_column_content' ), 20, 2 );
+		add_action( 'woocommerce_product_options_general_product_data', array( $this, 'wooprofit_add_cost_field' ) );
+		add_action( 'woocommerce_process_product_meta', array( $this, 'wooprofit_save_cost_field' ) );
+		add_filter( 'manage_product_posts_columns', array( $this, 'wooprofit_add_cost_and_profit_column_header' ), 20 );
+		add_action( 'manage_product_posts_custom_column', array( $this, 'wooprofit_populate_cost_and_profit_column_content' ), 20, 2 );
 		/**
 		 * Make the custom columns sortable
 		 */
-		add_filter( 'manage_edit-product_sortable_columns', array( $this, 'make_cost_and_profit_column_sortable' ) );
+		add_filter( 'manage_edit-product_sortable_columns', array( $this, 'wooprofit_make_cost_and_profit_column_sortable' ) );
 		/**
 		 * Handle sorting by custom columns
 		 */
-		add_action( 'pre_get_posts', array( $this, 'sort_cost_and_profit_columns' ) );
+		add_action( 'pre_get_posts', array( $this, 'wooprofit_sort_cost_and_profit_columns' ) );
 		/**
 		 * Add custom tab inside the woocommerce setting menu
 		 */
-		add_filter( 'woocommerce_get_settings_pages', array( $this, 'add_cost_tab_to_woocommerce_settings' ) );
+		add_filter( 'woocommerce_get_settings_pages', array( $this, 'wooprofit_add_cost_tab_to_woocommerce_settings' ) );
 		/**
 		 * Settings filter
 		 */
@@ -67,8 +68,8 @@ class Wooprofit {
 		/**
 		 * Date range
 		 */
-		add_action( 'wp_ajax_get_orders_by_date_range', [ $this, 'get_orders_by_date_range' ] );
-		add_action( 'wp_ajax_nopriv_get_orders_by_date_range', [ $this, 'get_orders_by_date_range' ] );
+		add_action( 'wp_ajax_wooprofit_get_orders_by_date_range', [ $this, 'wooprofit_get_orders_by_date_range' ] );
+		add_action( 'wp_ajax_nopriv_wooprofit_get_orders_by_date_range', [ $this, 'wooprofit_get_orders_by_date_range' ] );
 
 	}
 
@@ -82,7 +83,7 @@ class Wooprofit {
 	/**
 	 * Method for settings
 	 */
-	function add_cost_tab_to_woocommerce_settings( $settings ) {
+	function wooprofit_add_cost_tab_to_woocommerce_settings( $settings ) {
 		$settings[] = include( 'templates/class-wooprofit-settings-cost.php' );
 
 		return $settings;
@@ -128,6 +129,10 @@ class Wooprofit {
 		);
 	}
 
+	/**
+	* Total Cost Calculation
+	*/
+
 	function wooprofit_total_stock(): ?int {
 		$total_stock = 0;
 		// Ensure WooCommerce is active
@@ -153,10 +158,12 @@ class Wooprofit {
 		return $total_stock;
 	}
 
+	/**
+	 * Total Price Calculation
+	 */
 	function wooprofit_total_price() {
 		$total_price = 0;
 
-		// Ensure WooCommerce is active
 		if ( class_exists( 'WooCommerce' ) ) {
 			$args = array(
 				'post_type'      => 'product',
@@ -179,9 +186,12 @@ class Wooprofit {
 		return $total_price;
 	}
 
+	/**
+	* Total cost calculation
+	**/
 	function wooprofit_total_cost(): float|int {
 		$total_cost = 0;
-		// Ensure WooCommerce is active
+
 		if ( class_exists( 'WooCommerce' ) ) {
 			$args = array(
 				'post_type'      => 'product',
@@ -207,12 +217,17 @@ class Wooprofit {
 		return $total_cost;
 	}
 
+	/**
+	 *    Total profit Calculate
+	 */
 	function wooprofit_total_profit(): float|int {
 		return $this->wooprofit_total_price() - $this->wooprofit_total_cost();
 	}
 
-	//  cost field
-	function add_cost_field(): void {
+	/**
+	 * add cost field
+	 */
+	function wooprofit_add_cost_field(): void {
 		woocommerce_wp_text_input(
 			array(
 				'id'          => '_product_cost',
@@ -230,7 +245,7 @@ class Wooprofit {
 	/**
 	 * Save cost field
 	 */
-	function save_cost_field( $post_id ): void {
+	function wooprofit_save_cost_field( $post_id ): void {
 		$product_cost = isset( $_POST['_product_cost'] ) ? sanitize_text_field( $_POST['_product_cost'] ) : '';
 		update_post_meta( $post_id, '_product_cost', $product_cost );
 	}
@@ -238,10 +253,11 @@ class Wooprofit {
 	/**
 	 * Add custom columns to the products admin page
 	 **/
-	function add_cost_and_profit_column_header( $columns ): array {
+	function wooprofit_add_cost_and_profit_column_header( $columns ): array {
 		// Remove the existing 'product_cost' and 'product_profit' columns if they already exist
 		unset( $columns['product_cost'] );
 		unset( $columns['product_profit'] );
+
 		/**
 		 *  Insert 'product_cost' and 'product_profit' after 'price' column
 		 */
@@ -258,10 +274,10 @@ class Wooprofit {
 		return $new_columns;
 	}
 
-	/*
+	/**
 	 * Populate custom columns with data
-	 * */
-	function populate_cost_and_profit_column_content( $column, $post_id ): void {
+	 */
+	function wooprofit_populate_cost_and_profit_column_content( $column, $post_id ): void {
 		if ( 'product_cost' === $column ) {
 			$product_cost = get_post_meta( $post_id, '_product_cost', true );
 			if ( $product_cost !== '' ) {
@@ -286,14 +302,20 @@ class Wooprofit {
 		}
 	}
 
-	function make_cost_and_profit_column_sortable( $columns ) {
+	/**
+	 * create cost and profit columns
+	 */
+	function wooprofit_make_cost_and_profit_column_sortable( $columns ) {
 		$columns['product_cost']   = 'product_cost';
 		$columns['product_profit'] = 'product_profit';
 
 		return $columns;
 	}
 
-	function sort_cost_and_profit_columns( $query ): void {
+	/**
+	 *  cost and profit columns sorting
+	 */
+	function wooprofit_sort_cost_and_profit_columns( $query ): void {
 		if ( ! is_admin() || ! $query->is_main_query() ) {
 			return;
 		}
@@ -317,9 +339,10 @@ class Wooprofit {
 		include_once plugin_dir_path( __FILE__ ) . 'templates/dashboard.php';
 	}
 
-	/** Date range */
-
-	function get_orders_by_date_range(): void {
+	/**
+	 * Date range
+	 */
+	function wooprofit_get_orders_by_date_range(): void {
 
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			wp_die( esc_html( 'You do not have sufficient permissions to access this page.', 'wooprofit' ) );

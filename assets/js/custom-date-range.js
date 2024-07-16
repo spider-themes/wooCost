@@ -77,7 +77,7 @@
                     url: ajax_params.ajaxurl,
                     method: 'POST',
                     data: {
-                        action: 'get_orders_by_date_range',
+                        action: 'wooprofit_get_orders_by_date_range',
                         start_date: start_date,
                         end_date: end_date,
                         date_range: date_range
