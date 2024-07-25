@@ -1,50 +1,218 @@
-.wooprifit_container{
-    width: 1140px;
-    margin: 0 auto;
-    display: block;
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
-.m-5{
-    padding: 90px 0px;
+:root{
+    --white: #ffffff;
+    --bg-dark: #05161d;
+    --bg-blue-dark: #234058;
+    --border-color: #2f5575;
+    --card-body-bg: #032538;
 }
-.flex{
+body{
+    font-size: 16px;
+    font-family: Roboto, Poppins,sans-serif;
+    background: var(--bg-dark);
+    /*color: var(--white);*/
+}
+h1,h2,h3,h4,h5,h6{
+    margin: 0;
+    font-family: Poppins, sans-serif;
+}
+
+/*.wrap{
+    padding: 20px;
+    max-height: 100vh;
+}*/
+.bg-dark {
+    background-color: var(--bg-dark);
+    color: var(--white);
+}
+.page-header {
+    align-items: center;
+    background-color: var(--bg-blue-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    margin-top: 20px;
+    min-height: 45px;
+    padding: 0 20px;
+}
+.page-header .title{
+    font-size: 20px;
+}
+.w-100{
+    width: 100%;
+    max-width: 100%;
+}
+.card {
+    background-color: var(--card-body-bg);
+    border: 1px solid var(--border-color) !important;
+    border-radius: 10px;
+    padding: 0 0 1rem !important;
+}
+.card-header{
+    background-color: var(--bg-blue-dark);
+    padding: 10px 20px !important;
+    border-radius: 10px 10px 0 0;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 15px;
+}
+.card-header .title{
+    font-size: 16px;
+    font-weight: 600;
+}
+.card-body{
+    padding:0 20px;
+}
+.neg-margin{
+    margin-left: -25px;
+    padding-right: 90px;
+    display: flex;
+    border-radius: 0 !important;
+    /*border-top: 1px solid !important;*/
+    /*border-bottom: 1px solid !important;*/
+    border-left: 0 !important;
+    border-right: 0 !important;
+    /*border-color: var(--border-color);*/
+}
+.p-0{
+    padding: 0 !important;
+}
+.compare-text.title{
+    color: #50809f !important;
+    font-weight: bold;
+    margin-left: 20px !important;
+}
+.chart.title{
+    color: var(--white);
+}
+.flex {
     display: flex;
     align-items: center;
 }
-.wooprofit_row{
+.space-between{
+    justify-content: space-between;
+}
+.gap-5{
+   gap: 5px;
+}
+.gap-10{
+    gap: 10px;
+}
+.nice-select{
+    background-color: rgba(255, 240, 240, 0) !important;
+    border: none !important;
+}
+ input[type=text],select {
+    box-shadow: 0 0 0 transparent;
+    border-radius: 4px;
+    /*border: none !important;*/
+    background-color: #fff0;
+    color: var(--white);
+}
+::placeholder{
+    color:var(--white);
+}
+::-ms-input-placeholder{
+
+}
+.nice-select .list {
+    color: #0c0d0e !important;
+}
+/*.nice-select span.current{
+    color: var(--white) !important;
+}*/
+.wooprofit_row {
     border: 1px solid #716b6b;
-    padding: 20px;
-    border-radius: 8px;
 }
 
-.col-3{
+.col-3 {
     width: 33.3%;
-
 }
-.col-4{
+
+.col-4 {
     width: 25%;
 }
-.col-5{
+
+.col-5 {
     width: 20%;
 }
-.col{
-    padding: 10px;
-    border: 1px solid #d8d8d8;
-    margin-right: 3px;
-    border-radius: 3px;
-    width: -webkit-fill-available;
+.col-2{
+    width: 50%;
 }
 
-.wooprofit_row :last-child{
+.wooprofit_row :last-child {
     margin-right: 0px;
 }
-.text-center{
+
+.text-center {
     text-align: center;
 }
+
+.text-white{
+    color:var(--white);
+}
+
 #product_profit_display {
     font-weight: bold;
     margin-top: 10px;
 }
 
+/*Tooltips css*/
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    font-size: 12px;
+    line-height: 1.5;
+    background-color: #032538;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 175%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #032538 transparent transparent transparent;
+}
+
+.tooltip.active .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.fas.fa-info-circle {
+    color: var(--white);
+    font-size: 16px;
+}
+
+.small{
+    font-size: 9px;
+}
 /* Date picker */
 .custom-date-range-picker {
     display: flex;
@@ -54,6 +222,7 @@
     padding: 10px;
     border: 1px solid #ccd0d4;
     border-radius: 5px;
+
 }
 
 .custom-date-input {
@@ -90,4 +259,23 @@
 
 .profit-negative {
     color: red;
+}
+
+/*chart css*/
+.shadow {
+    box-shadow: 0px 1px 15px 1px rgba(69, 65, 78, 0.08);
+}
+.sparkboxes .box {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-shadow: 0 1px 1px 1px #666;
+    box-shadow: 0 1px 15px 1px rgba(69, 65, 78, 0.08);
+    position: relative;
+    border-radius: 5px;
+}
+span.apexcharts-legend-text {
+    color: var(--white) !important;
+}
+.apexcharts-toolbar {
+    display: none !important;
 }

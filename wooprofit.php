@@ -96,8 +96,11 @@ class Wooprofit {
 		$plugin_data = get_plugin_data( __FILE__ );
 		$plugin_version = $plugin_data['Version'];
 		$assets_dir = plugins_url( 'assets/', __FILE__ );
+
 		wp_enqueue_style( 'wooprofit-style', $assets_dir . 'css/style.css' );
 		wp_enqueue_style( 'wooprofit-nice', $assets_dir . 'css/nice-select.css' );
+		wp_enqueue_style( 'google-font', '//fonts.googleapis.com/css?family=Montserrat' );
+		wp_enqueue_style( 'font-awesome', '//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css' );
 
 		if ( $hook == 'post.php' || $hook == 'post-new.php' ) {
 			global $post_type;
@@ -108,6 +111,11 @@ class Wooprofit {
 
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 		wp_enqueue_style( 'jquery-ui', '//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css' );
+		wp_enqueue_script( 'apexcharts', '//cdn.jsdelivr.net/npm/apexcharts' );
+		wp_enqueue_script('chart', $assets_dir . 'js/chart.js', array( 'jquery' ), $plugin_version, ['in_footer' => true, 'strategy' => 'defer'] );
+//		wp_enqueue_script('compare', $assets_dir . 'js/order-compare.js', array(), $plugin_version, ['in_footer' => true, 'strategy' => 'defer'] );
+		wp_enqueue_script('tooltip', $assets_dir . 'js/tooltip.js', array( 'jquery' ), $plugin_version, ['in_footer' => true, 'strategy' => 'defer'] );
+
 		wp_enqueue_script( 'custom-date-range-script', $assets_dir . 'js/custom-date-range.js', array( 'jquery' ), $plugin_version, ['in_footer' => true, 'strategy' => 'defer'] );
 		wp_enqueue_script( 'nice-select', $assets_dir . 'js/jquery.nice-select.min.js', array(), $plugin_version, ['in_footer' => true, 'strategy' => 'defer'] );
 		wp_localize_script( 'custom-date-range-script', 'ajax_params', array(
@@ -391,7 +399,12 @@ class Wooprofit {
 			$average_profit       = $total_profit / ( ( strtotime( $end_date ) - strtotime( $start_date ) ) / ( 60 * 60 * 24 ) + 1 );
 			$average_order_profit = $total_orders ? $total_profit / $total_orders : 0;
 
-
+			$chart_data = [
+				'orders' => [$total_orders],
+				'profits' => [$total_profit],
+				'sales' => [$total_sales],
+				'labels' => [$start_date, $end_date]
+			];
 			echo json_encode( array(
 				'total_orders'         => $total_orders,
 				'total_sales'          => wc_price( $total_sales ),
@@ -402,8 +415,10 @@ class Wooprofit {
 				'profit_class'         => $profit_class,
 				'average_profit'       => wc_price( $average_profit ),
 				'average_order_profit' => wc_price( $average_order_profit ),
+				'chart_data'           => $chart_data
 			) );
 		} else {
+
 			echo json_encode( array(
 				'total_orders'         => 0,
 				'total_sales'          => wc_price( 0 ),
@@ -414,6 +429,7 @@ class Wooprofit {
 				'profit_class'         => 'profit-negative',
 				'average_profit'       => wc_price( 0 ),
 				'average_order_profit' => wc_price( 0 ),
+				'chart_data'           => $chart_data
 			) );
 		}
 		wp_reset_postdata();

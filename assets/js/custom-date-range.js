@@ -1,5 +1,4 @@
 ;(function ($) {
-
     'use strict'
 
     jQuery(document).ready(function ($) {
@@ -50,67 +49,139 @@
 
             $('#start_date').val(startDate);
             $('#end_date').val(endDate);
-        });
 
+            // Load data based on the new date range
+            loadData();
+        });
 
         $('#start_date, #end_date').datepicker({
             dateFormat: 'yy-mm-dd'
         });
 
+        function loadData() {
+            const start_date = $('#start_date').val();
+            const end_date = $('#end_date').val();
+            const date_range = $('#date-range-select').val();
+
+            $.ajax({
+                url: ajax_params.ajaxurl,
+                method: 'POST',
+                data: {
+                    action: 'wooprofit_get_orders_by_date_range',
+                    start_date: start_date,
+                    end_date: end_date,
+                    date_range: date_range
+                },
+                success: function (response) {
+                    const data = JSON.parse(response);
+
+                    if (data.total_orders > 0) {
+                        $('#orders-list').html(data.total_orders);
+                    } else {
+                        $('#orders-list').html(0);
+                    }
+                    $('#total-sales').html(data.total_sales);
+                    $('#net-sales').html(data.net_sales);
+                    $('#total-cost').html(data.total_cost);
+                    $('#average-order-value').html(data.average_order_value);
+                    $('#profit').html(data.profit).attr('class', data.profit_class);
+                    $('#average-profit').html(data.average_profit);
+                    $('#average-order-profit').html(data.average_order_profit);
+                    $('#profit-percentage').html(`(<span id="profit-percentage">${data.profit_percentage}</span>)`);
+
+                    // Update chart data
+                    updateChart(data.chart_data);
+                },
+                error: function (error) {
+                    console.log('Error:', error);
+                }
+            });
+        }
+
+        function updateChart(chartData) {
+            chart.updateSeries([
+                {
+                    name: 'Order',
+                    type: 'column',
+                    data: chartData.orders
+                }, {
+                    name: 'Profit',
+                    type: 'area',
+                    data: chartData.profits
+                }, {
+                    name: 'Sales',
+                    type: 'line',
+                    data: chartData.sales
+                }
+            ]);
+            chart.updateOptions({
+                labels: chartData.labels
+            });
+        }
 
         $("#custom-date-range-form").submit(function (event) {
             event.preventDefault();
-            const startDate = $('#start_date').val();
-            const endDate = $('#end_date').val();
-
-            if (!startDate || !endDate) {
-                alert('Please select a valid date range.');
-                return;
-            }
-
-            function loadData() {
-                var start_date = $('#start_date').val();
-                var end_date = $('#end_date').val();
-                var date_range = $('#date-range-select').val();
-
-                $.ajax({
-                    url: ajax_params.ajaxurl,
-                    method: 'POST',
-                    data: {
-                        action: 'wooprofit_get_orders_by_date_range',
-                        start_date: start_date,
-                        end_date: end_date,
-                        date_range: date_range
-                    },
-                    success: function (response) {
-
-                        const data = JSON.parse(response);
-
-                        $('#orders-list').html(data.total_orders);
-                        $('#total-sales').html(data.total_sales);
-                        $('#net-sales').html(data.net_sales);
-                        $('#total-cost').html(data.total_cost);
-                        $('#average-order-value').html(data.average_order_value);
-                        $('#profit').html(data.profit).attr('class', data.profit_class);
-                        $('#average-profit').html(data.average_profit);
-                        $('#average-order-profit').html(data.average_order_profit);
-                        $('#profit-percentage').html(`(<span id="profit-percentage">${data.profit_percentage}</span>)`);
-                    },
-                    error: function (error) {
-                        console.log('Error:', error);
-                    }
-                });
-            }
-
-            $('#start_date').change(loadData);
-            $('#end_date').change(loadData);
-            // Trigger loadData on filter button click
-            $('#filter-button').click(loadData);
-            $('#date-range-select').change(loadData);
+            loadData();
         });
 
+        $('#start_date').change(loadData);
+        $('#end_date').change(loadData);
+        $('#filter-button').click(loadData);
+
+        // Load data when the page first loads
         $('#date-range-select').val('today').change();
 
-    });
 
+        // comparison jquery
+        $('select.nice-select').niceSelect();
+
+        // Initialize jQuery UI Datepicker
+        $('#prev_start_date, #prev_end_date').datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+
+        // Function to update custom date range fields
+        function updateDateRangeFields() {
+            var selectedOption = $('#previous-date-range-select option:selected');
+            var startDate = selectedOption.attr('data-start-date');
+            var endDate = selectedOption.attr('data-end-date');
+            var selectedValue = selectedOption.val();
+
+            if (selectedValue === 'custom') {
+                // Clear the date fields for custom selection
+                $('#prev_start_date').val('');
+                $('#prev_end_date').val('');
+            } else if (startDate && endDate) {
+                $('#prev_start_date').val(startDate);
+                $('#prev_end_date').val(endDate);
+            } else {
+                $('#prev_start_date').val('');
+                $('#prev_end_date').val('');
+            }
+        }
+
+        // Event listener for dropdown change
+        $('#previous-date-range-select').on('change', function () {
+            var selectedValue = $(this).val();
+            if (selectedValue === 'custom') {
+                $('#custom-date-range').show();
+            } else {
+                $('#custom-date-range').hide();
+            }
+            updateDateRangeFields();
+        });
+
+        // Initial check
+        var initialSelectedValue = $('#previous-date-range-select').val();
+        if (initialSelectedValue === 'custom') {
+            $('#custom-date-range').show();
+        } else {
+            $('#custom-date-range').hide();
+        }
+        updateDateRangeFields();
+        // end comparison js
+
+    });
 })(jQuery);
+
+

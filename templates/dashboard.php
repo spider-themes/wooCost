@@ -8,45 +8,78 @@ if ( file_exists( $file_to_include ) ) {
 	echo 'File not found: ' . esc_html( $file_to_include );
 }
 ?>
-<div class="wrap">
-    <h1 class="">Profit Margin</h1>
-    <div class="wooprofit_row flex m-5">
-        <div class="col col-4">
-            <p class="text-center">Total Stock</p>
-            <h2 class="text-center">
-				<?php echo esc_html( $this->wooprofit_total_stock() ); ?>
-            </h2>
-        </div>
-        <div class="col col-4">
-            <p class="text-center">Total Price</p>
-            <h2 class="text-center">
-				<?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $this->wooprofit_total_price(), 2 ) ); ?>
-            </h2>
-        </div>
-        <div class="col col-4">
-            <p class="text-center">Total Cost</p>
-            <h2 class="text-center">
-				<?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $this->wooprofit_total_cost(), 2 ) ); ?>
-            </h2>
-        </div>
-        <div class="col col-4">
-            <p class="text-center">Potential Profit</p>
-			<?php
-			if ( $this->wooprofit_total_profit() > 0 ) { ?>
-                <h2 class="text-center profit-positive">
-					<?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $this->wooprofit_total_profit(), 2 ) ); ?>
+<div class="wrap bg-dark">
+    <div class="page-header">
+        <h2 class="text-white title">Profit</h2>
+    </div>
+    <div class="flex gap-5">
+        <div class="col-4 card">
+            <div class="card-header flex">
+                <h2 class="text-white title">
+                    Total Stock
+                    <i class="fas fa-info-circle tooltip" data-tooltip="Total Stock refers to the total number of all items currently available in the store."></i>
                 </h2>
-				<?php
-			} else {
-				?>
-                <h2 class="text-center profit-negative">
-					<?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $this->wooprofit_total_profit(), 2 ) ); ?>
-                </h2> <?php
-			}
-			?>
+            </div>
+            <div class="card-body">
+                <p class="text-white">
+		            <?php echo esc_html( $this->wooprofit_total_stock() ); ?>
+                </p>
+            </div>
+        </div>
+        <div class="col-4 card">
+            <div class="card-header flex">
+                <h2 class="text-white title">
+                    Total Price
+                    <i class="fas fa-info-circle tooltip" data-tooltip="Total Price is represents the combined retail price of all products currently in stock."></i>
+                </h2>
+            </div>
+            <div class="card-body">
+                <p class="text-white">
+		            <?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $this->wooprofit_total_price(), 2 ) ); ?>
+                </p>
+            </div>
+        </div>
+        <div class="col-4 card">
+            <div class="card-header flex">
+                <h2 class="text-white title">
+                    Total Cost
+                    <i class="fas fa-info-circle tooltip" data-tooltip="Total Cost is refers to the cumulative cost of all products currently in stock."></i>
+                </h2>
+            </div>
+            <div class="card-body">
+                <p class="text-white">
+		            <?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $this->wooprofit_total_cost(), 2 ) ); ?>
+                </p>
+            </div>
+        </div>
+        <div class="col-4 card">
+            <div class="card-header flex">
+                <h2 class="text-white title">
+                    Total Potential Profit
+                    <i class="fas fa-info-circle tooltip" data-tooltip="Total Potential Profit is refers to the estimated profit that can be made from selling all items currently in stock at their listed prices."></i>
+                </h2>
+            </div>
+            <div class="card-body">
+	            <?php
+	            if ( $this->wooprofit_total_profit() > 0 ) { ?>
+                    <p class="profit-positive">
+			            <?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $this->wooprofit_total_profit(), 2 ) ); ?>
+                    </p>
+		            <?php
+	            } else {
+		            ?>
+                    <p class="profit-negative">
+			            <?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $this->wooprofit_total_profit(), 2 ) ); ?>
+                    </p> <?php
+	            }
+	            ?>
+            </div>
         </div>
     </div>
     <div class="date-range-picker">
 		<?php include_once plugin_dir_path( __FILE__ ) . 'report-by-date.php'; ?>
+    </div>
+    <div class="chart">
+	    <?php include_once plugin_dir_path( __FILE__ ) . 'chart.php'; ?>
     </div>
 </div>
