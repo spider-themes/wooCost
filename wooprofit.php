@@ -70,6 +70,12 @@ class Wooprofit {
 		 */
 		add_action( 'wp_ajax_wooprofit_get_orders_by_date_range', [ $this, 'wooprofit_get_orders_by_date_range' ] );
 		add_action( 'wp_ajax_nopriv_wooprofit_get_orders_by_date_range', [ $this, 'wooprofit_get_orders_by_date_range' ] );
+		/**
+		 * Order Comparison
+		 */
+
+		add_action('wp_ajax_wooprofit_compare_monthly_orders', [ $this, 'wooprofit_compare_monthly_orders' ]);
+		add_action('wp_ajax_nopriv_wooprofit_compare_monthly_orders', [ $this, 'wooprofit_compare_monthly_orders' ]);
 
 	}
 
@@ -93,15 +99,29 @@ class Wooprofit {
 	 * Asset loading
 	 */
 	function wooprofit_assets_load( $hook ): void {
+		$screen = get_current_screen();
 		$plugin_data = get_plugin_data( __FILE__ );
 		$plugin_version = $plugin_data['Version'];
 		$assets_dir = plugins_url( 'assets/', __FILE__ );
 
-		wp_enqueue_style( 'wooprofit-style', $assets_dir . 'css/style.css' );
-		wp_enqueue_style( 'wooprofit-nice', $assets_dir . 'css/nice-select.css' );
-		wp_enqueue_style( 'google-font', '//fonts.googleapis.com/css?family=Montserrat' );
-		wp_enqueue_style( 'font-awesome', '//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css' );
+		if ($screen->id === 'analytics_page_wc-analytics-profit'){
+			wp_enqueue_style( 'wooprofit-style', $assets_dir . 'css/style.css' );
+			wp_enqueue_style( 'wooprofit-nice', $assets_dir . 'css/nice-select.css' );
+			wp_enqueue_style( 'google-font', '//fonts.googleapis.com/css?family=Montserrat' );
+			wp_enqueue_style( 'font-awesome', '//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css' );
+			wp_enqueue_script( 'jquery-ui-datepicker' );
+			wp_enqueue_style( 'jquery-ui', '//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css' );
+			wp_enqueue_script( 'apexcharts', '//cdn.jsdelivr.net/npm/apexcharts' );
+			wp_enqueue_script('chart', $assets_dir . 'js/chart.js', array( 'jquery' ), $plugin_version, ['in_footer' => true, 'strategy' => 'defer'] );
 
+			wp_enqueue_script('tooltip', $assets_dir . 'js/tooltip.js', array( 'jquery' ), $plugin_version, ['in_footer' => true, 'strategy' => 'defer'] );
+
+			wp_enqueue_script( 'custom-date-range-script', $assets_dir . 'js/custom-date-range.js', array( 'jquery' ), $plugin_version, ['in_footer' => true, 'strategy' => 'defer'] );
+			wp_enqueue_script( 'nice-select', $assets_dir . 'js/jquery.nice-select.min.js', array(), $plugin_version, ['in_footer' => true, 'strategy' => 'defer'] );
+			wp_localize_script( 'custom-date-range-script', 'ajax_params', array(
+				'ajaxurl' => admin_url( 'admin-ajax.php' ),
+			) );
+		}
 		if ( $hook == 'post.php' || $hook == 'post-new.php' ) {
 			global $post_type;
 			if ( $post_type == 'product' ) {
@@ -109,18 +129,6 @@ class Wooprofit {
 			}
 		}
 
-		wp_enqueue_script( 'jquery-ui-datepicker' );
-		wp_enqueue_style( 'jquery-ui', '//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css' );
-		wp_enqueue_script( 'apexcharts', '//cdn.jsdelivr.net/npm/apexcharts' );
-		wp_enqueue_script('chart', $assets_dir . 'js/chart.js', array( 'jquery' ), $plugin_version, ['in_footer' => true, 'strategy' => 'defer'] );
-//		wp_enqueue_script('compare', $assets_dir . 'js/order-compare.js', array(), $plugin_version, ['in_footer' => true, 'strategy' => 'defer'] );
-		wp_enqueue_script('tooltip', $assets_dir . 'js/tooltip.js', array( 'jquery' ), $plugin_version, ['in_footer' => true, 'strategy' => 'defer'] );
-
-		wp_enqueue_script( 'custom-date-range-script', $assets_dir . 'js/custom-date-range.js', array( 'jquery' ), $plugin_version, ['in_footer' => true, 'strategy' => 'defer'] );
-		wp_enqueue_script( 'nice-select', $assets_dir . 'js/jquery.nice-select.min.js', array(), $plugin_version, ['in_footer' => true, 'strategy' => 'defer'] );
-		wp_localize_script( 'custom-date-range-script', 'ajax_params', array(
-			'ajaxurl' => admin_url( 'admin-ajax.php' ),
-		) );
 	}
 
 	/**
@@ -434,7 +442,77 @@ class Wooprofit {
 		}
 		wp_reset_postdata();
 		wp_die();
+
 	}
+	/**
+	 * Comparison query
+	 */
+	public function wooprofit_compare_monthly_orders() {
+
+		$current_start_date = isset($_POST['start_date']) ? sanitize_text_field($_POST['start_date']) : '';
+		$current_end_date = isset($_POST['end_date']) ? sanitize_text_field($_POST['end_date']) : '';
+		$previous_start_date = isset($_POST['previous_start_date']) ? sanitize_text_field($_POST['previous_start_date']) : '';
+		$previous_end_date = isset($_POST['previous_end_date']) ? sanitize_text_field($_POST['previous_end_date']) : '';
+
+		// Fetch current and previous month data
+		$current_data = $this->get_order_data($current_start_date, $current_end_date);
+		$previous_data = $this->get_order_data($previous_start_date, $previous_end_date);
+
+		// Log the data for debugging
+		error_log('Current Data: ' . print_r($current_data, true));
+		error_log('Previous Data: ' . print_r($previous_data, true));
+
+		$response = array(
+			'current' => $current_data,
+			'previous' => $previous_data
+		);
+
+		wp_send_json($response);
+	}
+
+	public function get_order_data($start_date, $end_date) {
+		global $wpdb;
+
+		// Convert dates to datetime format
+		$start_date = date('Y-m-d H:i:s', strtotime($start_date));
+		$end_date = date('Y-m-d H:i:s', strtotime($end_date . ' +1 day'));
+
+		// Query to get orders in the specified date range
+		$orders = wc_get_orders(array(
+			'limit' => -1,
+			'status' => 'completed',
+			'date_paid' => $start_date . '...' . $end_date
+		));
+
+		// Calculate totals
+		$total_orders = count($orders);
+		$total_sales = 0;
+		$total_cost = 0;
+		$total_profit = 0;
+		foreach ($orders as $order) {
+			$total_sales += $order->get_total();
+			$total_cost += $order->get_meta('_cost'); // Assuming you store cost in order meta
+			$total_profit += $order->get_total() - $order->get_meta('_cost'); // Profit calculation
+		}
+		$average_order_value = $total_orders ? $total_sales / $total_orders : 0;
+		$average_profit = $total_orders ? $total_profit / $total_orders : 0;
+		$average_order_profit = $total_orders ? $total_profit / $total_orders : 0;
+		$profit_percentage = $total_sales ? ($total_profit / $total_sales) * 100 : 0;
+
+		$order_data = array(
+			'total_orders' => $total_orders,
+			'total_sales' => $total_sales,
+			'average_order_value' => $average_order_value,
+			'total_cost' => $total_cost,
+			'average_profit' => $average_profit,
+			'average_order_profit' => $average_order_profit,
+			'profit' => $total_profit,
+			'profit_percentage' => $profit_percentage,
+		);
+
+		return $order_data;
+	}
+
 }
 
 new Wooprofit();

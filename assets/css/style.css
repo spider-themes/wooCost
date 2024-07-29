@@ -97,6 +97,9 @@ h1,h2,h3,h4,h5,h6{
 .space-between{
     justify-content: space-between;
 }
+.justify-content-end{
+    justify-content: end;
+}
 .gap-5{
    gap: 5px;
 }
@@ -110,7 +113,6 @@ h1,h2,h3,h4,h5,h6{
  input[type=text],select {
     box-shadow: 0 0 0 transparent;
     border-radius: 4px;
-    /*border: none !important;*/
     background-color: #fff0;
     color: var(--white);
 }
@@ -123,13 +125,28 @@ h1,h2,h3,h4,h5,h6{
 .nice-select .list {
     color: #0c0d0e !important;
 }
-/*.nice-select span.current{
-    color: var(--white) !important;
-}*/
+
 .wooprofit_row {
     border: 1px solid #716b6b;
 }
-
+.badge {
+    align-items: center;
+    background-color: #68a102;
+    border-radius: 6px;
+    color: var(--white);
+    display: inline-flex;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    height: 25px;
+    justify-content: center;
+    min-width: 70px;
+    padding: 0 5px;
+    text-align: right;
+}
+.text-off-white{
+    color: #50809f;
+}
 .col-3 {
     width: 33.3%;
 }
@@ -211,7 +228,7 @@ h1,h2,h3,h4,h5,h6{
 }
 
 .small{
-    font-size: 9px;
+    font-size: 9px !important;
 }
 /* Date picker */
 .custom-date-range-picker {
