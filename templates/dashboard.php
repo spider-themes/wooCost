@@ -22,7 +22,7 @@ if ( file_exists( $file_to_include ) ) {
             </div>
             <div class="card-body">
                 <p class="text-white">
-		            <?php echo esc_html( $this->wooprofit_total_stock() ); ?>
+		            <?php echo esc_html( $this->total_stock() ); ?>
                 </p>
             </div>
         </div>
@@ -35,7 +35,7 @@ if ( file_exists( $file_to_include ) ) {
             </div>
             <div class="card-body">
                 <p class="text-white">
-		            <?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $this->wooprofit_total_price(), 2 ) ); ?>
+		            <?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $this->total_price(), 2 ) ); ?>
                 </p>
             </div>
         </div>
@@ -48,7 +48,7 @@ if ( file_exists( $file_to_include ) ) {
             </div>
             <div class="card-body">
                 <p class="text-white">
-		            <?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $this->wooprofit_total_cost(), 2 ) ); ?>
+		            <?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $this->total_cost(), 2 ) ); ?>
                 </p>
             </div>
         </div>
@@ -61,15 +61,15 @@ if ( file_exists( $file_to_include ) ) {
             </div>
             <div class="card-body">
 	            <?php
-	            if ( $this->wooprofit_total_profit() > 0 ) { ?>
+	            if ( $this->total_profit() > 0 ) { ?>
                     <p class="profit-positive">
-			            <?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $this->wooprofit_total_profit(), 2 ) ); ?>
+			            <?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $this->total_profit(), 2 ) ); ?>
                     </p>
 		            <?php
 	            } else {
 		            ?>
                     <p class="profit-negative">
-			            <?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $this->wooprofit_total_profit(), 2 ) ); ?>
+			            <?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $this->total_profit(), 2 ) ); ?>
                     </p> <?php
 	            }
 	            ?>
@@ -79,7 +79,7 @@ if ( file_exists( $file_to_include ) ) {
     <div class="date-range-picker">
 		<?php include_once plugin_dir_path( __FILE__ ) . 'report-by-date.php'; ?>
     </div>
-    <div class="chart">
-	    <?php include_once plugin_dir_path( __FILE__ ) . 'chart.php'; ?>
-    </div>
+    <!--<div class="chart">
+	    <?php /*include_once plugin_dir_path( __FILE__ ) . 'chart.php'; */?>
+    </div>-->
 </div>

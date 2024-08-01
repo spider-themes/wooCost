@@ -6,8 +6,8 @@ class ComparisonData {
 	public function __construct() {
 		// ... existing constructor code
 
-		add_action( 'wp_ajax_wooprofit_compare_monthly_orders', [ $this, 'wooprofit_compare_monthly_orders' ] );
-		add_action( 'wp_ajax_nopriv_wooprofit_compare_monthly_orders', [ $this, 'wooprofit_compare_monthly_orders' ] );
+		//add_action( 'wp_ajax_wooprofit_compare_monthly_orders', [ $this, 'wooprofit_compare_monthly_orders' ] );
+		//add_action( 'wp_ajax_nopriv_wooprofit_compare_monthly_orders', [ $this, 'wooprofit_compare_monthly_orders' ] );
 	}
 
 	// ... existing methods
