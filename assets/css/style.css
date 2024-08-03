@@ -274,11 +274,11 @@ h1,h2,h3,h4,h5,h6{
 }
 
 .profit-positive {
-    color: green;
+    color: #008000FF;
 }
 
 .profit-negative {
-    color: red;
+    color: #FF0000FF;
 }
 
 /*chart css*/

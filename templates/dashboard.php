@@ -79,7 +79,4 @@ if ( file_exists( $file_to_include ) ) {
     <div class="date-range-picker">
 		<?php include_once plugin_dir_path( __FILE__ ) . 'report-by-date.php'; ?>
     </div>
-    <!--<div class="chart">
-	    <?php /*include_once plugin_dir_path( __FILE__ ) . 'chart.php'; */?>
-    </div>-->
 </div>

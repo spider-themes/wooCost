@@ -85,16 +85,26 @@ class Wooprofit {
 		/**
 		 * add custom cost in Order
 		 */
-		add_filter('manage_edit-shop_order_columns', [$this, 'add_order_cost_column'], 20);
-		add_action('manage_shop_order_posts_custom_column', [$this,'populate_order_cost_column'], 10, 2);
 		add_action('woocommerce_admin_order_item_headers', [$this, 'add_cost_column_header']);
 		add_action('woocommerce_admin_order_item_values', [$this, 'add_cost_column_value'], 10, 3);
 		add_action('woocommerce_before_order_itemmeta_update', [$this, 'save_custom_order_item_cost'], 10, 1);
 
+		add_filter('manage_edit-shop_order_columns', [$this, 'add_order_cost_column'], 20);
+		add_action('manage_shop_order_posts_custom_column', [$this, 'populate_order_cost_column'], 10, 2);
+
+		/**
+		 * meta box sidebar register for order items edit
+		 */
+
+		add_action('add_meta_boxes', [$this, 'add_cost_profit_meta_box']);
+
+//		add_action('woocommerce_order_item_meta_end', [$this, 'display_cost_profit_in_order_item_meta'], 10, 3);
 
 		$this->total_profit();
-
+		$this->total_stock();
 	}
+
+
 	function remove_wp_default_notifications(): void {
 		$screen = get_current_screen();
 		if ($screen->id === 'analytics_page_wc-analytics-profit') {
@@ -130,7 +140,7 @@ class Wooprofit {
 		$plugin_version = $plugin_data['Version'];
 		$assets_dir = plugins_url( 'assets/', __FILE__ );
 
-		if ($screen->id === 'analytics_page_wc-analytics-profit'){
+		if ( $screen->id === 'analytics_page_wc-analytics-profit') {
 			wp_enqueue_style( 'wooprofit-style', $assets_dir . 'css/style.css' );
 			wp_enqueue_style( 'wooprofit-nice', $assets_dir . 'css/nice-select.css' );
 			wp_enqueue_style( 'google-font', '//fonts.googleapis.com/css?family=Montserrat' );
@@ -343,7 +353,6 @@ class Wooprofit {
 	function make_cost_and_profit_column_sortable( $columns ) {
 		$columns['product_cost']   = 'product_cost';
 		$columns['product_profit'] = 'product_profit';
-
 		return $columns;
 	}
 
@@ -368,13 +377,34 @@ class Wooprofit {
 	}
 
 	/**
-	 * add Cost column in order page
+	 * add Cost column in order items page
 	 */
-	function add_order_cost_column($columns) {
-		$columns['order_cost'] = __('New Cost', 'wooprofit');
-		return $columns;
+
+	function add_cost_column_header(): void {
+		echo '<th class="cost">' . __('Wooprofit Cost', 'wooprofit') . '</th>';
 	}
 
+	function add_cost_column_value($product, $item, $item_id): void {
+		// Ensure $product is a valid WC_Product object
+		if (!$product || !is_a($product, 'WC_Product')) {
+			echo '<td class="cost">' . __('N/A', 'wooprofit') . '</td>';
+			return;
+		}
+
+		$product_id = $product->get_id();
+		$cost = get_post_meta($product_id, '_product_cost', true);
+		echo '<td class="cost">' . wc_price($cost) . '</td>';
+	}
+	function save_custom_order_item_cost($item_id): void {
+		if ( isset( $_POST['order_item_cost'][ $item_id ] ) ) {
+			$cost = wc_clean( $_POST['order_item_cost'][ $item_id ] );
+			wc_update_order_item_meta( $item_id, '_product_cost', $cost );
+		}
+	}
+	function add_order_cost_column($columns) {
+		$columns['order_cost'] = __('NEW Cost', 'wooprofit');
+		return $columns;
+	}
 	function populate_order_cost_column($column, $post_id) {
 		if ($column === 'order_cost') {
 			$order = wc_get_order($post_id);
@@ -391,36 +421,6 @@ class Wooprofit {
 
 			echo wc_price($total_cost);
 		}
-	}
-
-	function add_cost_column_header() {
-		echo '<th class="cost">' . __('Wooprofit Cost', 'wooprofit') . '</th>';
-	}
-
-	function add_cost_column_value($product, $item, $item_id) {
-		// Ensure $product is a valid WC_Product object
-		if (!$product || !is_a($product, 'WC_Product')) {
-			echo '<td class="cost">' . __('N/A', 'wooprofit') . '</td>';
-			return;
-		}
-
-		$product_id = $product->get_id();
-		$cost = get_post_meta($product_id, '_product_cost', true);
-		echo '<td class="cost">' . wc_price($cost) . '</td>';
-	}
-
-	function save_custom_order_item_cost($item_id) {
-		if (isset($_POST['order_item_cost'][$item_id])) {
-			$cost = wc_clean($_POST['order_item_cost'][$item_id]);
-			wc_update_order_item_meta($item_id, '_product_cost', $cost);
-		}
-	}
-
-	/**
-	 *  WooProfit Margin Admin Page
-	 */
-	function admin_page(): void {
-		include_once plugin_dir_path( __FILE__ ) . 'templates/dashboard.php';
 	}
 
 	/**
@@ -448,9 +448,9 @@ class Wooprofit {
 			'date_created' => $start_date . '...' . $end_date,
 		);
 
-		$orders = wc_get_orders($args);
+		$orders = wc_get_orders( $args );
 		if (!empty($orders)) {
-			$total_orders = count($orders);
+			$total_orders = count( $orders );
 			$total_sales = 0;
 			$total_cost = 0;
 
@@ -474,12 +474,6 @@ class Wooprofit {
 			$average_profit = $total_profit / ((strtotime($end_date) - strtotime($start_date)) / (60 * 60 * 24) + 1);
 			$average_order_profit = $total_orders ? $total_profit / $total_orders : 0;
 
-			$chart_data = [
-				'orders' => [$total_orders],
-				'profits' => [$total_profit],
-				'sales' => [$total_sales],
-				'labels' => [$start_date, $end_date]
-			];
 
 			echo json_encode(array(
 				'total_orders' => $total_orders,
@@ -490,7 +484,7 @@ class Wooprofit {
 				'profit_class' => $profit_class,
 				'average_profit' => $currency_symbol . number_format($average_profit, 2),
 				'average_order_profit' => $currency_symbol . number_format($average_order_profit, 2),
-				'chart_data' => $chart_data
+
 			));
 		} else {
 			$currency_symbol = get_woocommerce_currency_symbol();
@@ -504,7 +498,7 @@ class Wooprofit {
 				'profit_class' => 'profit-negative',
 				'average_profit' => $currency_symbol . '0.00',
 				'average_order_profit' => $currency_symbol . '0.00',
-				'chart_data' => []
+
 			));
 		}
 		wp_reset_postdata();
@@ -614,7 +608,7 @@ class Wooprofit {
 		];
 	}
 
-	private function get_order_cost($order) {
+	private function get_order_cost($order): float|int {
 		$cost = 0;
 		foreach ($order->get_items() as $item_id => $item) {
 			$product_id = $item->get_product_id();
@@ -624,6 +618,62 @@ class Wooprofit {
 			}
 		}
 		return $cost;
+	}
+
+	//start meta box
+	function add_cost_profit_meta_box(): void {
+		global $pagenow;
+		$current_screen = get_current_screen();
+		// Check if we are on the WooCommerce order edit page
+		if ( $pagenow == 'admin.php' && $current_screen->id == 'woocommerce_page_wc-orders') {
+			add_meta_box(
+				'cost_profit_meta_box',
+				__('Cost and Profit', 'wooprofit'),
+				[$this, 'cost_profit_meta_box_html'],
+				'woocommerce_page_wc-orders',
+				'side',
+				'high'
+			);
+		}
+	}
+
+	function cost_profit_meta_box_html($post): void {
+		// Get the order object
+		$order = wc_get_order($post->ID);
+		if (!$order) {
+			error_log('Order not found'); // Debug log
+			return;
+		}
+
+		$total_cost = 0;
+
+		// Loop through order items to calculate the total cost
+		foreach ($order->get_items() as $item) {
+			$product = $item->get_product();
+			if ($product) {
+				$quantity = $item->get_quantity();
+				$cost = (float) get_post_meta($product->get_id(), '_product_cost', true) * $quantity;
+				$total_cost += $cost;
+			}
+		}
+		// Calculate total sales and profit
+		$total_sales = $order->get_total();
+		$total_profit = $total_sales - $total_cost;
+
+		// Display cost and profit
+		echo '<div>';
+		echo '<p><strong>' . __('Cost:', 'wooprofit') . '</strong> ' . '<span style="color: #008000FF">' .wc_price ($total_cost). '</span>'. '</p>';
+		echo '<p><strong>' . __('Profit:', 'wooprofit') . '</strong> ' . '<span style="color: #FF0000FF">' .wc_price ($total_profit). '</span>'. '</p>';
+		echo '</div>';
+
+	}
+	//end metabox
+
+	/**
+	 *  WooProfit Admin Page
+	 */
+	function admin_page(): void {
+		include_once plugin_dir_path( __FILE__ ) . 'templates/dashboard.php';
 	}
 
 }
