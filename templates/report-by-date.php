@@ -30,17 +30,14 @@ if ( file_exists( $file_to_include ) ) {
         </form>
         <!--comparison tab-->
         <div class="flex">
+
             <form action="" method="post" id="previous-date-range-form" class="flex">
                 <h4 class="compare-text title">compare to</h4>
                 <select id="previous-date-range-select" class="nice-select">
-                    <option value="no-comparison" selected><?php esc_html_e( 'No comparison', 'wooprofit' ); ?></option>
-                    <option value="previous-month" data-start-date="2024-07-01" data-end-date="2024-07-31"><?php esc_html_e( 'Previous Month'. '<small class="small"> July 1st, 2024 – July 31th, 2024</small>',
-							'wooprofit' ); ?></option>
-                    <option value="previous-period" data-start-date="2024-06-01" data-end-date="2024-06-30"><?php esc_html_e( 'Previous Period'. '<small class="small"> Jun 1st, 2024 – Jun 30th, 2024</small>',
-							'wooprofit' ); ?></option>
-                    <option value="previous-quarter" data-start-date="2024-04-01" data-end-date="2024-04-30"><?php esc_html_e( 'Previous Quarter'. '<small class="small"> Apr 1st, 2024 – Apr 12th, 2024</small>',
-							'wooprofit' ); ?></option>
-                    <!--<option value="custom"><?php /*esc_html_e( 'Custom', 'wooprofit' ); */?></option>-->
+                    <option value="no-comparison" selected><?php esc_html_e('No comparison', 'wooprofit'); ?></option>
+                    <option value="previous-month"><?php esc_html_e('Previous Month', 'wooprofit'); ?><small class="small"> </small></option>
+                    <option value="previous-period"><?php esc_html_e('Previous Period', 'wooprofit'); ?><small class="small"> </small></option>
+                    <option value="previous-quarter"><?php esc_html_e('Previous Quarter', 'wooprofit'); ?><small class="small"> </small></option>
                 </select>
 
                 <div id="custom-date-range">
@@ -48,6 +45,7 @@ if ( file_exists( $file_to_include ) ) {
                     <input type="text" id="prev_end_date" name="prev_end_date" autocomplete="off" placeholder="End Date">
                 </div>
             </form>
+
         </div>
         <!--end comparison tab-->
     </div>
@@ -78,18 +76,7 @@ if ( file_exists( $file_to_include ) ) {
             </div>
         </div>
     </div>
-    <!--<div class="col-4">
-	  <div class="card">
-		   <div class="card-header flex space-between">
-			   <h2 class="text-white title">Average Order Value</h2>
-			   <span class="badge" id="average-order-value-percentage-change"></span>
-		   </div>
-		   <div class="card-body flex space-between">
-			   <div id="average-order-value"></div>
-			   <div id="pre-average-order-value" class="text-off-white"></div>
-		   </div>
-	   </div>
-   </div>-->
+
     <div class="col-3">
         <div class="card">
             <div class="card-header flex space-between">
