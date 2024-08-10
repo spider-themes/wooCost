@@ -21,7 +21,7 @@ if ( file_exists( $file_to_include ) ) {
                     <option value="yesterday"><?php esc_html_e( 'Yesterday', 'wooprofit' ); ?></option>
                     <option value="last-7-days"><?php esc_html_e( 'Last 7 Days', 'wooprofit' ); ?></option>
                     <option value="last-14-days"><?php esc_html_e( 'Last 14 Days', 'wooprofit' ); ?></option>
-                    <option value="this-month"><?php esc_html_e( 'This Month', 'wooprofit' ); ?></option>
+                    <option value="this-month"><?php esc_html_e( 'Month to date', 'wooprofit' ); ?></option>
                     <option value="last-month"><?php esc_html_e( 'Last Month', 'wooprofit' ); ?></option>
                 </select>
                 <input type="text" id="start_date" name="start_date" autocomplete="off" placeholder="Start Date">

@@ -95,16 +95,21 @@ class Wooprofit {
 		/**
 		 * meta box sidebar register for order items edit
 		 */
-
 		add_action( 'add_meta_boxes', [ $this, 'add_cost_profit_meta_box' ] );
 
-//		add_action('woocommerce_order_item_meta_end', [$this, 'display_cost_profit_in_order_item_meta'], 10, 3);
+		/**
+		 * Remove third-party plugins notice
+		 */
+		add_action('admin_notices', [$this, 'remove_third_party_admin_notices'], 100);
 
 		$this->total_profit();
 		$this->total_stock();
 	}
 
-
+	/**
+	 * remove default notification
+	 * @return void
+	 */
 	function remove_wp_default_notifications(): void {
 		$screen = get_current_screen();
 		if ( $screen->id === 'analytics_page_wc-analytics-profit' ) {
@@ -115,7 +120,27 @@ class Wooprofit {
 		}
 	}
 
-	function settings_action_links( $links ) {
+	/**
+	 * Remove third-party notice
+	 * @return void
+	 *  remove third party notice
+	 */
+	public function remove_third_party_admin_notices(): void {
+		// Check if we are on the specific plugin page
+		$current_screen = get_current_screen();
+
+		if ( $current_screen->id === 'analytics_page_wc-analytics-profit') {
+			remove_all_actions('admin_notices');
+		}
+	}
+
+	/**
+	 * Plugins setting setup
+	 * @param $links
+	 *
+	 * @return mixed
+	 */
+	public function settings_action_links( $links ): mixed {
 		$settings_link = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=wooprofit' ) ) . '">' . esc_html( 'Settings', 'wooprofit' ) . '</a>';
 		array_unshift( $links, $settings_link );
 
@@ -124,8 +149,11 @@ class Wooprofit {
 
 	/**
 	 * add plugin setting option
+	 * @param $settings
+	 *
+	 * @return mixed
 	 */
-	function add_cost_tab_to_woocommerce_settings( $settings ) {
+	public function add_cost_tab_to_woocommerce_settings( $settings ): mixed {
 		$settings[] = include( 'templates/class-wooprofit-settings-cost.php' );
 
 		return $settings;
@@ -133,8 +161,12 @@ class Wooprofit {
 
 	/**
 	 * Asset loading
+	 *
+	 * @param $hook
+	 *
+	 * @return void
 	 */
-	function assets_load( $hook ): void {
+	public function assets_load( $hook ): void {
 		$screen         = get_current_screen();
 		$plugin_data    = get_plugin_data( __FILE__ );
 		$plugin_version = $plugin_data['Version'];
@@ -168,6 +200,7 @@ class Wooprofit {
 
 	/**
 	 * Set Submenu to Woocommerce Analytics
+	 * @return void
 	 */
 	public function admin_menu(): void {
 		add_submenu_page(
@@ -182,6 +215,7 @@ class Wooprofit {
 
 	/**
 	 * Total Cost Calculation
+	 * @return int|null
 	 */
 	public function total_stock(): ?int {
 		$total_stock = 0;
@@ -210,6 +244,7 @@ class Wooprofit {
 
 	/**
 	 * Total Price Calculation
+	 * @return float|int
 	 */
 	public function total_price(): float|int {
 		$total_price = 0;
@@ -238,7 +273,8 @@ class Wooprofit {
 
 	/**
 	 * Total cost calculation
-	 **/
+	 * @return float|int
+	 */
 	public function total_cost(): float|int {
 		$total_cost = 0;
 
@@ -268,7 +304,8 @@ class Wooprofit {
 	}
 
 	/**
-	 *    Total profit Calculate
+	 * Total profit Calculate
+	 * @return float|int
 	 */
 	public function total_profit(): float|int {
 		return $this->total_price() - $this->total_cost();
@@ -276,6 +313,7 @@ class Wooprofit {
 
 	/**
 	 * add cost field for product page
+	 * @return void
 	 */
 	public function add_cost_field(): void {
 		woocommerce_wp_text_input(
@@ -294,6 +332,9 @@ class Wooprofit {
 
 	/**
 	 * Save cost field for product page
+	 * @param $post_id
+	 *
+	 * @return void
 	 */
 	public function save_cost_field( $post_id ): void {
 		$product_cost = isset( $_POST['_product_cost'] ) ? sanitize_text_field( $_POST['_product_cost'] ) : '';
@@ -302,14 +343,17 @@ class Wooprofit {
 
 	/**
 	 * Add custom columns to the products admin page
-	 **/
+	 * @param $columns
+	 *
+	 * @return array
+	 */
 	public function add_cost_and_profit_column_header( $columns ): array {
 		// Remove the existing 'product_cost' and 'product_profit' columns if they already exist
 		unset( $columns['product_cost'] );
 		unset( $columns['product_profit'] );
 
 		/**
-		 *  Insert 'product_cost' and 'product_profit' after 'price' column
+		 * Insert 'product_cost' and 'product_profit' after 'price' column
 		 */
 		$new_columns = array();
 		foreach ( $columns as $key => $column ) {
@@ -325,6 +369,10 @@ class Wooprofit {
 
 	/**
 	 * Populate custom columns with data
+	 * @param $column
+	 * @param $post_id
+	 *
+	 * @return void
 	 */
 	public function populate_cost_and_profit_column_content( $column, $post_id ): void {
 		if ( 'product_cost' === $column ) {
@@ -353,6 +401,9 @@ class Wooprofit {
 
 	/**
 	 * create cost and profit columns
+	 * @param $columns
+	 *
+	 * @return mixed
 	 */
 	public function make_cost_and_profit_column_sortable( $columns ) {
 		$columns['product_cost']   = 'product_cost';
@@ -362,7 +413,10 @@ class Wooprofit {
 	}
 
 	/**
-	 *  cost and profit columns sorting
+	 * cost and profit columns sorting
+	 * @param $query
+	 *
+	 * @return void
 	 */
 	public function sort_cost_and_profit_columns( $query ): void {
 		if ( ! is_admin() || ! $query->is_main_query() ) {
@@ -383,12 +437,20 @@ class Wooprofit {
 
 	/**
 	 * add Cost column in order items page
+	 * @return void
 	 */
-
 	public function add_cost_column_header(): void {
 		echo '<th class="cost">' . __( 'Wooprofit Cost', 'wooprofit' ) . '</th>';
 	}
 
+	/**
+	 * Add cost column value
+	 * @param $product
+	 * @param $item
+	 * @param $item_id
+	 *
+	 * @return void
+	 */
 	public function add_cost_column_value( $product, $item, $item_id ): void {
 		// Ensure $product is a valid WC_Product object
 		if ( ! $product || ! is_a( $product, 'WC_Product' ) ) {
@@ -402,6 +464,13 @@ class Wooprofit {
 		echo '<td class="cost">' . wc_price( $cost ) . '</td>';
 	}
 
+	/**
+	 * Save column order item cost
+	 * @param $item_id
+	 *
+	 * @return void
+	 * @throws Exception
+	 */
 	public function save_custom_order_item_cost( $item_id ): void {
 		if ( isset( $_POST['order_item_cost'][ $item_id ] ) ) {
 			$cost = wc_clean( $_POST['order_item_cost'][ $item_id ] );
@@ -409,13 +478,26 @@ class Wooprofit {
 		}
 	}
 
-	public function add_order_cost_column( $columns ) {
+	/**
+	 * Add order cost column
+	 * @param $columns
+	 *
+	 * @return mixed
+	 */
+	public function add_order_cost_column( $columns ): mixed {
 		$columns['order_cost'] = __( 'NEW Cost', 'wooprofit' );
 
 		return $columns;
 	}
 
-	public function populate_order_cost_column( $column, $post_id ) {
+	/**
+	 * Populate order cost column
+	 * @param $column
+	 * @param $post_id
+	 *
+	 * @return void
+	 */
+	public function populate_order_cost_column( $column, $post_id ): void {
 		if ( $column === 'order_cost' ) {
 			$order      = wc_get_order( $post_id );
 			$items      = $order->get_items();
@@ -434,9 +516,9 @@ class Wooprofit {
 	}
 
 	/**
-	 * Date range
+	 * Date range function according to date range
+	 * @return void
 	 */
-
 	public function get_orders_by_date_range(): void {
 
 		global $wpdb;
@@ -524,64 +606,10 @@ class Wooprofit {
 		wp_die();
 	}
 
-
 	/**
-	 * Comparison query
+	 * Comparison Query method
+	 * @return void
 	 */
-	/*public function compare_monthly_orders(): void {
-		check_ajax_referer( 'wooprofit_compare_data', 'nonce' );
-
-		// Retrieve the selected date ranges from the AJAX request
-		if ( ! empty( $_POST['prev_start_date'] ) && ! empty( $_POST['prev_end_date'] ) ) {
-
-			$current_start_date = isset( $_POST['current_start_date'] ) ? sanitize_text_field( $_POST['current_start_date'] ) : date( 'Y-m-01' );
-			$current_end_date   = isset( $_POST['current_end_date'] ) ? sanitize_text_field( $_POST['current_end_date'] ) : date( 'Y-m-t' );
-			$prev_start_date    = sanitize_text_field( $_POST['prev_start_date'] );
-			$prev_end_date      = sanitize_text_field( $_POST['prev_end_date'] );
-
-
-			// Fetch the order data for the selected ranges
-			$current_data  = $this->get_order_data( $current_start_date, $current_end_date );
-			$previous_data = $this->get_order_data( $prev_start_date, $prev_end_date );
-
-
-			// Calculate percentage changes for each metric
-			$order_percentage_change                = $this->calculate_percentage_change( $current_data['total_orders'], $previous_data['total_orders'] );
-			$total_sales_percentage_change          = $this->calculate_percentage_change( $current_data['total_sales'], $previous_data['total_sales'] );
-			$total_cost_percentage_change           = $this->calculate_percentage_change( $current_data['total_cost'], $previous_data['total_cost'] );
-			$average_order_profit_percentage_change = $this->calculate_percentage_change( $current_data['average_order_profit'],
-				$previous_data['average_order_profit'] );
-			$total_profit_percentage_change         = $this->calculate_percentage_change( $current_data['total_profit'], $previous_data['total_profit'] );
-			$average_daily_profit_percentage_change = $this->calculate_percentage_change( $current_data['average_daily_profit'],
-				$previous_data['average_daily_profit'] );
-
-			// Get the currency symbol
-			$currency_symbol = get_woocommerce_currency_symbol();
-
-			// Prepare the result
-			$result = [
-				'current_month'                          => $current_data,
-				'previous_month'                         => $previous_data,
-				'order_percentage_change'                => $order_percentage_change,
-				'total_sales_percentage_change'          => $total_sales_percentage_change,
-				'total_cost_percentage_change'           => $total_cost_percentage_change,
-				'average_order_profit_percentage_change' => $average_order_profit_percentage_change,
-				'total_profit_percentage_change'         => $total_profit_percentage_change,
-				'average_daily_profit_percentage_change' => $average_daily_profit_percentage_change,
-				'currency_symbol'                        => $currency_symbol // Add currency symbol to the response
-			];
-
-			// Debug output
-			error_log( 'Current Data: ' . print_r( $current_data, true ) );
-			error_log( 'Previous Data: ' . print_r( $previous_data, true ) );
-			error_log( 'Average Daily Profit Percentage Change: ' . $result['average_daily_profit_percentage_change'] );
-
-			wp_send_json( $result );
-		} else {
-			wp_send_json( '0' );
-		}
-	}*/
-
 	public function compare_monthly_orders(): void {
 		check_ajax_referer('wooprofit_compare_data', 'nonce');
 
@@ -628,9 +656,12 @@ class Wooprofit {
 		}
 	}
 
-
 	/**
 	 * Calculate percentage change between two values
+	 * @param $current_value
+	 * @param $previous_value
+	 *
+	 * @return float|int
 	 */
 	private function calculate_percentage_change( $current_value, $previous_value ): float|int {
 		if ( $previous_value == 0 ) {
@@ -640,6 +671,13 @@ class Wooprofit {
 		return ( ( $current_value - $previous_value ) / $previous_value ) * 100;
 	}
 
+	/**
+	 * Get order data according to date range
+	 * @param $start_date
+	 * @param $end_date
+	 *
+	 * @return array
+	 */
 	private function get_order_data( $start_date, $end_date ): array {
 		$orders = wc_get_orders( [
 			'limit'        => - 1,
@@ -663,11 +701,8 @@ class Wooprofit {
 			$total_profit += $profit;
 		}
 
-
 		$average_order_profit = $order_count > 0 ? $total_profit / $order_count : 0;
-//		$average_daily_profit = $total_profit / $average_order_profit;
 		$average_daily_profit = $total_profit / ( ( strtotime( $end_date ) - strtotime( $start_date ) ) / ( 60 * 60 * 24 ) + 1 );
-
 
 		return [
 			'total_orders'         => $order_count,
@@ -679,6 +714,12 @@ class Wooprofit {
 		];
 	}
 
+	/**
+	 * Custom order cost function
+	 * @param $order
+	 *
+	 * @return float|int
+	 */
 	public function get_order_cost( $order ): float|int {
 		$cost = 0;
 		foreach ( $order->get_items() as $item_id => $item ) {
@@ -692,8 +733,10 @@ class Wooprofit {
 		return $cost;
 	}
 
-
-	//start meta box
+	/**
+	 * Meta box function
+	 * @return void
+	 */
 	public function add_cost_profit_meta_box(): void {
 		global $pagenow;
 		$current_screen = get_current_screen();
@@ -710,6 +753,12 @@ class Wooprofit {
 		}
 	}
 
+	/**
+	 * Meta box output function
+	 * @param $post
+	 *
+	 * @return void
+	 */
 	public function cost_profit_meta_box_html( $post ): void {
 
 		// Get the order object
@@ -743,10 +792,10 @@ class Wooprofit {
 		echo '</div>';
 
 	}
-	//end metabox
 
 	/**
-	 *  WooProfit Admin Page
+	 * WooProfit Admin Page
+	 * @return void
 	 */
 	public function plugin_page(): void {
 		include_once plugin_dir_path( __FILE__ ) . 'templates/dashboard.php';
