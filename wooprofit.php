@@ -275,15 +275,25 @@ class Wooprofit {
 	 * Total cost calculation
 	 * @return float|int
 	 */
+
 	public function total_cost(): float|int {
 		$total_cost = 0;
 
 		if ( class_exists( 'WooCommerce' ) ) {
+			// Check if the 'Cost of Goods for WooCommerce' plugin is activated
+			$is_cog_activated = class_exists( 'Alg_WC_Cost_of_Goods_Core' );
+
+			$meta_key = '_woo_product_cost';
+
+			if ( $is_cog_activated ) {
+				$meta_key = '_alg_wc_cog_cost';
+			}
+
 			$args = array(
 				'post_type'      => 'product',
-				'posts_per_page' => - 1,
+				'posts_per_page' => -1,
 				'post_status'    => 'publish',
-				'meta_key'       => '_product_cost',
+				'meta_key'       => $meta_key,
 				'meta_value'     => '',
 				'meta_compare'   => '!='
 			);
@@ -293,7 +303,19 @@ class Wooprofit {
 			if ( $products->have_posts() ) {
 				while ( $products->have_posts() ) {
 					$products->the_post();
-					$cost       = (float) get_post_meta( get_the_ID(), '_product_cost', true );
+					$cost = 0;
+
+					// Check if '_woo_product_cost' is set
+					$woo_cost = (float) get_post_meta( get_the_ID(), '_woo_product_cost', true );
+
+					if ( $is_cog_activated ) {
+						// If 'Cost of Goods for WooCommerce' is activated, use '_alg_wc_cog_cost'
+						$cost = (float) get_post_meta( get_the_ID(), '_alg_wc_cog_cost', true );
+					} elseif ( $woo_cost ) {
+						// Otherwise, use '_woo_product_cost' if it's set
+						$cost = $woo_cost;
+					}
+
 					$total_cost += $cost;
 				}
 			}
@@ -302,6 +324,9 @@ class Wooprofit {
 
 		return $total_cost;
 	}
+
+
+
 
 	/**
 	 * Total profit Calculate
@@ -318,7 +343,7 @@ class Wooprofit {
 	public function add_cost_field(): void {
 		woocommerce_wp_text_input(
 			array(
-				'id'          => '_product_cost',
+				'id'          => '_woo_product_cost',
 				'label'       => esc_html( 'Cost', 'wooprofit' ),
 				'placeholder' => 'Enter the cost price',
 				'desc_tip'    => 'true',
@@ -337,8 +362,8 @@ class Wooprofit {
 	 * @return void
 	 */
 	public function save_cost_field( $post_id ): void {
-		$product_cost = isset( $_POST['_product_cost'] ) ? sanitize_text_field( $_POST['_product_cost'] ) : '';
-		update_post_meta( $post_id, '_product_cost', $product_cost );
+		$product_cost = isset( $_POST['_woo_product_cost'] ) ? sanitize_text_field( $_POST['_woo_product_cost'] ) : '';
+		update_post_meta( $post_id, '_woo_product_cost', $product_cost );
 	}
 
 	/**
@@ -376,7 +401,7 @@ class Wooprofit {
 	 */
 	public function populate_cost_and_profit_column_content( $column, $post_id ): void {
 		if ( 'product_cost' === $column ) {
-			$product_cost = get_post_meta( $post_id, '_product_cost', true );
+			$product_cost = get_post_meta( $post_id, '_woo_product_cost', true );
 			if ( $product_cost !== '' ) {
 				echo esc_html( number_format( (float) $product_cost, 2 ) . esc_html( get_woocommerce_currency_symbol() ) );
 			} else {
@@ -386,7 +411,7 @@ class Wooprofit {
 
 		if ( 'product_profit' === $column ) {
 			$product_price = get_post_meta( $post_id, '_price', true );
-			$product_cost  = get_post_meta( $post_id, '_product_cost', true );
+			$product_cost  = get_post_meta( $post_id, '_woo_product_cost', true );
 
 			if ( $product_price && $product_cost !== '' ) {
 				$profit            = $product_price - $product_cost;
@@ -405,7 +430,7 @@ class Wooprofit {
 	 *
 	 * @return mixed
 	 */
-	public function make_cost_and_profit_column_sortable( $columns ) {
+	public function make_cost_and_profit_column_sortable( $columns ): mixed {
 		$columns['product_cost']   = 'product_cost';
 		$columns['product_profit'] = 'product_profit';
 
@@ -425,7 +450,7 @@ class Wooprofit {
 		$orderby = $query->get( 'orderby' );
 
 		if ( 'product_cost' === $orderby ) {
-			$query->set( 'meta_key', '_product_cost' );
+			$query->set( 'meta_key', '_woo_product_cost' );
 			$query->set( 'orderby', 'meta_value_num' );
 		}
 
@@ -460,7 +485,7 @@ class Wooprofit {
 		}
 
 		$product_id = $product->get_id();
-		$cost       = get_post_meta( $product_id, '_product_cost', true );
+		$cost       = get_post_meta( $product_id, '_woo_product_cost', true );
 		echo '<td class="cost">' . wc_price( $cost ) . '</td>';
 	}
 
@@ -474,7 +499,7 @@ class Wooprofit {
 	public function save_custom_order_item_cost( $item_id ): void {
 		if ( isset( $_POST['order_item_cost'][ $item_id ] ) ) {
 			$cost = wc_clean( $_POST['order_item_cost'][ $item_id ] );
-			wc_update_order_item_meta( $item_id, '_product_cost', $cost );
+			wc_update_order_item_meta( $item_id, '_woo_product_cost', $cost );
 		}
 	}
 
@@ -506,7 +531,7 @@ class Wooprofit {
 			foreach ( $items as $item_id => $item ) {
 				$product = $item->get_product();
 				if ( $product ) {
-					$cost       = get_post_meta( $product->get_id(), '_product_cost', true );
+					$cost       = get_post_meta( $product->get_id(), '_woo_product_cost', true );
 					$total_cost += $cost * $item->get_quantity();
 				}
 			}
@@ -519,6 +544,7 @@ class Wooprofit {
 	 * Date range function according to date range
 	 * @return void
 	 */
+
 	public function get_orders_by_date_range(): void {
 
 		global $wpdb;
@@ -538,7 +564,7 @@ class Wooprofit {
 		}
 
 		$args = array(
-			'limit'        => - 1,
+			'limit'        => -1,
 			'status'       => array( 'wc-completed', 'wc-processing', 'wc-on-hold' ),
 			'date_created' => $start_date . '...' . $end_date,
 		);
@@ -553,10 +579,20 @@ class Wooprofit {
 				$total_sales += $order->get_total();
 
 				foreach ( $order->get_items() as $item ) {
-					$product_id   = $item->get_product_id();
-					$product_cost = get_post_meta( $product_id, '_product_cost', true );
-					$product_cost = $product_cost ? floatval( $product_cost ) : 0;
-					$total_cost   += $product_cost * $item->get_quantity();
+					$product_id = $item->get_product_id();
+
+					// Default to using '_woo_product_cost'
+					$product_cost = (float) get_post_meta( $product_id, '_woo_product_cost', true );
+
+					// If 'Cost of Goods for WooCommerce' is activated, use '_alg_wc_cog_cost' instead
+					if ( class_exists( 'Alg_WC_Cost_of_Goods' ) ) {
+						$alg_cost = get_post_meta( $product_id, '_alg_wc_cog_cost', true );
+						if ( ! empty( $alg_cost ) ) {
+							$product_cost = (float) $alg_cost;
+						}
+					}
+
+					$total_cost += $product_cost * $item->get_quantity();
 				}
 			}
 
@@ -605,6 +641,9 @@ class Wooprofit {
 		wp_reset_postdata();
 		wp_die();
 	}
+
+
+
 
 	/**
 	 * Comparison Query method
@@ -726,7 +765,7 @@ class Wooprofit {
 			$product_id = $item->get_product_id();
 			$product    = wc_get_product( $product_id );
 			if ( $product ) {
-				$cost += $product->get_meta( '_product_cost', true ) * $item->get_quantity();
+				$cost += $product->get_meta( '_woo_product_cost', true ) * $item->get_quantity();
 			}
 		}
 
@@ -776,7 +815,7 @@ class Wooprofit {
 			$product = $item->get_product();
 			if ( $product ) {
 				$quantity   = $item->get_quantity();
-				$cost       = (float) get_post_meta( $product->get_id(), '_product_cost', true ) * $quantity;
+				$cost       = (float) get_post_meta( $product->get_id(), '_woo_product_cost', true ) * $quantity;
 				$total_cost += $cost;
 			}
 		}

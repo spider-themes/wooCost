@@ -1,6 +1,6 @@
 jQuery(document).ready(function($) {
     function calculateProfit() {
-        var cost = parseFloat($('#_product_cost').val()) || 0;
+        var cost = parseFloat($('#_woo_product_cost').val()) || 0;
         var price = parseFloat($('#_regular_price').val()) || 0;
         var profit = price - cost;
         var profitPercentage = (cost > 0) ? (profit / cost) * 100 : 0;
@@ -14,7 +14,7 @@ jQuery(document).ready(function($) {
     calculateProfit();
 
     // Recalculate profit when the cost or price field changes
-    $('#_product_cost, #_regular_price').on('input', function() {
+    $('#_woo_product_cost, #_regular_price').on('input', function() {
         calculateProfit();
     });
 

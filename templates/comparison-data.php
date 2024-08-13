@@ -60,7 +60,7 @@ class ComparisonData {
 
 			foreach ( $order->get_items() as $item ) {
 				$product_id = $item->get_product_id();
-				$product_cost = get_post_meta( $product_id, '_product_cost', true );
+				$product_cost = get_post_meta( $product_id, '_woo_product_cost', true );
 				$product_cost = $product_cost ? floatval( $product_cost ) : 0;
 				$total_cost += $product_cost * $item->get_quantity();
 			}
