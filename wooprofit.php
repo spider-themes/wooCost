@@ -112,7 +112,7 @@ class Wooprofit {
 	 */
 	function remove_wp_default_notifications(): void {
 		$screen = get_current_screen();
-		if ( $screen->id === 'analytics_page_wc-analytics-profit' ) {
+		if ( $screen->id === 'toplevel_page_woo-profit' || $screen->id === 'wooprofit_page_woo-profit-bulk-discounts' || $screen->id === 'wooprofit_page_woo-profit-operation-cost') {
 			remove_action( 'admin_notices', 'update_nag', 3 );
 			// Remove admin footer text
 			add_filter( 'admin_footer_text', '__return_empty_string', 11 );
@@ -129,7 +129,7 @@ class Wooprofit {
 		// Check if we are on the specific plugin page
 		$current_screen = get_current_screen();
 
-		if ( $current_screen->id === 'analytics_page_wc-analytics-profit') {
+		if ( $current_screen->id === 'toplevel_page_woo-profit') {
 			remove_all_actions('admin_notices');
 		}
 	}
@@ -171,8 +171,22 @@ class Wooprofit {
 		$plugin_data    = get_plugin_data( __FILE__ );
 		$plugin_version = $plugin_data['Version'];
 		$assets_dir     = plugins_url( 'assets/', __FILE__ );
+		if ( $screen->id === 'wooprofit_page_woo-profit-bulk-discounts' ) {
+			wp_enqueue_style( 'bulk-style', $assets_dir . 'css/bulk-dicount.css' );
+			wp_enqueue_script( 'bulk-discount', $assets_dir . 'js/bulk-discount.js', array(), $plugin_version,
+				[ 'in_footer' => true, 'strategy' => 'defer' ] );
+		}
+		if ( $screen->id === 'wooprofit_page_woo-profit-operation-cost' ) {
+			wp_enqueue_style( 'bulk-cost-style', $assets_dir . 'css/cost-operation.css' );
+			wp_enqueue_style( 'sweetalert2', '//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css' );
+			wp_enqueue_script( 'sweetalert2', '//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js', array(), $plugin_version,
+				[ 'in_footer' => true, 'strategy' => 'defer' ] );
+			wp_enqueue_script( 'custom-sweetalert', $assets_dir . 'js/cost-operation.js', array(), $plugin_version,
+				[ 'in_footer' => true, 'strategy' => 'defer' ] );
+		}
 
-		if ( $screen->id === 'analytics_page_wc-analytics-profit' ) {
+		/*if ( $screen->id === 'analytics_page_wc-analytics-profit' ) { */
+		if ( $screen->id === 'toplevel_page_woo-profit' ) {
 			wp_enqueue_style( 'wooprofit-style', $assets_dir . 'css/style.css' );
 			wp_enqueue_style( 'wooprofit-nice', $assets_dir . 'css/nice-select.css' );
 			wp_enqueue_style( 'google-font', '//fonts.googleapis.com/css?family=Montserrat' );
@@ -202,15 +216,90 @@ class Wooprofit {
 	 * Set Submenu to Woocommerce Analytics
 	 * @return void
 	 */
-	public function admin_menu(): void {
+	/*public function admin_menu(): void {
 		add_submenu_page(
 			'wc-admin&path=/analytics/overview',
 			esc_html( 'Profit', 'wooprofit' ),
 			esc_html( 'Profit Margin', 'wooprofit' ),
 			'manage_woocommerce',
 			'wc-analytics-profit',
-			[ $this, 'plugin_page' ]
+			[ $this, 'wooprofit_page' ]
 		);
+	}*/
+	/**
+	 * Set admin menu for wooprofit
+	 * @return void
+	 */
+	public function admin_menu(): void {
+		add_menu_page(
+			__( 'WooProfit', 'woo-profit' ),
+			__( 'WooProfit', 'woo-profit' ),
+			'manage_woocommerce',
+			'woo-profit',
+			[ $this, 'wooprofit_page' ],
+			'dashicons-money-alt',
+			26
+		);
+
+		/**
+		 * Rename the parent menu when displayed as a submenu
+		 */
+		add_submenu_page(
+			'woo-profit',
+			__( 'Overview', 'woo-profit' ),
+			__( 'Overview', 'woo-profit' ),
+			'manage_woocommerce',
+			'woo-profit',
+			[ $this, 'wooprofit_page' ]
+		);
+
+		/**
+		 * Submenu: Bulk Discounts
+		 */
+		add_submenu_page(
+			'woo-profit',
+			__( 'Bulk Discount', 'woo-profit' ),
+			__( 'Bulk Discount', 'woo-profit' ),
+			'manage_woocommerce',
+			'woo-profit-bulk-discounts',
+			[ $this, 'bulk_discounts_page' ]
+		);
+
+		/**
+		 * Submenu: Operation Cost
+		 */
+		add_submenu_page(
+			'woo-profit',
+			__( 'Cost of Operation', 'woo-profit' ),
+			__( 'Cost of Operation', 'woo-profit' ),
+			'manage_woocommerce',
+			'woo-profit-operation-cost',
+			[ $this, 'operation_cost_page' ]
+		);
+
+		/**
+		 * Submenu: generate image
+		 */
+		add_submenu_page(
+			'woo-profit',
+			__( 'Generate Product Image', 'woo-profit' ),
+			__( 'Generate Product Image', 'woo-profit' ),
+			'manage_woocommerce',
+			'woo-profit-image-generate',
+			[ $this, 'image_generate_page' ]
+		);
+	}
+
+	public function image_generate_page(): void {
+		include_once plugin_dir_path( __FILE__ ) . 'templates/product-image-generate.php';
+	}
+
+	public function bulk_discounts_page(): void {
+		include_once plugin_dir_path( __FILE__ ) . 'templates/bulk-discount.php';
+	}
+
+    public function operation_cost_page(): void {
+	    include_once plugin_dir_path( __FILE__ ) . 'templates/cost-operation.php';
 	}
 
 	/**
@@ -836,7 +925,7 @@ class Wooprofit {
 	 * WooProfit Admin Page
 	 * @return void
 	 */
-	public function plugin_page(): void {
+	public function wooprofit_page(): void {
 		include_once plugin_dir_path( __FILE__ ) . 'templates/dashboard.php';
 	}
 

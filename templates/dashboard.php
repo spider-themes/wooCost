@@ -10,7 +10,7 @@ if ( file_exists( $file_to_include ) ) {
 ?>
 <div class="wrap bg-dark">
     <div class="page-header">
-        <h2 class="text-white title">Profit</h2>
+        <h2 class="text-white title">WooProfit Details</h2>
     </div>
     <div class="flex gap-5">
         <div class="col-4 card">
