@@ -3,20 +3,18 @@
     <div class="bulk-tabs">
         <div class="tabs">
             <div class="tab active" data-tab="settings">Settings</div>
-            <div class="tab" data-tab="discounts-rules">Discounts & Percentage Rules</div>
         </div>
         <!-- Tab Content -->
         <div class="tab-content active" id="settings">
-
             <div class="flex items-center gap-30">
                 <h2 class="heading">Discounts & Percentage Rules</h2>
-                <a class="add-rule button button-link add-rule-btn"  id="addRuleBtn"> + Add rule</a>
+                <a class="add-rule button button-link add-rule-btn" id="addRuleBtn"> + Add rule</a>
             </div>
 
             <div class="bulk-container">
                 <div class="rules-section">
                     <div class="rule-input" id="ruleInput">
-                        <input type="text"  placeholder="Add title">
+                        <input type="text" placeholder="Add title">
                     </div>
                 </div>
             </div>
@@ -60,24 +58,26 @@
                             <label class="discount-rules-label">Discount Rules</label>
                         </div>
                         <div class="discount-rules-wrapper">
-                            <div class="discount-rules-inputs">
-                                <div class="input-group">
-                                    <label for="from-field">From</label>
-                                    <input type="text" id="from-field" placeholder="1" class="from-field">
-                                </div>
-                                <div class="input-group">
-                                    <label for="to-field">To</label>
-                                    <input type="text" id="to-field" placeholder="" class="to-field">
-                                </div>
-                                <div class="input-group">
-                                    <label for="apply-field">Apply</label>
-                                    <select id="apply-field" class="rule-options">
-                                        <option value="percentage">% Percentage</option>
-                                        <option value="fixed">Fixed Amount</option>
-                                    </select>
-                                </div>
-                                <div class="input-group">
-                                    <input type="text" id="value-field" placeholder="20" class="value-field"> %
+                            <div id="rulesContainer">
+                                <div class="discount-rules-inputs mb-20">
+                                    <div class="input-group">
+                                        <label for="from-field">From</label>
+                                        <input type="text" id="from-field" placeholder="1" class="from-field">
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="to-field">To</label>
+                                        <input type="text" id="to-field" placeholder="" class="to-field">
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="apply-field">Apply</label>
+                                        <select id="apply-field" class="rule-options">
+                                            <option value="percentage">% Percentage</option>
+                                            <option value="fixed">Fixed Amount</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group">
+                                        <input type="text" id="value-field" placeholder="20" class="value-field"> %
+                                    </div>
                                 </div>
                             </div>
 
@@ -140,55 +140,7 @@
                 </form>
             </div>
         </div>
-        <div class="tab-content" id="discounts-rules">
-            <div class="flex items-center mb-30 gap-30">
-                <h2 class="heading">Discounts & Percentage Rules</h2>
-                <a class="add-rule button button-link add-rule-btn"  id="addRuleBtn"> + Add rule</a>
-            </div>
 
-            <div class="alignleft actions bulkactions mb-20">
-                <label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>
-                <select name="action" id="bulk-action-selector-top">
-                    <option value="-1">Bulk actions</option>
-                    <option value="edit" class="hide-if-no-js">Edit</option>
-                    <option value="activate">Activate</option>
-                    <option value="deactivate">Deactivate</option>
-                    <option value="delete">Delete</option>
-                </select>
-                <input type="submit" id="doaction" class="button action" value="Apply">
-            </div>
-
-            <table class="wp-list-table widefat fixed striped table-view-list posts ui-sortable">
-                <thead>
-                    <tr>
-                        <td id="cb" class="manage-column column-cb check-column">
-                            <input id="cb-select" type="checkbox">
-                            <label for="cb-select"><span class="screen-reader-text">Select All</span></label>
-                        </td>
-                        <th scope="col" id="name" class="">Rule Name</th>
-                        <th scope="col" id="discount_mode" class="">Discount Mode</th>
-                        <th scope="col" id="status" class="">Status</th>
-                        <th scope="col" id="priority" class="">Priority</th>
-                    </tr>
-                </thead>
-                <tbody>
-                        <tr>
-                            <th scope="row" class="check-column">
-                                <input id="" type="checkbox" name="" value="">
-                                <label for=""><span class="screen-reader-text">Select Ramadan Discount</span></label>
-                                <div class="locked-indicator">
-                                    <span class="locked-indicator-icon" aria-hidden="true"></span>
-                                    <span class="screen-reader-text">“Ramadan Discount” is locked</span>
-                                </div>
-                            </th>
-                            <td>ONe</td>
-                            <td>ONe</td>
-                            <td>ONe</td>
-                            <td>two</td>
-                        </tr>
-                </tbody>
-            </table>
-        </div>
     </div>
     <!--   End Tabs -->
 

@@ -56,10 +56,7 @@ class Wooprofit {
 		 * Handle sorting by custom columns
 		 */
 		add_action( 'pre_get_posts', array( $this, 'sort_cost_and_profit_columns' ) );
-		/**
-		 * Add custom tab inside the woocommerce setting menu
-		 */
-		add_filter( 'woocommerce_get_settings_pages', array( $this, 'add_cost_tab_to_woocommerce_settings' ) );
+
 		/**
 		 * Settings filter
 		 */
@@ -141,22 +138,10 @@ class Wooprofit {
 	 * @return mixed
 	 */
 	public function settings_action_links( $links ): mixed {
-		$settings_link = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=wooprofit' ) ) . '">' . esc_html( 'Settings', 'wooprofit' ) . '</a>';
+		$settings_link = '<a href="' . esc_url( admin_url( 'admin.php?page=woo-profit-bulk-discounts' ) ) . '">' . esc_html( 'Settings', 'wooprofit' ) . '</a>';
 		array_unshift( $links, $settings_link );
 
 		return $links;
-	}
-
-	/**
-	 * add plugin setting option
-	 * @param $settings
-	 *
-	 * @return mixed
-	 */
-	public function add_cost_tab_to_woocommerce_settings( $settings ): mixed {
-		$settings[] = include( 'templates/class-wooprofit-settings-cost.php' );
-
-		return $settings;
 	}
 
 	/**
@@ -212,20 +197,6 @@ class Wooprofit {
 		}
 	}
 
-	/**
-	 * Set Submenu to Woocommerce Analytics
-	 * @return void
-	 */
-	/*public function admin_menu(): void {
-		add_submenu_page(
-			'wc-admin&path=/analytics/overview',
-			esc_html( 'Profit', 'wooprofit' ),
-			esc_html( 'Profit Margin', 'wooprofit' ),
-			'manage_woocommerce',
-			'wc-analytics-profit',
-			[ $this, 'wooprofit_page' ]
-		);
-	}*/
 	/**
 	 * Set admin menu for wooprofit
 	 * @return void
@@ -298,8 +269,8 @@ class Wooprofit {
 		include_once plugin_dir_path( __FILE__ ) . 'templates/bulk-discount.php';
 	}
 
-    public function operation_cost_page(): void {
-	    include_once plugin_dir_path( __FILE__ ) . 'templates/cost-operation.php';
+	public function operation_cost_page(): void {
+		include_once plugin_dir_path( __FILE__ ) . 'templates/cost-operation.php';
 	}
 
 	/**
@@ -413,9 +384,6 @@ class Wooprofit {
 
 		return $total_cost;
 	}
-
-
-
 
 	/**
 	 * Total profit Calculate
@@ -730,9 +698,6 @@ class Wooprofit {
 		wp_reset_postdata();
 		wp_die();
 	}
-
-
-
 
 	/**
 	 * Comparison Query method

@@ -234,8 +234,7 @@ a.add-rule.button-link{
     padding: 0;
     margin-right: 0;
     border: none;
-   display: inline-block;
-
+    display: inline-block;
 
 }
 .tab:hover {
@@ -246,7 +245,7 @@ a.add-rule.button-link{
 }
 
 .tab.active {
-    /*background-color: #fff;*/
+
     background-color: #336374;
     border-bottom: 2px solid #fff;
     font-weight: bold;
