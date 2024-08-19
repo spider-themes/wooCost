@@ -1,0 +1,4 @@
+;(function ($) {
+    $('#smartwizard').smartWizard();
+
+})(jQuery);

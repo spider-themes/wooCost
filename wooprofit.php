@@ -138,7 +138,7 @@ class Wooprofit {
 	 * @return mixed
 	 */
 	public function settings_action_links( $links ): mixed {
-		$settings_link = '<a href="' . esc_url( admin_url( 'admin.php?page=woo-profit-bulk-discounts' ) ) . '">' . esc_html( 'Settings', 'wooprofit' ) . '</a>';
+		$settings_link = '<a href="' . esc_url( admin_url( 'admin.php?page=woo-profit-bulk-discounts' ) ) . '">' . esc_html( __( 'Settings', 'wooprofit' ) ) . '</a>';
 		array_unshift( $links, $settings_link );
 
 		return $links;
@@ -167,6 +167,16 @@ class Wooprofit {
 			wp_enqueue_script( 'sweetalert2', '//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js', array(), $plugin_version,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
 			wp_enqueue_script( 'custom-sweetalert', $assets_dir . 'js/cost-operation.js', array(), $plugin_version,
+				[ 'in_footer' => true, 'strategy' => 'defer' ] );
+		}
+
+		if ( $screen->id === 'wooprofit_page_woo-profit-image-generate' ) {
+			wp_enqueue_style( 'bulk-cost-style', $assets_dir . 'css/product-image-generate.css' );
+			wp_enqueue_style( 'smartwizardcdn', '//cdn.jsdelivr.net/npm/smartwizard@6/dist/css/smart_wizard_all.min.css' );
+
+			wp_enqueue_script( 'smartwizard', '//cdn.jsdelivr.net/npm/smartwizard@6/dist/js/jquery.smartWizard.min.js', array(), $plugin_version,
+				[ 'in_footer' => true, 'strategy' => 'defer' ] );
+			wp_enqueue_script( 'smartwizard-custom', $assets_dir . 'js/product-image-generate.js', array(), $plugin_version,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
 		}
 
@@ -203,8 +213,8 @@ class Wooprofit {
 	 */
 	public function admin_menu(): void {
 		add_menu_page(
-			__( 'WooProfit', 'woo-profit' ),
-			__( 'WooProfit', 'woo-profit' ),
+			esc_html( __( 'WooProfit', 'woo-profit' ) ),
+			esc_html( __( 'WooProfit', 'woo-profit' ) ),
 			'manage_woocommerce',
 			'woo-profit',
 			[ $this, 'wooprofit_page' ],
@@ -217,8 +227,8 @@ class Wooprofit {
 		 */
 		add_submenu_page(
 			'woo-profit',
-			__( 'Overview', 'woo-profit' ),
-			__( 'Overview', 'woo-profit' ),
+			esc_html( __( 'Overview', 'woo-profit' ) ),
+			esc_html( __( 'Overview', 'woo-profit' ) ),
 			'manage_woocommerce',
 			'woo-profit',
 			[ $this, 'wooprofit_page' ]
@@ -229,8 +239,8 @@ class Wooprofit {
 		 */
 		add_submenu_page(
 			'woo-profit',
-			__( 'Bulk Discount', 'woo-profit' ),
-			__( 'Bulk Discount', 'woo-profit' ),
+			esc_html( __( 'Bulk Discount', 'woo-profit' ) ),
+			esc_html( __( 'Bulk Discount', 'woo-profit' ) ),
 			'manage_woocommerce',
 			'woo-profit-bulk-discounts',
 			[ $this, 'bulk_discounts_page' ]
@@ -241,8 +251,8 @@ class Wooprofit {
 		 */
 		add_submenu_page(
 			'woo-profit',
-			__( 'Cost of Operation', 'woo-profit' ),
-			__( 'Cost of Operation', 'woo-profit' ),
+			esc_html( __( 'Cost of Operation', 'woo-profit' ) ),
+			esc_html( __( 'Cost of Operation', 'woo-profit' ) ),
 			'manage_woocommerce',
 			'woo-profit-operation-cost',
 			[ $this, 'operation_cost_page' ]
@@ -253,8 +263,8 @@ class Wooprofit {
 		 */
 		add_submenu_page(
 			'woo-profit',
-			__( 'Generate Product Image', 'woo-profit' ),
-			__( 'Generate Product Image', 'woo-profit' ),
+			esc_html( __( 'Generate Product Image', 'woo-profit' ) ),
+			esc_html( __( 'Generate Product Image', 'woo-profit' ) ),
 			'manage_woocommerce',
 			'woo-profit-image-generate',
 			[ $this, 'image_generate_page' ]
@@ -269,8 +279,8 @@ class Wooprofit {
 		include_once plugin_dir_path( __FILE__ ) . 'templates/bulk-discount.php';
 	}
 
-	public function operation_cost_page(): void {
-		include_once plugin_dir_path( __FILE__ ) . 'templates/cost-operation.php';
+    public function operation_cost_page(): void {
+	    include_once plugin_dir_path( __FILE__ ) . 'templates/cost-operation.php';
 	}
 
 	/**

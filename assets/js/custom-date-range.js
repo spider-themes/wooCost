@@ -98,10 +98,10 @@
             });
         }
 
-        /*
-                $('#start_date, #end_date').datepicker({
-                    dateFormat: 'yy-mm-dd'
-                });*/
+/*
+        $('#start_date, #end_date').datepicker({
+            dateFormat: 'yy-mm-dd'
+        });*/
 
 
         // Function to calculate the end date of the previous range based on the selected start and end dates
@@ -177,7 +177,7 @@
                 var dates = calculatePreviousRange(startDate, endDate, 'period');
                 prevStartDate = dates.startDate;
                 prevEndDate = dates.endDate;
-                smallText = `From ${prevStartDate} to ${prevEndDate}`;
+               smallText = `From ${prevStartDate} to ${prevEndDate}`;
             } else if (optionValue === 'previous-quarter') {
                 var dates = calculatePreviousRange(startDate, endDate, 'quarter');
                 prevStartDate = dates.startDate;

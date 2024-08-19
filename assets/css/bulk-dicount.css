@@ -138,12 +138,14 @@ input:checked + .slider::before {
 }
 
 /* Discount Application Container */
-.discount-application-container {
+.w-100 {
     display: flex;
     width: 100%;
     margin-top: 15px;
 }
-
+.w-70{
+    width: 70%;
+}
 /* Radio button options container */
 .discount-application-options {
     display: flex;
@@ -234,7 +236,7 @@ a.add-rule.button-link{
     padding: 0;
     margin-right: 0;
     border: none;
-    display: inline-block;
+   display: inline-block;
 
 }
 .tab:hover {
