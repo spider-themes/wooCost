@@ -1,0 +1,20 @@
+{
+    "name": "mdayubali/wooprofit",
+    "description": "Profit Analysis for the WordPress woocommerce plugin",
+    "type": "wordpress-plugin",
+    "license": "GPLv2",
+    "autoload": {
+        "psr-4": {
+            "wooProfit\\": "includes/"
+        },
+        "files": []
+    },
+    "authors": [
+        {
+            "name": "mdayubali",
+            "email": "ayubh9288@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}

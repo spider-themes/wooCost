@@ -154,7 +154,7 @@
                         </div>
                     </div>
 
-                <!-- display exclude products if active-->
+                    <!-- display exclude products if active-->
                     <div class="exclude-active">
                         <!--Exclude Products-->
                         <div class="w-100 mb-30">

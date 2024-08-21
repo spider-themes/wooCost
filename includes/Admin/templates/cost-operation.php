@@ -1,5 +1,5 @@
 <div class="wrap">
-<form id="costForm" action="" method="post">
+    <form id="costForm" action="" method="post">
 
         <table id="costTable">
             <thead>
@@ -11,16 +11,16 @@
             </thead>
             <tbody>
             <!-- Cost rows will be dynamically added here -->
-                <td>
-                    <input type="text" name="cost-type-name" placeholder="Enter cost type name">
-                </td>
-                <td>
-                    <input type="number" name="cost" placeholder="Enter cost" class="cost-input">
-                    <p></p>
-                </td>
-                <td>
-                    <input type="date" name="date" class="input-date">
-                </td>
+            <td>
+                <input type="text" name="cost-type-name" placeholder="Enter cost type name">
+            </td>
+            <td>
+                <input type="number" name="cost" placeholder="Enter cost" class="cost-input">
+                <p></p>
+            </td>
+            <td>
+                <input type="date" name="date" class="input-date">
+            </td>
             </tbody>
             <tfoot>
             <tr>
@@ -31,7 +31,7 @@
             </tfoot>
         </table>
 
-     <button type="button" id="add-cost-btn">Add Cost</button>
+        <button type="button" id="add-cost-btn">Add Cost</button>
         <button type="submit" id="save-btn" class="button button-primary">Save</button>
     </form>
 </div>

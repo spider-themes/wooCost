@@ -1,14 +1,3 @@
-<?php
-$plugin_dir = plugin_dir_path( __FILE__ );
-
-$file_to_include = $plugin_dir . '../wooprofit.php';
-if ( file_exists( $file_to_include ) ) {
-	include_once( $file_to_include );
-} else {
-	echo 'File not found: ' . esc_html( $file_to_include );
-}
-?>
-
 <div class="wrap">
     <div class="page-header">
         <h2 class="text-white title">Date Range</h2>
@@ -34,10 +23,10 @@ if ( file_exists( $file_to_include ) ) {
             <form action="" method="post" id="previous-date-range-form" class="flex">
                 <h4 class="compare-text title">compare to</h4>
                 <select id="previous-date-range-select" class="nice-select">
-                    <option value="no-comparison" selected><?php esc_html_e('No comparison', 'wooprofit'); ?></option>
-                    <option value="previous-month"><?php esc_html_e('Previous Month', 'wooprofit'); ?><small class="small"> </small></option>
-                    <option value="previous-period"><?php esc_html_e('Previous Period', 'wooprofit'); ?><small class="small"> </small></option>
-                    <option value="previous-quarter"><?php esc_html_e('Previous Quarter', 'wooprofit'); ?><small class="small"> </small></option>
+                    <option value="no-comparison" selected><?php esc_html_e( 'No comparison', 'wooprofit' ); ?></option>
+                    <option value="previous-month"><?php esc_html_e( 'Previous Month', 'wooprofit' ); ?><small class="small"> </small></option>
+                    <option value="previous-period"><?php esc_html_e( 'Previous Period', 'wooprofit' ); ?><small class="small"> </small></option>
+                    <option value="previous-quarter"><?php esc_html_e( 'Previous Quarter', 'wooprofit' ); ?><small class="small"> </small></option>
                 </select>
 
                 <div id="custom-date-range">

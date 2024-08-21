@@ -1,5 +1,5 @@
 <div class="">
-	<h2 class="wp-heading-inline">Generate Product Image</h2>
+    <h2 class="wp-heading-inline">Generate Product Image</h2>
 
     <!-- SmartWizard html -->
     <div id="smartwizard">
