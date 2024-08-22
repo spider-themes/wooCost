@@ -14,17 +14,13 @@ body{
     font-size: 16px;
     font-family: Roboto, Poppins,sans-serif;
     background: var(--bg-dark);
-    /*color: var(--white);*/
+
 }
 h1,h2,h3,h4,h5,h6{
     margin: 0;
     font-family: Poppins, sans-serif;
 }
 
-/*.wrap{
-    padding: 20px;
-    max-height: 100vh;
-}*/
 .bg-dark {
     background-color: var(--bg-dark);
     color: var(--white);
@@ -73,11 +69,8 @@ h1,h2,h3,h4,h5,h6{
     padding-right: 90px;
     display: flex;
     border-radius: 0 !important;
-    /*border-top: 1px solid !important;*/
-    /*border-bottom: 1px solid !important;*/
     border-left: 0 !important;
     border-right: 0 !important;
-    /*border-color: var(--border-color);*/
 }
 .p-0{
     padding: 0 !important;

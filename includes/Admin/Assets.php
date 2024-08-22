@@ -29,9 +29,13 @@ class Assets {
 			wp_enqueue_style( 'bulk-style', WOOPROFIT_ASSETS . '/css/bulk-dicount.css' );
 			wp_enqueue_script( 'bulk-discount', WOOPROFIT_ASSETS . '/js/bulk-discount.js', array(), WOOPROFIT_VERSION,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
-		}elseif ($screen->id === 'wooprofit_page_operation-cost') {
+		}
+		if ($screen->id === 'wooprofit_page_operation-cost') {
 			wp_enqueue_style( 'bulk-cost-style', WOOPROFIT_ASSETS . '/css/cost-operation.css' );
-		}elseif ( $screen->id === 'wooprofit_page_image-generate' ) {
+			wp_enqueue_script( 'cost-operation', WOOPROFIT_ASSETS . '/js/cost-operation.js', array(), WOOPROFIT_VERSION,
+				[ 'in_footer' => true, 'strategy' => 'defer' ] );
+		}
+		if ( $screen->id === 'wooprofit_page_image-generate' ) {
 			wp_enqueue_style( 'bulk-cost-style', WOOPROFIT_ASSETS . '/css/product-image-generate.css' );
 			wp_enqueue_style( 'smartwizardcdn', '//cdn.jsdelivr.net/npm/smartwizard@6/dist/css/smart_wizard_all.min.css' );
 
