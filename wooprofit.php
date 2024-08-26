@@ -85,12 +85,12 @@ if ( ! class_exists( 'Wooprofit' ) ) {
 		}
 
 		public function templates_include(): void {
-			require_once __DIR__ . '/templates/cost-profit-metabox.php';
-			require_once __DIR__ . '/templates/custom-columns-sortable.php';
-			require_once __DIR__ . '/templates/order-by-date-range.php';
-			require_once __DIR__ . '/templates/custom-cost-field.php';
-			require_once __DIR__ . '/templates/compare-monthly-orders.php';
-			require_once __DIR__ . '/templates/order-page-custom-cost.php';
+			require_once __DIR__ . '/functions/cost-profit-metabox.php';
+			require_once __DIR__ . '/functions/custom-columns-sortable.php';
+			require_once __DIR__ . '/functions/order-by-date-range.php';
+			require_once __DIR__ . '/functions/custom-cost-field.php';
+			require_once __DIR__ . '/functions/compare-monthly-orders.php';
+			require_once __DIR__ . '/functions/order-page-custom-cost.php';
 
 		}
 

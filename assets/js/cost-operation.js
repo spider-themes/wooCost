@@ -92,9 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
         memoInput.setAttribute('id', 'memo');
         memoInput.setAttribute('name', 'memo');
         memoInput.classList.add('memo-input');
-        memoInput.setAttribute('accept', '.pdf,.doc,.docx,.txt,.ppt,.jpeg,.jpg,.png');
         memoCell.appendChild(memoInput);
-        // memoInput.setAttribute('accept', '.pdf,.doc,.docx,.txt,.ppt');
 
         // Create the submit button
         const submitCell = document.createElement('td');
@@ -149,9 +147,31 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('costForm').addEventListener('submit', function (e) {
         e.preventDefault();
         // Handle form submission logic here
-        // alert('Form submitted!');
+        console.log('Form submitted!');
     });
 });
+
+//  restriction for file types selection
+document.addEventListener('DOMContentLoaded', () => {
+    const fileInput = document.getElementById('memo');
+    const warningMessage = document.getElementById('file-warning');
+
+    fileInput.addEventListener('change', function () {
+        // Get the selected file's extension
+        const filePath = fileInput.value;
+        const allowedExtensions = /(\.pdf|\.doc|\.docx|\.txt|\.ppt)$/i;
+
+        if (!allowedExtensions.exec(filePath)) {
+            // If the file extension is not valid, clear the file input and show the warning
+            fileInput.value = '';
+            warningMessage.style.display = 'block';
+        } else {
+            // Hide the warning message if the file is valid
+            warningMessage.style.display = 'none';
+        }
+    });
+});
+
 
 // Added the leaving confirmation message without save after edit the page
 document.addEventListener('DOMContentLoaded', () => {

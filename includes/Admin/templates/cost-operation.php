@@ -34,7 +34,8 @@
                 <textarea  id="notes" name="notes" class="notes-area"></textarea>
             </td>
             <td>
-                <input type="file"  id="memo" name="memo" class="memo-input" accept=".pdf,.doc,.docx,.txt,.ppt,.jpeg,.jpg,.png">
+                <input type="file"  id="memo" name="memo" class="memo-input" accept=".pdf,.doc,.docx,.txt,.ppt">
+                <p id="file-warning" style="color: red; display: none;">Please select a file with a valid extension: .pdf, .doc, .docx, .txt, .ppt</p>
             </td>
             <td>
                 <input type="date" name="date" class="input-date">
