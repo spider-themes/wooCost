@@ -20,7 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-
 const WOOPROFIT_PLUGIN_FILE = __FILE__;
 
 if ( ! class_exists( 'Wooprofit' ) ) {
@@ -92,7 +91,7 @@ if ( ! class_exists( 'Wooprofit' ) ) {
 			require_once __DIR__ . '/templates/custom-cost-field.php';
 			require_once __DIR__ . '/templates/compare-monthly-orders.php';
 			require_once __DIR__ . '/templates/order-page-custom-cost.php';
-//			require_once __DIR__ . '/templates/total-count.php';
+
 		}
 
 		/**
@@ -108,7 +107,6 @@ if ( ! class_exists( 'Wooprofit' ) ) {
 
 			return $links;
 		}
-
 
 		/**
 		 * Total Cost Calculation

@@ -2,11 +2,7 @@
 /**
  * Make the custom columns sortable
  */
-add_filter( 'manage_edit-product_sortable_columns', 'make_cost_and_profit_column_sortable');
-/**
- * Handle sorting by custom columns
- */
-add_action( 'pre_get_posts', 'sort_cost_and_profit_columns');
+add_filter( 'manage_edit-product_sortable_columns', 'wooprofit_make_cost_and_profit_column_sortable');
 
 /**
  * create cost and profit columns
@@ -15,7 +11,7 @@ add_action( 'pre_get_posts', 'sort_cost_and_profit_columns');
  *
  * @return mixed
  */
-function make_cost_and_profit_column_sortable( $columns ): mixed {
+function wooprofit_make_cost_and_profit_column_sortable( $columns ): mixed {
 	$columns['product_cost']   = 'product_cost';
 	$columns['product_profit'] = 'product_profit';
 
@@ -28,7 +24,7 @@ function make_cost_and_profit_column_sortable( $columns ): mixed {
  *
  * @return void
  */
-function sort_cost_and_profit_columns( $query ): void {
+function wooprofit_sort_cost_and_profit_columns( $query ): void {
 	if ( ! is_admin() || ! $query->is_main_query() ) {
 		return;
 	}
@@ -44,3 +40,7 @@ function sort_cost_and_profit_columns( $query ): void {
 		$query->set( 'orderby', 'meta_value_num' );
 	}
 }
+/**
+ * Handle sorting by custom columns
+ */
+add_action( 'pre_get_posts', 'wooprofit_sort_cost_and_profit_columns');

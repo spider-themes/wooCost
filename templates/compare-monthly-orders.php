@@ -3,15 +3,15 @@ $wooprofit = Wooprofit::get_instance();
 /**
  * Order Comparison
  */
-add_action( 'wp_ajax_wooprofit_compare_monthly_orders', 'compare_monthly_orders' );
-add_action( 'wp_ajax_nopriv_wooprofit_compare_monthly_orders',  'compare_monthly_orders' );
+add_action( 'wp_ajax_wooprofit_compare_monthly_orders', 'wooprofit_compare_monthly_orders' );
+add_action( 'wp_ajax_nopriv_wooprofit_compare_monthly_orders',  'wooprofit_compare_monthly_orders' );
 
 /**
  * Comparison Query method
  *
  * @return void
  */
-function compare_monthly_orders(): void {
+function wooprofit_compare_monthly_orders(): void {
 	check_ajax_referer( 'wooprofit_compare_data', 'nonce' );
 
 	// Retrieve date ranges from POST data
@@ -21,16 +21,16 @@ function compare_monthly_orders(): void {
 	$prev_end_date      = sanitize_text_field( $_POST['prev_end_date'] );
 
 	if ( ! empty( $prev_start_date ) && ! empty( $prev_end_date ) ) {
-		$current_data  = get_order_data( $current_start_date, $current_end_date );
-		$previous_data = get_order_data( $prev_start_date, $prev_end_date );
+		$current_data  = wooprofit_get_order_data( $current_start_date, $current_end_date );
+		$previous_data = wooprofit_get_order_data( $prev_start_date, $prev_end_date );
 
-		$order_percentage_change                = calculate_percentage_change( $current_data['total_orders'], $previous_data['total_orders'] );
-		$total_sales_percentage_change          = calculate_percentage_change( $current_data['total_sales'], $previous_data['total_sales'] );
-		$total_cost_percentage_change           = calculate_percentage_change( $current_data['total_cost'], $previous_data['total_cost'] );
-		$average_order_profit_percentage_change = calculate_percentage_change( $current_data['average_order_profit'],
+		$order_percentage_change                = wooprofit_calculate_percentage_change( $current_data['total_orders'], $previous_data['total_orders'] );
+		$total_sales_percentage_change          = wooprofit_calculate_percentage_change( $current_data['total_sales'], $previous_data['total_sales'] );
+		$total_cost_percentage_change           = wooprofit_calculate_percentage_change( $current_data['total_cost'], $previous_data['total_cost'] );
+		$average_order_profit_percentage_change = wooprofit_calculate_percentage_change( $current_data['average_order_profit'],
 			$previous_data['average_order_profit'] );
-		$total_profit_percentage_change         = calculate_percentage_change( $current_data['total_profit'], $previous_data['total_profit'] );
-		$average_daily_profit_percentage_change = calculate_percentage_change( $current_data['average_daily_profit'],
+		$total_profit_percentage_change         = wooprofit_calculate_percentage_change( $current_data['total_profit'], $previous_data['total_profit'] );
+		$average_daily_profit_percentage_change = wooprofit_calculate_percentage_change( $current_data['average_daily_profit'],
 			$previous_data['average_daily_profit'] );
 
 		$currency_symbol = get_woocommerce_currency_symbol();
@@ -66,7 +66,7 @@ function compare_monthly_orders(): void {
  *
  * @return array
  */
-function get_order_data( $start_date, $end_date ): array {
+function wooprofit_get_order_data( $start_date, $end_date ): array {
 	$orders = wc_get_orders( [
 		'limit'        => - 1,
 		'orderby'      => 'date',
@@ -81,7 +81,7 @@ function get_order_data( $start_date, $end_date ): array {
 
 	foreach ( $orders as $order ) {
 		$total  = $order->get_total();
-		$cost   = get_order_cost( $order );
+		$cost   = wooprofit_get_order_cost( $order );
 		$profit = $total - $cost;
 
 		$total_sales  += $total;
@@ -110,7 +110,7 @@ function get_order_data( $start_date, $end_date ): array {
  *
  * @return float|int
  */
-function calculate_percentage_change( $current_value, $previous_value ): float|int {
+function wooprofit_calculate_percentage_change( $current_value, $previous_value ): float|int {
 	if ( $previous_value == 0 ) {
 		return $current_value > 0 ? 100 : 0; // Avoid division by zero, handle cases where previous value is zero
 	}
@@ -126,7 +126,7 @@ function calculate_percentage_change( $current_value, $previous_value ): float|i
  *
  * @return float|int
  */
-function get_order_cost( $order ): float|int {
+function wooprofit_get_order_cost( $order ): float|int {
 	$cost = 0;
 	foreach ( $order->get_items() as $item_id => $item ) {
 		$product_id = $item->get_product_id();

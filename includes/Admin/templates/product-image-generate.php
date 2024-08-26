@@ -1,4 +1,4 @@
-<div class="">
+<div class="mw-1200">
     <h2 class="wp-heading-inline">Generate Product Image</h2>
 
     <!-- SmartWizard html -->
@@ -32,16 +32,52 @@
 
         <div class="tab-content">
             <div id="step-1" class="tab-pane" role="tabpanel" aria-labelledby="step-1">
-                <input type="file" id="myfile" name="myfile">
+                <div class="choose-design">
+                    <ul>
+                        <li><input type="radio" name="test" id="cb1" />
+                            <label for="cb1"><img src="https://images.pexels.com/photos/5650026/pexels-photo-5650026.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" /></label>
+                        </li>
+                        <li><input type="radio" name="test" id="cb2" />
+                            <label for="cb2"><img src="https://images.pexels.com/photos/5624987/pexels-photo-5624987.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" /></label>
+                        </li>
+                        <li><input type="radio" name="test" id="cb3" />
+                            <label for="cb3"><img src="https://images.pexels.com/photos/5625003/pexels-photo-5625003.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" /></label>
+                        </li>
+                    </ul>
+                </div>
             </div>
+
             <div id="step-2" class="tab-pane" role="tabpanel" aria-labelledby="step-2">
                 Customize Design
             </div>
+
             <div id="step-3" class="tab-pane" role="tabpanel" aria-labelledby="step-3">
-                Select Products
+                <div class="select-product">
+                        <div class="radio-group">
+                            <input type="radio" id="all-products" name="products" value="all-products" checked>
+                            <label for="all-products">All products</label>
+                        </div>
+                        <div class="radio-group">
+                            <input type="radio" id="specific-products" name="products" value="specific-products">
+                            <label for="specific-products">Specific products</label>
+                            <small class="application-info">Choose to apply the rule to the specific product</small>
+                        </div>
+                        <div class="product-search w-50">
+                            <div class="select-product-options">
+                                <input type="text" name="specific-products" placeholder="Type the Product name">
+                            </div>
+                            <span class="application-info"><small>Search the product name</small></span>
+                        </div>
+                </div>
+
             </div>
+
             <div id="step-4" class="tab-pane" role="tabpanel" aria-labelledby="step-4">
-                Finish
+                <div class="finish">
+                    <form action="#" method="post">
+                        <button type="submit" class="finish-btn button">Finish</button>
+                    </form>
+                </div>
             </div>
         </div>
 

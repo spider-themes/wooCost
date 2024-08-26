@@ -1,67 +1,9 @@
-/*
-document.addEventListener('DOMContentLoaded', function () {
-    let costRowCount = 1; // Start from 1 because the first row is already present
-
-    document.getElementById('add-cost-btn').addEventListener('click', function () {
-       /!* if (costRowCount >= 6) {
-            alert('You cannot add more than 4 cost fields for the same product.');
-            return;
-        }*!/
-
-        // Create a new table row
-        const newRow = document.createElement('tr');
-
-        // Create the Cost Type Name input field
-        const costTypeCell = document.createElement('td');
-        const costTypeInput = document.createElement('input');
-        costTypeInput.setAttribute('type', 'text');
-        costTypeInput.setAttribute('name', 'cost-type-name');
-        costTypeInput.setAttribute('placeholder', 'Enter cost type name');
-        costTypeCell.appendChild(costTypeInput);
-
-        // Create the Cost input field
-        const costCell = document.createElement('td');
-        const costInput = document.createElement('input');
-        costInput.setAttribute('type', 'number');
-        costInput.setAttribute('name', 'cost');
-        costInput.setAttribute('placeholder', 'Enter cost');
-        costInput.classList.add('cost-input');
-        costCell.appendChild(costInput);
-
-        // Create the date field
-        const dateCell = document.createElement('td');
-        const dateInput = document.createElement('input');
-        dateInput.setAttribute('type', 'date');
-        dateInput.setAttribute('name', 'date');
-        dateInput.classList.add('input-date');
-        dateCell.appendChild(dateInput);
-
-        // Append the new cells to the row
-        newRow.appendChild(costTypeCell);
-        newRow.appendChild(costCell);
-        newRow.appendChild(dateCell);
-
-        // Append the row to the table body
-        document.querySelector('#costTable tbody').appendChild(newRow);
-        // Increment the row count
-        costRowCount++;
-    });
-
-    // Form submission logic
-    document.getElementById('costForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-        // Handle form submission logic here
-        alert('Form submitted!');
-    });
-
-});
-*/
 
 document.addEventListener('DOMContentLoaded', function () {
     let costRowCount = 1; // Start from 1 because the first row is already present
 
     document.getElementById('add-cost-btn').addEventListener('click', function () {
-        if (costRowCount >= 4) {
+        if (costRowCount >= 10) {
             alert('You cannot add more than 4 cost fields for the same product.');
             return;
         }
@@ -74,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
         costTypeInput.setAttribute('type', 'text');
         costTypeInput.setAttribute('name', 'cost-type-name');
         costTypeInput.setAttribute('placeholder', 'Enter cost type name');
+
         costTypeCell.appendChild(costTypeInput);
 
         // Create the Cost input field
@@ -85,6 +28,52 @@ document.addEventListener('DOMContentLoaded', function () {
         costInput.classList.add('cost-input');
         costCell.appendChild(costInput);
 
+
+        // Create the account selection field
+        const accountCell = document.createElement('td');
+        const accountSelect = document.createElement('select');
+
+        // Set attributes for the select element
+        accountSelect.setAttribute('name', 'account');
+        accountSelect.setAttribute('id', 'account');
+        accountSelect.classList.add('account-selection');
+
+        // Create and append the options
+        const option1 = document.createElement('option');
+        option1.value = '';
+        option1.text = 'Choose Account Type';
+        option1.selected = true;
+
+        const option2 = document.createElement('option');
+        option2.value = 'cash';
+        option2.text = 'Cash';
+
+        const option3 = document.createElement('option');
+        option3.value = 'bank-account';
+        option3.text = 'Bank Accounts';
+
+        const option4 = document.createElement('option');
+        option4.value = 'card';
+        option4.text = 'Card';
+
+        // Append options to the select element
+        accountSelect.appendChild(option1);
+        accountSelect.appendChild(option2);
+        accountSelect.appendChild(option3);
+        accountSelect.appendChild(option4);
+        accountCell.appendChild(accountSelect);
+
+        // Create the notes field
+        const notesCell = document.createElement('td');
+        const notesTextarea = document.createElement('textarea');
+
+        // Set attributes for the textarea element
+        notesTextarea.setAttribute('id', 'notes');
+        notesTextarea.setAttribute('name', 'notes');
+        notesTextarea.classList.add('notes-area');
+        notesCell.appendChild(notesTextarea);
+
+
         // Create the date field
         const dateCell = document.createElement('td');
         const dateInput = document.createElement('input');
@@ -93,10 +82,39 @@ document.addEventListener('DOMContentLoaded', function () {
         dateInput.classList.add('input-date');
         dateCell.appendChild(dateInput);
 
+
+        // Create the memo file input field
+        const memoCell = document.createElement('td');
+        const memoInput = document.createElement('input');
+
+        // Set attributes for the file input element
+        memoInput.setAttribute('type', 'file');
+        memoInput.setAttribute('id', 'memo');
+        memoInput.setAttribute('name', 'memo');
+        memoInput.classList.add('memo-input');
+        memoInput.setAttribute('accept', '.pdf,.doc,.docx,.txt,.ppt,.jpeg,.jpg,.png');
+        memoCell.appendChild(memoInput);
+        // memoInput.setAttribute('accept', '.pdf,.doc,.docx,.txt,.ppt');
+
+        // Create the submit button
+        const submitCell = document.createElement('td');
+        const submitButton = document.createElement('input');
+
+// Set attributes for the submit button
+        submitButton.setAttribute('type', 'submit');
+        submitButton.setAttribute('value', 'Edit');
+        submitButton.classList.add('button-link');
+        submitCell.appendChild(submitButton);
+
+
         // Append the new cells to the row
         newRow.appendChild(costTypeCell);
         newRow.appendChild(costCell);
+        newRow.appendChild(accountCell);
+        newRow.appendChild(notesCell);
+        newRow.appendChild(memoCell);
         newRow.appendChild(dateCell);
+        newRow.appendChild(submitCell);
 
         // Append the row to the table body
         document.querySelector('#costTable tbody').appendChild(newRow);
@@ -131,6 +149,44 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('costForm').addEventListener('submit', function (e) {
         e.preventDefault();
         // Handle form submission logic here
-        alert('Form submitted!');
+        // alert('Form submitted!');
     });
 });
+
+// Added the leaving confirmation message without save after edit the page
+document.addEventListener('DOMContentLoaded', () => {
+    // Track if any changes have been made
+    let isFormEdited = false;
+
+    // Get references to the form and its elements
+    const form = document.getElementById('costForm');
+    const inputs = form.querySelectorAll('input, textarea, select');
+    const addCostButton = document.getElementById('add-cost-btn');
+
+    // Add event listeners to detect changes in form inputs
+    inputs.forEach((element) => {
+        element.addEventListener('input', () => {
+            isFormEdited = true;
+        });
+    });
+
+    // Add event listener to detect when the "Add Cost" button is clicked
+    addCostButton.addEventListener('click', () => {
+        isFormEdited = true;
+    });
+
+    // Listen for the beforeunload event
+    window.addEventListener('beforeunload', (event) => {
+        // Only show the warning if changes were made
+        if (isFormEdited) {
+            event.preventDefault(); // Required for some browsers
+            event.returnValue = ''; // Standard way to trigger a warning dialog
+        }
+    });
+
+    // Optionally reset the isFormEdited flag when the form is submitted
+    form.addEventListener('submit', () => {
+        isFormEdited = false;
+    });
+});
+

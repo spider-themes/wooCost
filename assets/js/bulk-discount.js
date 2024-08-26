@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
             userRolesField.style.display = 'flex';
         }
     }
+
     // Add event listeners to radio buttons
     allUsersRadio.addEventListener('change', updateFieldVisibility);
     specificUserRadio.addEventListener('change', updateFieldVisibility);
@@ -84,7 +85,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Initialize the correct field visibility on page load
     updateFieldVisibility();
-
 
 
 // product exclude js
@@ -105,6 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Exclude Products based on selection
+
     const specificProductsRadio = document.getElementById('exspecific-products');
     const specificProductsCatRadio = document.getElementById('specific-products-cat');
     const specificProductsTagRadio = document.getElementById('specific-products-tag');

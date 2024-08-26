@@ -29,13 +29,11 @@ class Assets {
 			wp_enqueue_style( 'bulk-style', WOOPROFIT_ASSETS . '/css/bulk-dicount.css' );
 			wp_enqueue_script( 'bulk-discount', WOOPROFIT_ASSETS . '/js/bulk-discount.js', array(), WOOPROFIT_VERSION,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
-		}
-		if ($screen->id === 'wooprofit_page_operation-cost') {
+		}elseif ($screen->id === 'wooprofit_page_operation-cost') {
 			wp_enqueue_style( 'bulk-cost-style', WOOPROFIT_ASSETS . '/css/cost-operation.css' );
 			wp_enqueue_script( 'cost-operation', WOOPROFIT_ASSETS . '/js/cost-operation.js', array(), WOOPROFIT_VERSION,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
-		}
-		if ( $screen->id === 'wooprofit_page_image-generate' ) {
+		}elseif ( $screen->id === 'wooprofit_page_image-generate' ) {
 			wp_enqueue_style( 'bulk-cost-style', WOOPROFIT_ASSETS . '/css/product-image-generate.css' );
 			wp_enqueue_style( 'smartwizardcdn', '//cdn.jsdelivr.net/npm/smartwizard@6/dist/css/smart_wizard_all.min.css' );
 
@@ -43,9 +41,7 @@ class Assets {
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
 			wp_enqueue_script( 'smartwizard-custom', WOOPROFIT_ASSETS . '/js/product-image-generate.js', array(), WOOPROFIT_VERSION,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
-		}
-
-		if ( $screen->id === 'toplevel_page_wooprofit' ) {
+		}elseif ( $screen->id === 'toplevel_page_wooprofit' ) {
 			wp_enqueue_style( 'wooprofit-style', WOOPROFIT_ASSETS . '/css/style.css' );
 			wp_enqueue_style( 'wooprofit-nice', WOOPROFIT_ASSETS . '/css/nice-select.css' );
 			wp_enqueue_style( 'google-font', '//fonts.googleapis.com/css?family=Montserrat' );
@@ -62,13 +58,12 @@ class Assets {
 				'ajaxurl' => admin_url( 'admin-ajax.php' ),
 				'nonce'   => wp_create_nonce( 'wooprofit_compare_data' )
 			) );
-		}
-		if ( $hook == 'post.php' || $hook == 'post-new.php' ) {
+		}elseif ( $hook == 'post.php' || $hook == 'post-new.php' ) {
 			global $post_type;
 			if ( $post_type == 'product' ) {
 				wp_enqueue_script( 'wooprofit', WOOPROFIT_ASSETS . '/js/profit-show.js', array( 'jquery' ), WOOPROFIT_VERSION,
 					[ 'in_footer' => true, 'strategy' => 'defer' ] );
 			}
-		}
+		}else return;
 	}
 }

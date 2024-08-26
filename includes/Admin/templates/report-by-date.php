@@ -1,4 +1,4 @@
-<div class="wrap">
+<div class="">
     <div class="page-header">
         <h2 class="text-white title">Date Range</h2>
     </div>

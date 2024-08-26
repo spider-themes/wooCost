@@ -50,7 +50,7 @@
                                     <label for="specific-products">Specific products</label>
                                 </div>
                             </div>
-                            <span class="application-info"><small>Choose to apply the rule to all users or only specific user roles</small></span>
+                            <span class="application-info"><small>Choose to apply the rule to the specific product</small></span>
                         </div>
                     </div>
 

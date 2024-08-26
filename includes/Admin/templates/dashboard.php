@@ -5,7 +5,7 @@ use Wooprofit;
 
 $wooprofit = Wooprofit::get_instance(); // Get the global instance
 ?>
-<div class="wrap bg-dark">
+<div class="wrap bg-dark mw-1200">
     <div class="page-header">
         <h2 class="text-white title">WooProfit Details</h2>
     </div>

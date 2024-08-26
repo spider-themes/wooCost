@@ -1,9 +1,4 @@
 <?php
-/**
- * Date range
- */
-add_action( 'wp_ajax_wooprofit_get_orders_by_date_range', 'get_orders_by_date_range' );
-add_action( 'wp_ajax_nopriv_wooprofit_get_orders_by_date_range', 'get_orders_by_date_range' );
 
 /**
  * Date range function according to date range
@@ -11,7 +6,7 @@ add_action( 'wp_ajax_nopriv_wooprofit_get_orders_by_date_range', 'get_orders_by_
  * @return void
  */
 
-function get_orders_by_date_range(): void {
+function wooprofit_get_orders_by_date_range(): void {
 
 	global $wpdb;
 	if ( ! current_user_can( 'manage_woocommerce' ) ) {
@@ -107,3 +102,5 @@ function get_orders_by_date_range(): void {
 	wp_reset_postdata();
 	wp_die();
 }
+add_action( 'wp_ajax_wooprofit_get_orders_by_date_range', 'wooprofit_get_orders_by_date_range' );
+add_action( 'wp_ajax_nopriv_wooprofit_get_orders_by_date_range', 'wooprofit_get_orders_by_date_range' );

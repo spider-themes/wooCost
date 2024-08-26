@@ -98,10 +98,6 @@
             });
         }
 
-/*
-        $('#start_date, #end_date').datepicker({
-            dateFormat: 'yy-mm-dd'
-        });*/
 
 
         // Function to calculate the end date of the previous range based on the selected start and end dates

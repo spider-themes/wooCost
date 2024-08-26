@@ -40,6 +40,10 @@ h1,h2,h3,h4,h5,h6{
 .page-header .title{
     font-size: 20px;
 }
+.mw-1200{
+    max-width: 1200px;
+    /*margin-inline: auto;*/
+}
 .w-100{
     width: 100%;
     max-width: 100%;
@@ -65,7 +69,7 @@ h1,h2,h3,h4,h5,h6{
     padding:0 20px;
 }
 .neg-margin{
-    margin-left: -25px;
+    /*margin-left: -25px;*/
     padding-right: 90px;
     display: flex;
     border-radius: 0 !important;

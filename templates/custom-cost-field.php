@@ -1,20 +1,11 @@
 <?php
 
 /**
- * add custom cost field
- */
-add_action( 'woocommerce_product_options_general_product_data',  'add_cost_field' ) ;
-add_action( 'woocommerce_process_product_meta','save_cost_field' ) ;
-add_filter( 'manage_product_posts_columns',  'add_cost_and_profit_column_header', 20 );
-add_action( 'manage_product_posts_custom_column', 'populate_cost_and_profit_column_content', 20, 2 );
-
-
-/**
  * add cost field for product page
  *
  * @return void
  */
-function add_cost_field(): void {
+function wooprofit_add_cost_field(): void {
 	woocommerce_wp_text_input(
 		array(
 			'id'          => '_woo_product_cost',
@@ -28,6 +19,7 @@ function add_cost_field(): void {
 	     . esc_html__( 'Profit: 0.00 (' . esc_html( get_woocommerce_currency_symbol() ) . ' 0.00%)', 'wooprofit' ) . '</p>';
 
 }
+add_action( 'woocommerce_product_options_general_product_data',  'wooprofit_add_cost_field' ) ;
 
 
 /**
@@ -37,10 +29,12 @@ function add_cost_field(): void {
  *
  * @return void
  */
-function save_cost_field( $post_id ): void {
+function wooprofit_save_cost_field( $post_id ): void {
 	$product_cost = isset( $_POST['_woo_product_cost'] ) ? sanitize_text_field( $_POST['_woo_product_cost'] ) : '';
 	update_post_meta( $post_id, '_woo_product_cost', $product_cost );
 }
+
+add_action( 'woocommerce_process_product_meta','wooprofit_save_cost_field' ) ;
 
 
 /**
@@ -50,7 +44,7 @@ function save_cost_field( $post_id ): void {
  *
  * @return array
  */
-function add_cost_and_profit_column_header( $columns ): array {
+function wooprofit_add_cost_and_profit_column_header( $columns ): array {
 	// Remove the existing 'product_cost' and 'product_profit' columns if they already exist
 	unset( $columns['product_cost'] );
 	unset( $columns['product_profit'] );
@@ -69,6 +63,7 @@ function add_cost_and_profit_column_header( $columns ): array {
 
 	return $new_columns;
 }
+add_filter( 'manage_product_posts_columns',  'wooprofit_add_cost_and_profit_column_header', 20 );
 
 /**
  * Populate custom columns with data
@@ -78,7 +73,7 @@ function add_cost_and_profit_column_header( $columns ): array {
  *
  * @return void
  */
-function populate_cost_and_profit_column_content( $column, $post_id ): void {
+function wooprofit_populate_cost_and_profit_column_content( $column, $post_id ): void {
 	if ( 'product_cost' === $column ) {
 		$product_cost = get_post_meta( $post_id, '_woo_product_cost', true );
 		if ( $product_cost !== '' ) {
@@ -103,3 +98,5 @@ function populate_cost_and_profit_column_content( $column, $post_id ): void {
 		}
 	}
 }
+
+add_action( 'manage_product_posts_custom_column', 'wooprofit_populate_cost_and_profit_column_content', 20, 2 );

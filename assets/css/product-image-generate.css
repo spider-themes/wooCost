@@ -1,8 +1,11 @@
+.mw-1200{
+    max-width: 1200px;
+}
+
 #smartwizard>.nav .nav-link.active {
     color: #ffffff !important;
-    border-color: #009ef7;
     background-color: #009ef7;
-    cursor: pointer;
+
 }
 
 #smartwizard>.nav .nav-link.active::before {
@@ -10,4 +13,104 @@
 }
 #smartwizard>.nav .nav-link.active::after {
     border-left-color: #009ef7  !important;
+}
+
+.choose-design ul {
+    list-style-type: none;
+}
+
+.choose-design li {
+    display: inline-block;
+}
+
+.choose-design input[type="radio"][id^="cb"] {
+    display: none;
+}
+
+.choose-design label {
+    border: 1px solid #fff;
+    padding: 10px;
+    display: block;
+    position: relative;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.choose-design label:before {
+    background-color: white;
+    color: white;
+    content: " ";
+    display: block;
+    border-radius: 50%;
+    border: 1px solid grey;
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    line-height: 28px;
+    transition-duration: 0.4s;
+    transform: scale(0);
+}
+
+.choose-design label img {
+    height: 150px;
+    width: 250px;
+    transition-duration: 0.2s;
+    transform-origin: 50% 50%;
+}
+
+.choose-design :checked + label {
+    border-color: #ddd;
+}
+
+.choose-design :checked + label:before {
+    content: "✓";
+    background-color: grey;
+    transform: scale(1);
+}
+
+.choose-design :checked + label img {
+    transform: scale(0.9);
+    box-shadow: 0 0 5px #333;
+    z-index: -1;
+}
+
+.finish .finish-btn{
+    background: #009ef7;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.button.finish-btn:hover {
+    background-color: #0056b3;
+    color: #ffffff;
+}
+
+
+/* Radio button and label styling */
+.select-product .radio-group{
+    margin-block-end: 10px;
+}
+
+
+/* Additional information styling */
+.application-info {
+    margin-block-start: 10px;
+    font-size: 14px;
+    color: #555;
+    display: block;
+}
+.w-50{
+    width: 100%;
+    max-width: 50%;
+}
+.select-product-options input[type="text"] {
+    width: 100%;
+    min-height: 40px;
+}
+.tab-content {
+    min-height: 180px;
 }
