@@ -74,14 +74,6 @@ document.addEventListener('DOMContentLoaded', function () {
         notesCell.appendChild(notesTextarea);
 
 
-        // Create the date field
-        const dateCell = document.createElement('td');
-        const dateInput = document.createElement('input');
-        dateInput.setAttribute('type', 'date');
-        dateInput.setAttribute('name', 'date');
-        dateInput.classList.add('input-date');
-        dateCell.appendChild(dateInput);
-
 
         // Create the memo file input field
         const memoCell = document.createElement('td');
@@ -94,11 +86,36 @@ document.addEventListener('DOMContentLoaded', function () {
         memoInput.classList.add('memo-input');
         memoCell.appendChild(memoInput);
 
+
+
+        // Create the category input field
+        /*const catCell = document.createElement('td');
+        const catInput = document.createElement('input');
+
+        // Set attributes for the file input element
+        catInput.setAttribute('type', 'submit');
+        catInput.setAttribute('id', 'category');
+        catInput.setAttribute('value', 'Add Category');
+        catInput.setAttribute('name', 'category');
+        catInput.classList.add('category','button-primary');
+        catCell.appendChild(catInput);*/
+
+
+        // Create the date field
+        const dateCell = document.createElement('td');
+        const dateInput = document.createElement('input');
+        dateInput.setAttribute('type', 'date');
+        dateInput.setAttribute('name', 'date');
+        dateInput.classList.add('input-date');
+        dateCell.appendChild(dateInput);
+
+
+
         // Create the submit button
         const submitCell = document.createElement('td');
         const submitButton = document.createElement('input');
 
-// Set attributes for the submit button
+        // Set attributes for the submit button
         submitButton.setAttribute('type', 'submit');
         submitButton.setAttribute('value', 'Edit');
         submitButton.classList.add('button-link');
@@ -111,6 +128,7 @@ document.addEventListener('DOMContentLoaded', function () {
         newRow.appendChild(accountCell);
         newRow.appendChild(notesCell);
         newRow.appendChild(memoCell);
+        // newRow.appendChild(catCell);
         newRow.appendChild(dateCell);
         newRow.appendChild(submitCell);
 
@@ -210,3 +228,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+/*
+document.getElementById("category").addEventListener("click", function(event) {
+    event.preventDefault(); // Prevents form submission if it's within a form
+    var inputContainer = document.getElementById("inputContainer");
+    inputContainer.style.display = "block"; // Show the input field container
+});
+*/

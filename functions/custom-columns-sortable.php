@@ -1,8 +1,4 @@
 <?php
-/**
- * Make the custom columns sortable
- */
-add_filter( 'manage_edit-product_sortable_columns', 'wooprofit_make_cost_and_profit_column_sortable');
 
 /**
  * create cost and profit columns
@@ -17,6 +13,11 @@ function wooprofit_make_cost_and_profit_column_sortable( $columns ): mixed {
 
 	return $columns;
 }
+/**
+ * Make the custom columns sortable
+ */
+add_filter( 'manage_edit-product_sortable_columns', 'wooprofit_make_cost_and_profit_column_sortable');
+
 /**
  * cost and profit columns sorting
  *

@@ -55,6 +55,7 @@ if ( ! class_exists( 'Wooprofit' ) ) {
 
 		public function activate(): void {
 			flush_rewrite_rules();
+			$this->create_custom_table();
 		}
 
 		/**
@@ -84,13 +85,35 @@ if ( ! class_exists( 'Wooprofit' ) ) {
 			$this->templates_include();
 		}
 
+		public function create_custom_table(): void {
+			global $wpdb;
+			$table_name = $wpdb->prefix . 'wooprofit_cost_table';
+			$charset_collate = $wpdb->get_charset_collate();
+
+			$sql = "CREATE TABLE $table_name (
+				id mediumint(9) NOT NULL AUTO_INCREMENT,
+				cost_type_name varchar(255) NOT NULL,
+				cost decimal(10,2) NOT NULL,
+				account varchar(50) NOT NULL,
+				notes text,
+				memo varchar(255),
+				date date NOT NULL,
+				PRIMARY KEY (id)
+			) $charset_collate;";
+
+			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+			dbDelta($sql);
+		}
+
 		public function templates_include(): void {
-			require_once __DIR__ . '/functions/cost-profit-metabox.php';
-			require_once __DIR__ . '/functions/custom-columns-sortable.php';
-			require_once __DIR__ . '/functions/order-by-date-range.php';
-			require_once __DIR__ . '/functions/custom-cost-field.php';
-			require_once __DIR__ . '/functions/compare-monthly-orders.php';
-			require_once __DIR__ . '/functions/order-page-custom-cost.php';
+
+			require_once plugin_dir_path( __FILE__ ) . '/functions/cost-profit-metabox.php';
+			require_once plugin_dir_path( __FILE__ ) . '/functions/custom-columns-sortable.php';
+			require_once plugin_dir_path( __FILE__ ) . '/functions/order-by-date-range.php';
+			require_once plugin_dir_path( __FILE__ ) . '/functions/custom-cost-field.php';
+			require_once plugin_dir_path( __FILE__ ) . '/functions/compare-monthly-orders.php';
+			require_once plugin_dir_path( __FILE__ ) . '/functions/order-page-custom-cost.php';
+			require_once plugin_dir_path( __FILE__ ) . '/functions/cost-operation-table.php';
 
 		}
 
@@ -107,6 +130,8 @@ if ( ! class_exists( 'Wooprofit' ) ) {
 
 			return $links;
 		}
+
+
 
 		/**
 		 * Total Cost Calculation
