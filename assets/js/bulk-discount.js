@@ -144,3 +144,65 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleSwitch = document.getElementById('toggle-switch');
+    const activeRuleInput = document.getElementById('active-rule');
+
+    // Function to update the hidden input field based on the checkbox state
+    function updateActiveRule() {
+        if (toggleSwitch.checked) {
+            activeRuleInput.value = '1';
+        } else {
+            activeRuleInput.value = '0';
+        }
+    }
+
+    // Update the value on page load based on the current state of the checkbox
+    updateActiveRule();
+
+    // Add an event listener to update the value whenever the checkbox state changes
+    toggleSwitch.addEventListener('change', updateActiveRule);
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const shopToggleSwitch = document.getElementById('shop-toggle-switch');
+    const activeShopInput = document.getElementById('active-shop');
+
+    // Function to update the hidden input field based on the checkbox state
+    function updateActiveShop() {
+        if (shopToggleSwitch.checked) {
+            activeShopInput.value = '1';
+        } else {
+            activeShopInput.value = '0';
+        }
+    }
+
+    // Update the value on page load based on the current state of the checkbox
+    updateActiveShop();
+
+    // Add an event listener to update the value whenever the checkbox state changes
+    shopToggleSwitch.addEventListener('change', updateActiveShop);
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const excludeToggleSwitch = document.getElementById('exclude-toggle-switch');
+    const activeExcludeInput = document.getElementById('active-exclude');
+
+    // Function to update the hidden input field based on the checkbox state
+    function updateActiveExclude() {
+        if (excludeToggleSwitch.checked) {
+            activeExcludeInput.value = '1';
+        } else {
+            activeExcludeInput.value = '0';
+        }
+    }
+
+    // Update the value on page load based on the current state of the checkbox
+    updateActiveExclude();
+
+    // Add an event listener to update the value whenever the checkbox state changes
+    excludeToggleSwitch.addEventListener('change', updateActiveExclude);
+});
+
+

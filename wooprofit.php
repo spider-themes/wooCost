@@ -37,8 +37,9 @@ if ( ! class_exists( 'Wooprofit' ) ) {
 		 */
 		public function __construct() {
 			add_action( 'init', array( $this, 'plugin_init' ) );
-			register_activation_hook( __FILE__, [ $this, 'activate' ] );
+			register_activation_hook( plugin_basename(__FILE__), [ $this, 'activate' ] );
 		}
+
 		/**
 		 * Initializes a singleton instance
 		 *
@@ -55,11 +56,14 @@ if ( ! class_exists( 'Wooprofit' ) ) {
 
 		public function activate(): void {
 			flush_rewrite_rules();
-			$this->create_custom_table();
+			$this->cost_operation_table();
+			$this->bulk_discounts_table();
+
 		}
 
 		/**
 		 * Const Define
+		 *
 		 * @return void
 		 */
 		public function define_constants(): void {
@@ -85,9 +89,9 @@ if ( ! class_exists( 'Wooprofit' ) ) {
 			$this->templates_include();
 		}
 
-		public function create_custom_table(): void {
+		public function cost_operation_table(): void {
 			global $wpdb;
-			$table_name = $wpdb->prefix . 'wooprofit_cost_table';
+			$table_name      = $wpdb->prefix . 'wooprofit_cost_table';
 			$charset_collate = $wpdb->get_charset_collate();
 
 			$sql = "CREATE TABLE $table_name (
@@ -101,9 +105,39 @@ if ( ! class_exists( 'Wooprofit' ) ) {
 				PRIMARY KEY (id)
 			) $charset_collate;";
 
-			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-			dbDelta($sql);
+			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			dbDelta( $sql );
 		}
+
+
+		public function bulk_discounts_table(): void {
+			global $wpdb;
+
+			// Table name with the WordPress prefix
+			$table_name = $wpdb->prefix . 'wooprofit_bulk_discounts';
+
+			// Get the character set from the current database
+			$charset_collate = $wpdb->get_charset_collate();
+
+			// Corrected SQL query to create the table
+			$sql = "CREATE TABLE $table_name (
+            id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            active_rule TINYINT(1) NOT NULL DEFAULT 0,
+            profit_rules TEXT NOT NULL,
+            discount_rules TEXT NOT NULL,
+            user_roles TEXT NOT NULL,
+            exclude_products TINYINT(1) NOT NULL DEFAULT 0,
+            discount_loop TINYINT(1) NOT NULL DEFAULT 0,
+            PRIMARY KEY (id)
+        ) $charset_collate;";
+
+			// Include the WordPress file with the dbDelta function
+			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			error_log("Table creation SQL: $sql");
+			// Execute the query
+			dbDelta( $sql );
+		}
+
 
 		public function templates_include(): void {
 
@@ -114,6 +148,7 @@ if ( ! class_exists( 'Wooprofit' ) ) {
 			require_once plugin_dir_path( __FILE__ ) . '/functions/compare-monthly-orders.php';
 			require_once plugin_dir_path( __FILE__ ) . '/functions/order-page-custom-cost.php';
 			require_once plugin_dir_path( __FILE__ ) . '/functions/cost-operation-table.php';
+			require_once plugin_dir_path( __FILE__ ) . '/functions/bulk-discount-table.php';
 
 		}
 
@@ -130,7 +165,6 @@ if ( ! class_exists( 'Wooprofit' ) ) {
 
 			return $links;
 		}
-
 
 
 		/**

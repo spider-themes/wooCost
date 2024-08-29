@@ -1,10 +1,5 @@
 <?php
 $wooprofit = Wooprofit::get_instance();
-/**
- * Order Comparison
- */
-add_action( 'wp_ajax_wooprofit_compare_monthly_orders', 'wooprofit_compare_monthly_orders' );
-add_action( 'wp_ajax_nopriv_wooprofit_compare_monthly_orders',  'wooprofit_compare_monthly_orders' );
 
 /**
  * Comparison Query method
@@ -58,6 +53,9 @@ function wooprofit_compare_monthly_orders(): void {
 		] );
 	}
 }
+
+add_action( 'wp_ajax_wooprofit_compare_monthly_orders', 'wooprofit_compare_monthly_orders' );
+add_action( 'wp_ajax_nopriv_wooprofit_compare_monthly_orders',  'wooprofit_compare_monthly_orders' );
 /**
  * Get order data according to date range
  *

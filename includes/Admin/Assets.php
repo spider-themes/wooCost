@@ -29,6 +29,10 @@ class Assets {
 			wp_enqueue_style( 'bulk-style', WOOPROFIT_ASSETS . '/css/bulk-dicount.css' );
 			wp_enqueue_script( 'bulk-discount', WOOPROFIT_ASSETS . '/js/bulk-discount.js', array(), WOOPROFIT_VERSION,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
+
+			/*wp_localize_script('bulk-discount', 'ajax_object', array(
+				'ajax_url' => admin_url('admin-ajax.php')
+			));*/
 		}elseif ($screen->id === 'wooprofit_page_operation-cost') {
 			wp_enqueue_style( 'bulk-cost-style', WOOPROFIT_ASSETS . '/css/cost-operation.css' );
 			/*wp_enqueue_script( 'cost-operation', WOOPROFIT_ASSETS . '/js/cost-operation.js', array(), WOOPROFIT_VERSION,

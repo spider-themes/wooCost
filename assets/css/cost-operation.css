@@ -19,14 +19,6 @@ th {
     background-color: #f2f2f2;
 }
 
-/*td input,
-td select,
-td number,
-td textarea {
-    display: flex;
-    align-items: center;
-
-}*/
 
 input[type="text"], input[type="number"] {
     width: 95%;
@@ -35,7 +27,6 @@ input[type="text"], input[type="number"] {
 
 .cost-btn-group {
     display: flex;
-    /*justify-content: space-between;*/
     justify-content: flex-end;
 }
 .add-cost-btn{
