@@ -1,14 +1,14 @@
 <?php
 /**
- * Plugin Name: WooProfit
- * Plugin URI: https://spider-themes.net/wooprofit/
+ * Plugin Name: WooCost
+ * Plugin URI: https://spider-themes.net/woocost/
  * Description: Effortlessly track and analyze product costs and profits in WooCommerce, empowering smarter financial decisions and enhanced profitability.
  * Version: 1.0.0
  * Requires at least: 5.7
  * Requires PHP: 7.4
  * Author: spider-themes
  * Author URI: https://spider-themes.net
- * Text Domain: wooprofit
+ * Text Domain: woocost
  * Domain Path: /languages
  * Copyright: © 2024 Spider Themes
  * License: GNU General Public License v3.0
@@ -20,13 +20,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-const WOOPROFIT_PLUGIN_FILE = __FILE__;
+const WOOCOST_PLUGIN_FILE = __FILE__;
 
-if ( ! class_exists( 'Wooprofit' ) ) {
+if ( ! class_exists( 'Woocost' ) ) {
 
 	require_once __DIR__ . '/vendor/autoload.php';
 
-	final class Wooprofit {
+	final class Woocost {
 
 		const version = "1.0.0";
 
@@ -37,13 +37,13 @@ if ( ! class_exists( 'Wooprofit' ) ) {
 		 */
 		public function __construct() {
 			add_action( 'init', array( $this, 'plugin_init' ) );
-			register_activation_hook( plugin_basename(__FILE__), [ $this, 'activate' ] );
+			register_activation_hook( plugin_basename( __FILE__ ), [ $this, 'activate' ] );
 		}
 
 		/**
 		 * Initializes a singleton instance
 		 *
-		 * @return \Wooprofit
+		 * @return \Woocost
 		 */
 		public static function get_instance() {
 			if ( self::$instance === null ) {
@@ -67,11 +67,11 @@ if ( ! class_exists( 'Wooprofit' ) ) {
 		 * @return void
 		 */
 		public function define_constants(): void {
-			define( 'WOOPROFIT_VERSION', self::version );
-			define( 'WOOPROFIT_FILE', __FILE__ );
-			define( 'WOOPROFIT_PATH', __DIR__ );
-			define( 'WOOPROFIT_URL', plugins_url( '', WOOPROFIT_FILE ) );
-			define( 'WOOPROFIT_ASSETS', WOOPROFIT_URL . '/assets' );
+			define( 'WOOCOST_VERSION', self::version );
+			define( 'WOOCOST_FILE', __FILE__ );
+			define( 'WOOCOST_PATH', __DIR__ );
+			define( 'WOOCOST_URL', plugins_url( '', WOOCOST_FILE ) );
+			define( 'WOOCOST_ASSETS', WOOCOST_URL . '/assets' );
 		}
 
 		public function plugin_init(): void {
@@ -79,11 +79,11 @@ if ( ! class_exists( 'Wooprofit' ) ) {
 			/**
 			 * Settings filter
 			 */
-			add_filter( 'plugin_action_links_' . plugin_basename( WOOPROFIT_PLUGIN_FILE ), array( $this, 'settings_action_links' ) );
+			add_filter( 'plugin_action_links_' . plugin_basename( WOOCOST_PLUGIN_FILE ), array( $this, 'settings_action_links' ) );
 
 			if ( is_admin() ) {
-				new wooProfit\Admin();
-				new wooProfit\Notices\Notices();
+				new wooCost\Admin();
+				new wooCost\Notices\Notices();
 			}
 			$this->define_constants();
 			$this->templates_include();
@@ -91,7 +91,7 @@ if ( ! class_exists( 'Wooprofit' ) ) {
 
 		public function cost_operation_table(): void {
 			global $wpdb;
-			$table_name      = $wpdb->prefix . 'wooprofit_cost_table';
+			$table_name      = $wpdb->prefix . 'woocost_cost_operation';
 			$charset_collate = $wpdb->get_charset_collate();
 
 			$sql = "CREATE TABLE $table_name (
@@ -114,7 +114,7 @@ if ( ! class_exists( 'Wooprofit' ) ) {
 			global $wpdb;
 
 			// Table name with the WordPress prefix
-			$table_name = $wpdb->prefix . 'wooprofit_bulk_discounts';
+			$table_name = $wpdb->prefix . 'woocost_bulk_discounts';
 
 			// Get the character set from the current database
 			$charset_collate = $wpdb->get_charset_collate();
@@ -160,7 +160,7 @@ if ( ! class_exists( 'Wooprofit' ) ) {
 		 * @return mixed
 		 */
 		public function settings_action_links( $links ): mixed {
-			$settings_link = '<a href="' . esc_url( admin_url( 'admin.php?page=bulk-discounts' ) ) . '">' . esc_html__( 'Settings', 'wooprofit' ) . '</a>';
+			$settings_link = '<a href="' . esc_url( admin_url( 'admin.php?page=bulk-discounts' ) ) . '">' . esc_html__( 'Settings', 'woocost' ) . '</a>';
 			array_unshift( $links, $settings_link );
 
 			return $links;
@@ -293,6 +293,6 @@ if ( ! class_exists( 'Wooprofit' ) ) {
 
 	}
 
-	Wooprofit::get_instance();
+	Woocost::get_instance();
 
 }

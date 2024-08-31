@@ -1,12 +1,12 @@
 <?php
 // Handle form submission
-function wooprofit_cost_form_submission(): void {
-	if (!isset($_POST['wooprofit_nonce']) || !wp_verify_nonce($_POST['wooprofit_nonce'], 'save_cost')) {
+function woocost_cost_form_submission(): void {
+	if (!isset($_POST['woocost_nonce']) || !wp_verify_nonce($_POST['woocost_nonce'], 'save_cost')) {
 		return;
 	}
 
 	global $wpdb;
-	$table_name = $wpdb->prefix . 'wooprofit_cost_table';
+	$table_name = $wpdb->prefix . 'woocost_cost_operation';
 
 	$cost_type_name = sanitize_text_field( $_POST['cost-type-name'] );
 	$cost = floatval( $_POST['cost'] );
@@ -55,11 +55,11 @@ function wooprofit_cost_form_submission(): void {
 	wp_redirect( admin_url( 'admin.php?page=operation-cost' ) );
 	exit;
 }
-add_action( 'admin_post_save_cost', 'wooprofit_cost_form_submission' );
+add_action( 'admin_post_save_cost', 'woocost_cost_form_submission' );
 
 
 // Handle the deletion of a cost entry
-function wooprofit_delete_cost(): void {
+function woocost_delete_cost(): void {
 	if (
 		!isset($_GET['cost_id']) ||
 		!isset($_GET['_wpnonce']) ||
@@ -69,7 +69,7 @@ function wooprofit_delete_cost(): void {
 	}
 
 	global $wpdb;
-	$table_name = $wpdb->prefix . 'wooprofit_cost_table';
+	$table_name = $wpdb->prefix . 'woocost_cost_operation';
 	$cost_id = intval( $_GET['cost_id'] );
 
 	// Delete the entry
@@ -79,4 +79,4 @@ function wooprofit_delete_cost(): void {
 	wp_redirect( admin_url( 'admin.php?page=operation-cost' ) );
 	exit;
 }
-add_action( 'admin_post_delete_cost', 'wooprofit_delete_cost' );
+add_action( 'admin_post_delete_cost', 'woocost_delete_cost' );

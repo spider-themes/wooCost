@@ -1,6 +1,6 @@
 <?php return array(
     'root' => array(
-        'name' => 'mdayubali/wooprofit',
+        'name' => 'mdayubali/woocost',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
         'reference' => '1e2581aefd7e3fc205169c0ea9586a5dcabae25d',
@@ -10,7 +10,7 @@
         'dev' => true,
     ),
     'versions' => array(
-        'mdayubali/wooprofit' => array(
+        'mdayubali/woocost' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
             'reference' => '1e2581aefd7e3fc205169c0ea9586a5dcabae25d',

@@ -6,11 +6,11 @@
  * @return void
  */
 
-function wooprofit_get_orders_by_date_range(): void {
+function woocost_get_orders_by_date_range(): void {
 
 	global $wpdb;
 	if ( ! current_user_can( 'manage_woocommerce' ) ) {
-		wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'wooprofit' ) );
+		wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'woocost' ) );
 	}
 
 	$start_date = isset( $_POST['start_date'] ) ? sanitize_text_field( $_POST['start_date'] ) : '';
@@ -19,7 +19,7 @@ function wooprofit_get_orders_by_date_range(): void {
 	if ( ! $start_date || ! $end_date ) {
 		echo json_encode( [
 			'error'   => true,
-			'message' => esc_html__( 'Please select a valid date range.', 'wooprofit' ),
+			'message' => esc_html__( 'Please select a valid date range.', 'woocost' ),
 		] );
 		wp_die();
 	}
@@ -102,5 +102,5 @@ function wooprofit_get_orders_by_date_range(): void {
 	wp_reset_postdata();
 	wp_die();
 }
-add_action( 'wp_ajax_wooprofit_get_orders_by_date_range', 'wooprofit_get_orders_by_date_range' );
-add_action( 'wp_ajax_nopriv_wooprofit_get_orders_by_date_range', 'wooprofit_get_orders_by_date_range' );
+add_action( 'wp_ajax_woocost_get_orders_by_date_range', 'woocost_get_orders_by_date_range' );
+add_action( 'wp_ajax_nopriv_woocost_get_orders_by_date_range', 'woocost_get_orders_by_date_range' );

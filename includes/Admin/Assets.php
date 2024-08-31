@@ -1,8 +1,8 @@
 <?php
-namespace wooProfit\Admin;
+namespace wooCost\Admin;
 /**
  * Class Assets
- * @package Wooprofit\Admin
+ * @package WooCost\Admin
  */
 class Assets {
 	/**
@@ -25,47 +25,47 @@ class Assets {
 	public function assets_load( $hook ): void {
 		$screen         = get_current_screen();
 
-		if ( $screen->id === 'wooprofit_page_bulk-discounts' ) {
-			wp_enqueue_style( 'bulk-style', WOOPROFIT_ASSETS . '/css/bulk-dicount.css' );
-			wp_enqueue_script( 'bulk-discount', WOOPROFIT_ASSETS . '/js/bulk-discount.js', array(), WOOPROFIT_VERSION,
+		if ( $screen->id === 'woocost_page_bulk-discounts' ) {
+			wp_enqueue_style( 'bulk-style', WOOCOST_ASSETS . '/css/bulk-dicount.css' );
+			wp_enqueue_script( 'bulk-discount', WOOCOST_ASSETS . '/js/bulk-discount.js', array(), WOOCOST_VERSION,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
 
 			/*wp_localize_script('bulk-discount', 'ajax_object', array(
 				'ajax_url' => admin_url('admin-ajax.php')
 			));*/
-		}elseif ($screen->id === 'wooprofit_page_operation-cost') {
-			wp_enqueue_style( 'bulk-cost-style', WOOPROFIT_ASSETS . '/css/cost-operation.css' );
-			/*wp_enqueue_script( 'cost-operation', WOOPROFIT_ASSETS . '/js/cost-operation.js', array(), WOOPROFIT_VERSION,
+		}elseif ($screen->id === 'woocost_page_operation-cost') {
+			wp_enqueue_style( 'bulk-cost-style', WOOCOST_ASSETS . '/css/cost-operation.css' );
+			/*wp_enqueue_script( 'cost-operation', WOOCOST_ASSETS . '/js/cost-operation.js', array(), WOOCOST_VERSION,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );*/
-		}elseif ( $screen->id === 'wooprofit_page_image-generate' ) {
-			wp_enqueue_style( 'bulk-cost-style', WOOPROFIT_ASSETS . '/css/product-image-generate.css' );
+		}elseif ( $screen->id === 'woocost_page_image-generate' ) {
+			wp_enqueue_style( 'bulk-cost-style', WOOCOST_ASSETS . '/css/product-image-generate.css' );
 			wp_enqueue_style( 'smartwizardcdn', '//cdn.jsdelivr.net/npm/smartwizard@6/dist/css/smart_wizard_all.min.css' );
 
-			wp_enqueue_script( 'smartwizard', '//cdn.jsdelivr.net/npm/smartwizard@6/dist/js/jquery.smartWizard.min.js', array(), WOOPROFIT_VERSION,
+			wp_enqueue_script( 'smartwizard', '//cdn.jsdelivr.net/npm/smartwizard@6/dist/js/jquery.smartWizard.min.js', array(), WOOCOST_VERSION,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
-			wp_enqueue_script( 'smartwizard-custom', WOOPROFIT_ASSETS . '/js/product-image-generate.js', array(), WOOPROFIT_VERSION,
+			wp_enqueue_script( 'smartwizard-custom', WOOCOST_ASSETS . '/js/product-image-generate.js', array(), WOOCOST_VERSION,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
-		}elseif ( $screen->id === 'toplevel_page_wooprofit' ) {
-			wp_enqueue_style( 'wooprofit-style', WOOPROFIT_ASSETS . '/css/style.css' );
-			wp_enqueue_style( 'wooprofit-nice', WOOPROFIT_ASSETS . '/css/nice-select.css' );
+		}elseif ( $screen->id === 'toplevel_page_woocost' ) {
+			wp_enqueue_style( 'woocost-style', WOOCOST_ASSETS . '/css/style.css' );
+			wp_enqueue_style( 'woocost-nice', WOOCOST_ASSETS . '/css/nice-select.css' );
 			wp_enqueue_style( 'google-font', '//fonts.googleapis.com/css?family=Montserrat' );
 			wp_enqueue_style( 'font-awesome', '//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css' );
 			wp_enqueue_script( 'jquery-ui-datepicker' );
 			wp_enqueue_style( 'jquery-ui', '//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css' );
-			wp_enqueue_script( 'tooltip', WOOPROFIT_ASSETS . '/js/tooltip.js', array( 'jquery' ), WOOPROFIT_VERSION,
+			wp_enqueue_script( 'tooltip', WOOCOST_ASSETS . '/js/tooltip.js', array( 'jquery' ), WOOCOST_VERSION,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
-			wp_enqueue_script( 'custom-date-range-script', WOOPROFIT_ASSETS . '/js/custom-date-range.js', array( 'jquery' ), WOOPROFIT_VERSION,
+			wp_enqueue_script( 'custom-date-range-script', WOOCOST_ASSETS . '/js/custom-date-range.js', array( 'jquery' ), WOOCOST_VERSION,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
-			wp_enqueue_script( 'nice-select', WOOPROFIT_ASSETS . '/js/jquery.nice-select.min.js', array(), WOOPROFIT_VERSION,
+			wp_enqueue_script( 'nice-select', WOOCOST_ASSETS . '/js/jquery.nice-select.min.js', array(), WOOCOST_VERSION,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
 			wp_localize_script( 'custom-date-range-script', 'ajax_params', array(
 				'ajaxurl' => admin_url( 'admin-ajax.php' ),
-				'nonce'   => wp_create_nonce( 'wooprofit_compare_data' )
+				'nonce'   => wp_create_nonce( 'woocost_compare_data' )
 			) );
 		}elseif ( $hook == 'post.php' || $hook == 'post-new.php' ) {
 			global $post_type;
 			if ( $post_type == 'product' ) {
-				wp_enqueue_script( 'wooprofit', WOOPROFIT_ASSETS . '/js/profit-show.js', array( 'jquery' ), WOOPROFIT_VERSION,
+				wp_enqueue_script( 'woocost', WOOCOST_ASSETS . '/js/profit-show.js', array( 'jquery' ), WOOCOST_VERSION,
 					[ 'in_footer' => true, 'strategy' => 'defer' ] );
 			}
 		}else return;

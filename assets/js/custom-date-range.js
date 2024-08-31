@@ -74,7 +74,7 @@
                 url: ajax_params.ajaxurl,
                 method: 'POST',
                 data: {
-                    action: 'wooprofit_get_orders_by_date_range',
+                    action: 'woocost_get_orders_by_date_range',
                     start_date: start_date,
                     end_date: end_date,
                     date_range: date_range
@@ -335,7 +335,7 @@
                 url: ajax_params.ajaxurl,
                 method: "POST",
                 data: {
-                    action: "wooprofit_compare_monthly_orders",
+                    action: "woocost_compare_monthly_orders",
                     nonce: ajax_params.nonce,
                     current_start_date: currentStartDate,
                     current_end_date: currentEndDate,

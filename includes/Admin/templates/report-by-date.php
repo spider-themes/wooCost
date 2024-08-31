@@ -6,12 +6,12 @@
         <form name="custom-date-range-form" id="custom-date-range-form" method="post">
             <div class="flex gap-10">
                 <select id="date-range-select" class="nice-select">
-                    <option value="today"><?php esc_html_e( 'Today', 'wooprofit' ); ?></option>
-                    <option value="yesterday"><?php esc_html_e( 'Yesterday', 'wooprofit' ); ?></option>
-                    <option value="last-7-days"><?php esc_html_e( 'Last 7 Days', 'wooprofit' ); ?></option>
-                    <option value="last-14-days"><?php esc_html_e( 'Last 14 Days', 'wooprofit' ); ?></option>
-                    <option value="this-month"><?php esc_html_e( 'Month to date', 'wooprofit' ); ?></option>
-                    <option value="last-month"><?php esc_html_e( 'Last Month', 'wooprofit' ); ?></option>
+                    <option value="today"><?php esc_html_e( 'Today', 'woocost' ); ?></option>
+                    <option value="yesterday"><?php esc_html_e( 'Yesterday', 'woocost' ); ?></option>
+                    <option value="last-7-days"><?php esc_html_e( 'Last 7 Days', 'woocost' ); ?></option>
+                    <option value="last-14-days"><?php esc_html_e( 'Last 14 Days', 'woocost' ); ?></option>
+                    <option value="this-month"><?php esc_html_e( 'Month to date', 'woocost' ); ?></option>
+                    <option value="last-month"><?php esc_html_e( 'Last Month', 'woocost' ); ?></option>
                 </select>
                 <input type="text" id="start_date" name="start_date" autocomplete="off" placeholder="Start Date">
                 <input type="text" id="end_date" name="end_date" autocomplete="off" placeholder="End Date">
@@ -23,10 +23,10 @@
             <form action="" method="post" id="previous-date-range-form" class="flex">
                 <h4 class="compare-text title">compare to</h4>
                 <select id="previous-date-range-select" class="nice-select">
-                    <option value="no-comparison" selected><?php esc_html_e( 'No comparison', 'wooprofit' ); ?></option>
-                    <option value="previous-month"><?php esc_html_e( 'Previous Month', 'wooprofit' ); ?><small class="small"> </small></option>
-                    <option value="previous-period"><?php esc_html_e( 'Previous Period', 'wooprofit' ); ?><small class="small"> </small></option>
-                    <option value="previous-quarter"><?php esc_html_e( 'Previous Quarter', 'wooprofit' ); ?><small class="small"> </small></option>
+                    <option value="no-comparison" selected><?php esc_html_e( 'No comparison', 'woocost' ); ?></option>
+                    <option value="previous-month"><?php esc_html_e( 'Previous Month', 'woocost' ); ?><small class="small"> </small></option>
+                    <option value="previous-period"><?php esc_html_e( 'Previous Period', 'woocost' ); ?><small class="small"> </small></option>
+                    <option value="previous-quarter"><?php esc_html_e( 'Previous Quarter', 'woocost' ); ?><small class="small"> </small></option>
                 </select>
 
                 <div id="custom-date-range">
