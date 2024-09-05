@@ -1,6 +1,6 @@
 <?php
 global $wpdb;
-$table_name = $wpdb->prefix . 'wooprofit_cost_table';
+$table_name = $wpdb->prefix . 'woocost';
 
 // Check if we are editing
 $editing = false;
@@ -17,7 +17,7 @@ if ( isset($_GET['edit_id']) ) {
     <h2><?php echo $editing ? 'Edit Cost Entry' : 'Add New Cost'; ?></h2>
     <form id="costForm" action="<?php echo esc_url( admin_url('admin-post.php') ); ?>" method="post" enctype="multipart/form-data">
         <input type="hidden" name="action" value="save_cost">
-        <input type="hidden" name="wooprofit_nonce" value="<?php echo wp_create_nonce( 'save_cost' ); ?>">
+        <input type="hidden" name="woocost_nonce" value="<?php echo wp_create_nonce( 'save_cost' ); ?>">
 		<?php if ( $editing ) : ?>
             <input type="hidden" name="entry_id" value="<?php echo esc_attr( $cost_entry->id ); ?>">
 		<?php endif; ?>
@@ -25,9 +25,9 @@ if ( isset($_GET['edit_id']) ) {
         <table id="costTable">
             <thead>
             <tr>
-                <th>Cost Type Name</th>
-                <th>Cost</th>
-                <th>Account</th>
+                <th>Cost Type Name *</th>
+                <th>Cost *</th>
+                <th>Account *</th>
                 <th>Notes</th>
                 <th>Cost Memo</th>
                 <th>Date</th>
@@ -47,15 +47,13 @@ if ( isset($_GET['edit_id']) ) {
                 </td>
                 <td><textarea id="notes" name="notes" class="notes-area"><?php echo $editing ? esc_textarea( $cost_entry->notes ) : ''; ?></textarea></td>
                 <td>
-                    <input type="file" id="memo" name="memo" class="memo-input" accept=".pdf,.doc,.docx,.txt,.ppt">
+                    <input type="file" id="memo" name="memo" class="memo-input" accept=".pdf,.doc,.docx,.txt,.ppt,.png,.jpg,.jpeg">
 					<?php if ( $editing && !empty( $cost_entry->memo ) ) : ?>
                         <p>Current file: <a href="<?php echo esc_url( $cost_entry->memo ); ?>" target="_blank"><?php echo basename( $cost_entry->memo ); ?></a></p>
 					<?php endif; ?>
                 </td>
-                <td><input type="date" name="date" class="input-date" value="<?php echo $editing ? esc_attr( $cost_entry->date ) : ''; ?>" required></td>
-                <!--<td>
-                <button type="submit" class="button-primary"><?php /*//echo $editing ? 'Update' : 'Save'; */?></button>
-                </td>-->
+                <td><input type="date" name="date" class="input-date" value="<?php echo $editing ? esc_attr( $cost_entry->date ) : ''; ?>" ></td>
+
             </tr>
 
             </tbody>

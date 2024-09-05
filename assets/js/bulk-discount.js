@@ -206,3 +206,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+document.getElementById('toggle-switch').addEventListener('change', function() {
+    document.getElementById('active-rule').value = this.checked ? 1 : 0;
+});

@@ -1,5 +1,5 @@
 <?php
-namespace wooProfit\Notices;
+namespace wooCost\Notices;
 
 class Notices {
 
@@ -24,7 +24,7 @@ class Notices {
 		// Check if we are on the specific plugin page
 		$current_screen = get_current_screen();
 
-		if ( $current_screen->id === 'toplevel_page_wooprofit' ) {
+		if ( $current_screen->id === 'toplevel_page_woocost' ) {
 			remove_all_actions( 'admin_notices' );
 		}
 	}
@@ -36,8 +36,8 @@ class Notices {
 	 */
 	function remove_wp_default_notifications(): void {
 		$screen = get_current_screen();
-	if ( $screen->id === 'toplevel_page_wooprofit' || $screen->id === 'wooprofit_page_bulk-discounts'
-		     || $screen->id === 'wooprofit_page_operation-cost' || $screen->id === 'wooprofit_page_image-generate'
+	if ( $screen->id === 'toplevel_page_woocost' || $screen->id === 'woocost_page_bulk-discounts'
+		     || $screen->id === 'woocost_page_operation-cost' || $screen->id === 'woocost_page_image-generate'
 		) {
 			remove_action( 'admin_notices', 'update_nag', 3 );
 			// Remove admin footer text

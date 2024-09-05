@@ -48,7 +48,40 @@
             </div>
 
             <div id="step-2" class="tab-pane" role="tabpanel" aria-labelledby="step-2">
-                Customize Design
+
+                <h1>Edit Banner Image</h1>
+
+                <canvas id="canvas" width="1200" height="400"></canvas>
+
+                <div class="controls">
+                    <div class="row">
+                        <label for="valentineText">Banner Heading:</label>
+                        <input type="text" id="valentineText" placeholder="Banner Heading" />
+
+                        <label for="discountText">Discount :</label>
+                        <input type="text" id="discountText" placeholder="up to 45% OFF" />
+
+
+                        <label for="buttonText">Button:</label>
+                        <input type="text" id="buttonText" placeholder="Shop Now" />
+
+                        <label for="vendorName">Vendor Name:</label>
+                        <input type="text" id="vendorName" placeholder="example.com" />
+                    </div>
+
+                    <div class="row">
+                        <label for="backgroundImageUpload">Background Image:</label>
+                        <input type="file" id="backgroundImageUpload" accept="image/*" onchange="uploadBackgroundImage()" />
+
+                        <label for="imageUpload">Upload Logo:</label>
+                        <input type="file" id="imageUpload" accept="image/*" onchange="uploadImage()" />
+                    </div>
+                    <div class="row">
+                        <button onclick="updateImage()" class="btn update-btn">Update</button>
+                        <button onclick="downloadImage()" class="btn download-btn">Download Edited Image</button>
+                    </div>
+                </div>
+
             </div>
 
             <div id="step-3" class="tab-pane" role="tabpanel" aria-labelledby="step-3">

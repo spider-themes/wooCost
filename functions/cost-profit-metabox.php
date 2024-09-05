@@ -2,21 +2,21 @@
 /**
  * meta box sidebar register for order items edit
  */
-add_action( 'add_meta_boxes',  'wooprofit_add_cost_profit_meta_box');
+add_action( 'add_meta_boxes',  'woocost_add_cost_profit_meta_box');
 /**
  * Meta box function
  *
  * @return void
  */
-function wooprofit_add_cost_profit_meta_box(): void {
+function woocost_add_cost_profit_meta_box(): void {
 	global $pagenow;
 	$current_screen = get_current_screen();
 	// Check if we are on the WooCommerce order edit page
 	if ( $pagenow == 'admin.php' && $current_screen->id == 'woocommerce_page_wc-orders' ) {
 		add_meta_box(
 			'cost_profit_meta_box',
-			esc_html__( 'Cost and Profit', 'wooprofit' ),
-			'wooprofit_cost_profit_meta_box_html',
+			esc_html__( 'Cost and Profit', 'woocost' ),
+			'woocost_cost_profit_meta_box_html',
 			'woocommerce_page_wc-orders',
 			'side',
 			'high'
@@ -31,7 +31,7 @@ function wooprofit_add_cost_profit_meta_box(): void {
  *
  * @return void
  */
-function wooprofit_cost_profit_meta_box_html( $post ): void {
+function woocost_cost_profit_meta_box_html( $post ): void {
 
 	// Get the order object
 	$order = wc_get_order( $post->ID );
@@ -59,8 +59,8 @@ function wooprofit_cost_profit_meta_box_html( $post ): void {
 
 	// Display cost and profit
 	echo '<div>';
-	echo '<p><strong>' . esc_html__( 'Cost:', 'wooprofit' ) . '</strong> ' . '<span style="color: #FF0000FF ;">' . wc_price( $total_cost ) . '</span>' . '</p>';
-	echo '<p><strong>' . esc_html__( 'Profit:', 'wooprofit' ) . '</strong> ' . '<span style="color: #008000FF;">' . wc_price( $total_profit ) . '</span>'
+	echo '<p><strong>' . esc_html__( 'Cost:', 'woocost' ) . '</strong> ' . '<span style="color: #FF0000FF ;">' . wc_price( $total_cost ) . '</span>' . '</p>';
+	echo '<p><strong>' . esc_html__( 'Profit:', 'woocost' ) . '</strong> ' . '<span style="color: #008000FF;">' . wc_price( $total_profit ) . '</span>'
 	     . '</p>';
 	echo '</div>';
 

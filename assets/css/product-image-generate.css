@@ -114,3 +114,45 @@
 .tab-content {
     min-height: 180px;
 }
+
+/* Image generate with canvas */
+
+.controls {
+    margin-top: 20px;
+}
+.controls .row{
+    margin-block: 20px;
+}
+.controls .btn{
+    cursor: pointer;
+    outline: none;
+    font-size: 14px;
+    border-radius: 22px;
+    padding: 10px 40px;
+    text-transform: uppercase;
+}
+.controls .btn.update-btn{
+    margin-inline-end: 20px;
+}
+.controls .btn.update-btn,
+.controls .btn.download-btn:hover
+{
+    background: transparent;
+    color: #1172c4;
+    border-color: #1172c4;
+    border-style: solid;
+    border-width: 1px;
+    transition: all 0.2s linear;
+}
+.controls .btn.update-btn:hover
+{
+    color: #FFFFFFFF;
+    background: #1172c4;
+    border-color: #FFFFFFFF;
+    transition: all 0.2s linear;
+}
+.controls .btn.download-btn{
+    background: #1172c4;
+    color: #FFFFFFFF;
+    border: none;
+}

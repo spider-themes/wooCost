@@ -126,7 +126,7 @@ h1,h2,h3,h4,h5,h6{
     color: #0c0d0e !important;
 }
 
-.wooprofit_row {
+.woocost_row {
     border: 1px solid #716b6b;
 }
 .badge {
@@ -162,7 +162,7 @@ h1,h2,h3,h4,h5,h6{
     width: 50%;
 }
 
-.wooprofit_row :last-child {
+.woocost_row :last-child {
     margin-right: 0px;
 }
 

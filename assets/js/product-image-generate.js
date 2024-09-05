@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', function() {
             productSearchDiv.style.display = 'none';
         }
     }
-
     // Attach event listeners to the radio buttons
     specificProductsRadio.addEventListener('change', toggleProductSearch);
     allProductsRadio.addEventListener('change', toggleProductSearch);
@@ -26,3 +25,5 @@ document.addEventListener('DOMContentLoaded', function() {
     // Call the function on page load to set the correct initial state
     toggleProductSearch();
 });
+
+

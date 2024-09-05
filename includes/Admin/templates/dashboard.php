@@ -1,13 +1,13 @@
 <?php
-namespace wooProfit\Admin\templates;
+namespace wooCost\Admin\templates;
 
-use Wooprofit;
+use Woocost;
 
-$wooprofit = Wooprofit::get_instance(); // Get the global instance
+$woocost = Woocost::get_instance(); // Get the global instance
 ?>
 <div class="wrap bg-dark mw-1200">
     <div class="page-header">
-        <h2 class="text-white title">WooProfit Details</h2>
+        <h2 class="text-white title">WooCost Details</h2>
     </div>
     <div class="flex gap-5">
         <div class="col-4 card">
@@ -20,7 +20,7 @@ $wooprofit = Wooprofit::get_instance(); // Get the global instance
             </div>
             <div class="card-body">
                 <p class="text-white">
-					<?php echo esc_html( $wooprofit->total_stock() ); ?>
+					<?php echo esc_html( $woocost->total_stock() ); ?>
                 </p>
             </div>
         </div>
@@ -34,7 +34,7 @@ $wooprofit = Wooprofit::get_instance(); // Get the global instance
             </div>
             <div class="card-body">
                 <p class="text-white">
-					<?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $wooprofit->total_price(), 2 ) ); ?>
+					<?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $woocost->total_price(), 2 ) ); ?>
                 </p>
             </div>
         </div>
@@ -47,7 +47,7 @@ $wooprofit = Wooprofit::get_instance(); // Get the global instance
             </div>
             <div class="card-body">
                 <p class="text-white">
-					<?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $wooprofit->total_cost(), 2 ) ); ?>
+					<?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $woocost->total_cost(), 2 ) ); ?>
                 </p>
             </div>
         </div>
@@ -61,15 +61,15 @@ $wooprofit = Wooprofit::get_instance(); // Get the global instance
             </div>
             <div class="card-body">
 				<?php
-				if ( $wooprofit->total_profit() > 0 ) { ?>
+				if ( $woocost->total_profit() > 0 ) { ?>
                     <p class="profit-positive">
-						<?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $wooprofit->total_profit(), 2 ) ); ?>
+						<?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $woocost->total_profit(), 2 ) ); ?>
                     </p>
 					<?php
 				} else {
 					?>
                     <p class="profit-negative">
-						<?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $wooprofit->total_profit(), 2 ) ); ?>
+						<?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $woocost->total_profit(), 2 ) ); ?>
                     </p> <?php
 				}
 				?>

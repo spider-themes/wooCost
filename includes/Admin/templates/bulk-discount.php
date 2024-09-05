@@ -6,9 +6,9 @@
         </div>
         <!-- Tab Content -->
         <div class="tab-content active" id="settings">
-            <form action="<?php echo admin_url('admin-post.php'); ?>" method="post">
+            <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post">
                 <input type="hidden" name="action" value="save_bulk_discounts">
-                <input type="hidden" name="wooprofit_nonce" value="<?php echo wp_create_nonce('bulk_discounts'); ?>">
+                <input type="hidden" name="woocost_nonce" value="<?php echo wp_create_nonce('bulk_discounts'); ?>">
                 <div class="flex items-center gap-30">
                     <h2 class="heading">Discounts & Percentage Rules</h2>
                     <a class="add-rule button button-link add-rule-btn" id="addRuleBtn"> + Add rule</a>
@@ -75,21 +75,21 @@
                                 <div class="discount-rules-inputs mb-20">
                                     <div class="input-group">
                                         <label for="from-field">From</label>
-                                        <input type="text" id="from-field" placeholder="1" class="from-field">
+                                        <input type="text" id="from-field" name="from-field" placeholder="1" class="from-field">
                                     </div>
                                     <div class="input-group">
                                         <label for="to-field">To</label>
-                                        <input type="text" id="to-field" placeholder="" class="to-field">
+                                        <input type="text" id="to-field" name="to-field" placeholder="" class="to-field">
                                     </div>
                                     <div class="input-group">
                                         <label for="apply-field">Apply</label>
-                                        <select id="apply-field" class="rule-options">
+                                        <select id="apply-field" class="rule-options" name="apply-field">
                                             <option value="percentage">% Percentage</option>
                                             <option value="fixed">Fixed Amount</option>
                                         </select>
                                     </div>
                                     <div class="input-group">
-                                        <input type="text" id="value-field" placeholder="20" class="value-field"> %
+                                        <input type="text" id="value-field" name="value-field" placeholder="20" class="value-field"> %
                                     </div>
                                 </div>
                             </div>
@@ -106,15 +106,15 @@
                         <div class="p-relative">
                             <div class="discount-application-options">
                                 <div class="radio-group">
-                                    <input type="radio" id="all-users" name="discount-application" value="all" checked>
+                                    <input type="radio" id="all-users" name="user-role" value="all-users" checked>
                                     <label for="all-users">All users</label>
                                 </div>
                                 <div class="radio-group">
-                                    <input type="radio" id="specific-user" name="discount-application" value="specific">
+                                    <input type="radio" id="specific-user" name="user-role" value="specific-user">
                                     <label for="specific-user">Only to a specific user</label>
                                 </div>
                                 <div class="radio-group">
-                                    <input type="radio" id="user-roles" name="discount-application" value="roles">
+                                    <input type="radio" id="user-roles" name="user-role" value="only-specefic-user">
                                     <label for="user-roles">Only to specific user roles</label>
                                 </div>
                             </div>
@@ -217,7 +217,7 @@
                             <div class="switch">
                                 <input type="checkbox" id="shop-toggle-switch">
                                 <label for="shop-toggle-switch" class="slider"></label>
-                                <input type="hidden" id="active-shop" name="active-shop" value="0"  >
+                                <input type="hidden" id="active-shop" name="active-shop" value="0">
                             </div>
                             <span class="switch-description"><small>Enable if you want to show the discounted price in the shop page</small></span>
                         </div>

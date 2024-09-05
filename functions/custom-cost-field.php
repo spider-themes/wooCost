@@ -5,21 +5,21 @@
  *
  * @return void
  */
-function wooprofit_add_cost_field(): void {
+function woocost_add_cost_field(): void {
 	woocommerce_wp_text_input(
 		array(
 			'id'          => '_woo_product_cost',
-			'label'       => esc_html__( 'Cost', 'wooprofit' ),
+			'label'       => esc_html__( 'Cost', 'woocost' ),
 			'placeholder' => 'Enter the cost price',
 			'desc_tip'    => 'true',
-			'description' => esc_html__( 'Enter the cost price of the product.', 'wooprofit' )
+			'description' => esc_html__( 'Enter the cost price of the product.', 'woocost' )
 		)
 	);
 	echo '<p id="product_profit_display" class="form-field description">'
-	     . esc_html__( 'Profit: 0.00 (' . esc_html( get_woocommerce_currency_symbol() ) . ' 0.00%)', 'wooprofit' ) . '</p>';
+	     . esc_html__( 'Profit: 0.00 (' . esc_html( get_woocommerce_currency_symbol() ) . ' 0.00%)', 'woocost' ) . '</p>';
 
 }
-add_action( 'woocommerce_product_options_general_product_data',  'wooprofit_add_cost_field' ) ;
+add_action( 'woocommerce_product_options_general_product_data',  'woocost_add_cost_field' ) ;
 
 
 /**
@@ -29,12 +29,12 @@ add_action( 'woocommerce_product_options_general_product_data',  'wooprofit_add_
  *
  * @return void
  */
-function wooprofit_save_cost_field( $post_id ): void {
+function woocost_save_cost_field( $post_id ): void {
 	$product_cost = isset( $_POST['_woo_product_cost'] ) ? sanitize_text_field( $_POST['_woo_product_cost'] ) : '';
 	update_post_meta( $post_id, '_woo_product_cost', $product_cost );
 }
 
-add_action( 'woocommerce_process_product_meta','wooprofit_save_cost_field' ) ;
+add_action( 'woocommerce_process_product_meta','woocost_save_cost_field' ) ;
 
 
 /**
@@ -44,7 +44,7 @@ add_action( 'woocommerce_process_product_meta','wooprofit_save_cost_field' ) ;
  *
  * @return array
  */
-function wooprofit_add_cost_and_profit_column_header( $columns ): array {
+function woocost_add_cost_and_profit_column_header( $columns ): array {
 	// Remove the existing 'product_cost' and 'product_profit' columns if they already exist
 	unset( $columns['product_cost'] );
 	unset( $columns['product_profit'] );
@@ -56,14 +56,14 @@ function wooprofit_add_cost_and_profit_column_header( $columns ): array {
 	foreach ( $columns as $key => $column ) {
 		$new_columns[ $key ] = $column;
 		if ( 'price' === $key ) {
-			$new_columns['product_cost']   = esc_html__( 'Cost', 'wooprofit' );
-			$new_columns['product_profit'] = esc_html__( 'Profit', 'wooprofit' );
+			$new_columns['product_cost']   = esc_html__( 'Cost', 'woocost' );
+			$new_columns['product_profit'] = esc_html__( 'Profit', 'woocost' );
 		}
 	}
 
 	return $new_columns;
 }
-add_filter( 'manage_product_posts_columns',  'wooprofit_add_cost_and_profit_column_header', 20 );
+add_filter( 'manage_product_posts_columns',  'woocost_add_cost_and_profit_column_header', 20 );
 
 /**
  * Populate custom columns with data
@@ -73,7 +73,7 @@ add_filter( 'manage_product_posts_columns',  'wooprofit_add_cost_and_profit_colu
  *
  * @return void
  */
-function wooprofit_populate_cost_and_profit_column_content( $column, $post_id ): void {
+function woocost_populate_cost_and_profit_column_content( $column, $post_id ): void {
 	if ( 'product_cost' === $column ) {
 		$product_cost = get_post_meta( $post_id, '_woo_product_cost', true );
 		if ( $product_cost !== '' ) {
@@ -99,4 +99,4 @@ function wooprofit_populate_cost_and_profit_column_content( $column, $post_id ):
 	}
 }
 
-add_action( 'manage_product_posts_custom_column', 'wooprofit_populate_cost_and_profit_column_content', 20, 2 );
+add_action( 'manage_product_posts_custom_column', 'woocost_populate_cost_and_profit_column_content', 20, 2 );

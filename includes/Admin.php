@@ -1,6 +1,6 @@
 <?php
 
-namespace wooProfit;
+namespace wooCost;
 
 class Admin {
 

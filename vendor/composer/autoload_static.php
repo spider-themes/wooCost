@@ -9,12 +9,12 @@ class ComposerStaticInit688cd08729989346113501ccd0e74bc6
     public static $prefixLengthsPsr4 = array (
         'w' => 
         array (
-            'wooProfit\\' => 10,
+            'wooCost\\' => 8,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'wooProfit\\' => 
+        'wooCost\\' => 
         array (
             0 => __DIR__ . '/../..' . '/includes',
         ),
