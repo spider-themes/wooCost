@@ -1,4 +1,4 @@
-;(function ($) {
+;(function($) {
     $('#smartwizard').smartWizard();
 
 })(jQuery);
@@ -25,5 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Call the function on page load to set the correct initial state
     toggleProductSearch();
 });
+
 
 

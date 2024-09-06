@@ -30,12 +30,12 @@ class Assets {
 			wp_enqueue_script( 'bulk-discount', WOOCOST_ASSETS . '/js/bulk-discount.js', array(), WOOCOST_VERSION,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
 
-			/*wp_localize_script('bulk-discount', 'ajax_object', array(
-				'ajax_url' => admin_url('admin-ajax.php')
-			));*/
 		}elseif ($screen->id === 'woocost_page_operation-cost') {
+
 			wp_enqueue_style( 'bulk-cost-style', WOOCOST_ASSETS . '/css/cost-operation.css' );
+
 		}elseif ( $screen->id === 'woocost_page_image-generate' ) {
+
 			wp_enqueue_style( 'bulk-cost-style', WOOCOST_ASSETS . '/css/product-image-generate.css' );
 			wp_enqueue_style( 'smartwizardcdn', '//cdn.jsdelivr.net/npm/smartwizard@6/dist/css/smart_wizard_all.min.css' );
 
@@ -43,11 +43,20 @@ class Assets {
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
 			wp_enqueue_script( 'smartwizard-custom', WOOCOST_ASSETS . '/js/product-image-generate.js', array(), WOOCOST_VERSION,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
-
 			wp_enqueue_script( 'fabric', '//cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js', array(), WOOCOST_VERSION,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
 			wp_enqueue_script( 'imageEditor', WOOCOST_ASSETS . '/js/imageEditor.js', array(), WOOCOST_VERSION,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
+			wp_enqueue_style('select2-css', '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css');
+			wp_enqueue_script('select2-js', '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js', array(), WOOCOST_VERSION,
+				[ 'in_footer' => true, 'strategy' => 'defer' ] );
+
+			wp_enqueue_script( 'product-search', WOOCOST_ASSETS . '/js/product-search.js', array(), WOOCOST_VERSION,
+				[ 'in_footer' => true, 'strategy' => 'defer' ] );
+			wp_localize_script('product-search', 'product_object', [
+				'ajax_url' => admin_url('admin-ajax.php')
+			]);
+
 		}elseif ( $screen->id === 'toplevel_page_woocost' ) {
 			wp_enqueue_style( 'woocost-style', WOOCOST_ASSETS . '/css/style.css' );
 			wp_enqueue_style( 'woocost-nice', WOOCOST_ASSETS . '/css/nice-select.css' );

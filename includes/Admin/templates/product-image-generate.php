@@ -95,13 +95,26 @@
                             <label for="specific-products">Specific products</label>
                             <small class="application-info">Choose to apply the rule to the specific product</small>
                         </div>
-                        <div class="product-search w-50">
+                       <!-- <div class="product-search w-50">
                             <div class="select-product-options">
                                 <input type="text" name="specific-products" placeholder="Type the Product name">
                             </div>
                             <span class="application-info"><small>Search the product name</small></span>
+                            <ul id="product-suggestions" style="display:none;"></ul>
+                        </div>-->
+
+                    <div class="product-search w-50">
+                        <label for="product-search-input">Apply rule to:</label>
+                        <div class="select-product-options">
+                            <div id="selected-products" class="selected-products"></div>
+                            <input type="text" name="specific-products" id="product-search-input" placeholder="Type the Product name">
+                            <div id="suggestion-box" class="suggestion-box"></div>
                         </div>
-                </div>
+                        <span class="application-info">
+                            <small>Search the product name</small>
+                        </span>
+                        </div>
+                    </div>
 
             </div>
 
