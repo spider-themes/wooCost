@@ -6,9 +6,9 @@
         </div>
         <!-- Tab Content -->
         <div class="tab-content active" id="settings">
-            <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post">
+            <form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post">
                 <input type="hidden" name="action" value="save_bulk_discounts">
-                <input type="hidden" name="woocost_nonce" value="<?php echo wp_create_nonce('bulk_discounts'); ?>">
+                <input type="hidden" name="woocost_nonce" value="<?php echo wp_create_nonce( 'bulk_discounts' ); ?>">
                 <div class="flex items-center gap-30">
                     <h2 class="heading">Discounts & Percentage Rules</h2>
                     <a class="add-rule button button-link add-rule-btn" id="addRuleBtn"> + Add rule</a>
@@ -30,7 +30,7 @@
                             <div class="switch">
                                 <input type="checkbox" id="toggle-switch">
                                 <label for="toggle-switch" class="slider"></label>
-                                <input type="hidden" id="active-rule" name="active-rule" value="0"  >
+                                <input type="hidden" id="active-rule" name="active-rule" value="0">
                             </div>
                             <span class="switch-info"><small>Select to enable or disable this discount rule</small></span>
                         </div>
@@ -55,7 +55,7 @@
                     </div>
 
                     <!-- Apply percentage to specific-products-->
-                    <div class="w-100 mb-30 specific-products">
+                    <!--<div class="w-100 mb-30 specific-products">
                         <label class="discount-application-label">Apply rule to:</label>
                         <div class="p-relative w-70">
                             <div class="discount-application-options">
@@ -63,7 +63,23 @@
                             </div>
                             <span class="application-info"><small>Search the product(s) to include in the rule</small></span>
                         </div>
+                    </div>-->
+
+
+                    <div class="w-100 mb-30 specific-products">
+                        <label class="discount-application-label">Apply rule to:</label>
+                        <div class="p-relative w-70">
+                            <div class="discount-application-options">
+                                <div id="selected-products" class="selected-products"></div>
+                                <input type="text" name="specific-products" id="product-search-input" placeholder="Type the Product name">
+                                <div id="suggestion-box" class="suggestion-box"></div>
+                            </div>
+                            <span class="application-info">
+                            <small>Search the product(s) to include in the rule</small>
+                        </span>
+                        </div>
                     </div>
+
 
                     <!--Discount role -->
                     <div class="discount-rules-container mb-30">
@@ -149,66 +165,143 @@
                             <div class="switch">
                                 <input type="checkbox" id="exclude-toggle-switch">
                                 <label for="exclude-toggle-switch" class="slider"></label>
-                                <input type="hidden" id="active-exclude" name="active-exclude" value="0" >
+                                <input type="hidden" id="active-exclude" name="active-exclude" value="0">
                             </div>
                             <span class="switch-description"><small>Enable if you want to exclude specific products from this rule</small></span>
                         </div>
                     </div>
 
                     <!-- display exclude products if active-->
+                    <!--                    <div class="exclude-active">-->
+                    <!--Exclude Products-->
+                    <!--<div class="w-100 mb-30">
+						<label class="discount-application-label">Exclude Products</label>
+						<div class="p-relative">
+							<div class="discount-application-options">
+								<div class="radio-group">
+									<input type="radio" id="ex-specific-products" name="exclude-products" value="s-product" checked>
+									<label for="ex-specific-products">Specific products</label>
+								</div>
+								<div class="radio-group">
+									<input type="radio" id="specific-products-cat" name="exclude-products" value="s-product-cat">
+									<label for="specific-products-cat">Specific product categories</label>
+								</div>
+								<div class="radio-group">
+									<input type="radio" id="specific-products-tag" name="exclude-products" value="s-product-tag">
+									<label for="specific-products-tag">Specific product tags</label>
+								</div>
+							</div>
+							<span class="application-info"><small>Choose if you want to exclude some specific products or categories/tags from this rule</small></span>
+						</div>
+					</div>-->
+
+                    <!-- Exclude products list-->
+                    <!-- <div class="w-100 mb-30 ex-specific-products">
+						 <label class="discount-application-label">Choose which product(s) to exclude </label>
+						 <div class="p-relative w-70">
+							 <div class="discount-application-options">
+
+								 <input type="text" name="exclude-specific-product"  placeholder="Type the Product name">
+
+							 </div>
+							 <span class="application-info"><small>Search the product(s) to exclude</small></span>
+						 </div>
+					 </div>
+					 <div class="w-100 mb-30 specific-products-cat">
+						 <label class="discount-application-label">Choose the product categories to exclude </label>
+						 <div class="p-relative w-70">
+							 <div class="discount-application-options">
+								 <input type="text" name="exclude-specific-categories" placeholder="Search for a category">
+							 </div>
+							 <span class="application-info"><small>Search the product categories to exclude</small></span>
+						 </div>
+					 </div>
+					 <div class="w-100 mb-30 specific-products-tag">
+						 <label class="discount-application-label">Choose which product tags to exclude</label>
+						 <div class="p-relative w-70">
+							 <div class="discount-application-options">
+								 <input type="text" name="exclude-specific-tag" placeholder="Search for a tag">
+							 </div>
+							 <span class="application-info"><small>Search the product tags to exclude</small></span>
+						 </div>
+					 </div>
+				 </div>-->
+                    <!-- end display exclude products if active-->
+
                     <div class="exclude-active">
-                        <!--Exclude Products-->
+                        <!-- Exclude Products -->
                         <div class="w-100 mb-30">
                             <label class="discount-application-label">Exclude Products</label>
                             <div class="p-relative">
                                 <div class="discount-application-options">
                                     <div class="radio-group">
-                                        <input type="radio" id="exspecific-products" name="exclude-products" value="s-product" checked>
-                                        <label for="exspecific-products">Specific products</label>
+                                        <input type="radio" id="ex-specific-products" name="exclude-products" value="ex-specific-products" checked>
+                                        <label for="ex-specific-products">Specific products</label>
                                     </div>
                                     <div class="radio-group">
-                                        <input type="radio" id="specific-products-cat" name="exclude-products" value="s-product-cat">
+                                        <input type="radio" id="specific-products-cat" name="exclude-products" value="specific-products-cat">
                                         <label for="specific-products-cat">Specific product categories</label>
                                     </div>
                                     <div class="radio-group">
-                                        <input type="radio" id="specific-products-tag" name="exclude-products" value="s-product-tag">
+                                        <input type="radio" id="specific-products-tag" name="exclude-products" value="specific-products-tag">
                                         <label for="specific-products-tag">Specific product tags</label>
                                     </div>
                                 </div>
-                                <span class="application-info"><small>Choose if you want to exclude some specific products or categories/tags from this rule</small></span>
+                                <span class="application-info">
+                                    <small>Choose if you want to exclude some specific products or categories/tags from this rule</small>
+                                </span>
                             </div>
                         </div>
 
-                        <!-- Exclude products list-->
-                        <div class="w-100 mb-30 exspecific-products">
-                            <label class="discount-application-label">Choose which product(s) to exclude </label>
+
+                        <!-- Exclude specific products -->
+                        <div class="w-100 mb-30 ex-specific-products">
+                            <label class="discount-application-label">Choose which product(s) to exclude</label>
                             <div class="p-relative w-70">
                                 <div class="discount-application-options">
+                                    <div class="selected-items selected-products"></div> <!-- Unique container for products above the input -->
                                     <input type="text" name="exclude-specific-product" placeholder="Type the Product name">
+                                    <div id="suggestion-box-product" class="suggestion-box"></div>
                                 </div>
-                                <span class="application-info"><small>Search the product(s) to exclude</small></span>
+                                <span class="application-info">
+            <small>Search the product(s) to exclude</small>
+        </span>
                             </div>
                         </div>
+
+                        <!-- Exclude specific categories -->
                         <div class="w-100 mb-30 specific-products-cat">
-                            <label class="discount-application-label">Choose the product categories to exclude </label>
+                            <label class="discount-application-label">Choose the product categories to exclude</label>
                             <div class="p-relative w-70">
                                 <div class="discount-application-options">
+                                    <div class="selected-items selected-categories"></div> <!-- Unique container for categories above the input -->
                                     <input type="text" name="exclude-specific-categories" placeholder="Search for a category">
+                                    <div id="suggestion-box-category" class="suggestion-box"></div>
                                 </div>
-                                <span class="application-info"><small>Search the product categories to exclude</small></span>
+                                <span class="application-info">
+            <small>Search the product categories to exclude</small>
+        </span>
                             </div>
                         </div>
+
+                        <!-- Exclude specific tags -->
                         <div class="w-100 mb-30 specific-products-tag">
                             <label class="discount-application-label">Choose which product tags to exclude</label>
                             <div class="p-relative w-70">
                                 <div class="discount-application-options">
+                                    <div class="selected-items selected-tags"></div> <!-- Unique container for tags above the input -->
                                     <input type="text" name="exclude-specific-tag" placeholder="Search for a tag">
+                                    <div id="suggestion-box-tag" class="suggestion-box"></div>
                                 </div>
-                                <span class="application-info"><small>Search the product tags to exclude</small></span>
+                                <span class="application-info">
+            <small>Search the product tags to exclude</small>
+        </span>
                             </div>
                         </div>
+
+
                     </div>
-                    <!-- end display exclude products if active-->
+
 
                     <!--    Show discount in loop-->
                     <div class="switch-container mb-30">

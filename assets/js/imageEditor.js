@@ -16,13 +16,14 @@ fabric.Image.fromURL('https://images.pexels.com/photos/5650026/pexels-photo-5650
     canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
 
     // Add editable text fields without overlapping the original text
-    const mainText = new fabric.Text("Your Banner Heading", {
+    const mainText = new fabric.Text("Banner Heading", {
         left: 100,
         top: 150,
         fontFamily: 'Arial',
         fontSize: 30,
         fill: '#171616',
-        selectable: true
+        selectable: true,
+        contentEditable: true
     });
     canvas.add(mainText);
 
@@ -32,17 +33,19 @@ fabric.Image.fromURL('https://images.pexels.com/photos/5650026/pexels-photo-5650
         fontFamily: 'Arial',
         fontSize: 20,
         fill: '#fff',
-        selectable: true
+        selectable: true,
+        contentEditable: true
     });
     canvas.add(discountText);
 
-    const vendorText = new fabric.Text("Example.com", {
+    const vendorText = new fabric.Text("example.com", {
         left: 900,
         top: 350,
         fontFamily: 'Arial',
         fontSize: 20,
         fill: '#fff',
-        selectable: true
+        selectable: true,
+        contentEditable: true
     });
     canvas.add(vendorText);
 
@@ -53,7 +56,8 @@ fabric.Image.fromURL('https://images.pexels.com/photos/5650026/pexels-photo-5650
         fontSize: 25,
         fill: '#fff',
         backgroundColor: '#e74c3c',
-        selectable: true
+        selectable: true,
+        contentEditable: true
     });
     canvas.add(buttonText);
 });

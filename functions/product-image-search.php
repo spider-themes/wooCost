@@ -1,9 +1,6 @@
 <?php
 
-add_action('wp_ajax_get_product_names', 'get_product_names');
-add_action('wp_ajax_nopriv_get_product_names', 'get_product_names');
-
-function get_product_names() {
+function woocost_get_product_names(): void {
 	if (!isset($_POST['query'])) {
 		wp_send_json_error(['message' => 'Invalid request']);
 	}
@@ -30,3 +27,5 @@ function get_product_names() {
 
 	wp_send_json_success($product_list);
 }
+add_action('wp_ajax_woocost_get_product_names', 'woocost_get_product_names');
+add_action('wp_ajax_nopriv_woocost_get_product_names', 'woocost_get_product_names');

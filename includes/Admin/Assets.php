@@ -29,6 +29,17 @@ class Assets {
 			wp_enqueue_style( 'bulk-style', WOOCOST_ASSETS . '/css/bulk-dicount.css' );
 			wp_enqueue_script( 'bulk-discount', WOOCOST_ASSETS . '/js/bulk-discount.js', array(), WOOCOST_VERSION,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
+			wp_enqueue_script( 'product-search', WOOCOST_ASSETS . '/js/bulk-rule-product-search.js', array(), WOOCOST_VERSION,
+				[ 'in_footer' => true, 'strategy' => 'defer' ] );
+			wp_localize_script('product-search', 'product_object', [
+				'ajax_url' => admin_url('admin-ajax.php')
+			]);
+
+			wp_enqueue_script( 'exclude-search', WOOCOST_ASSETS . '/js/bulk-exclude-search.js', array(), WOOCOST_VERSION,
+				[ 'in_footer' => true, 'strategy' => 'defer' ] );
+			wp_localize_script('exclude-search', 'exclude_object', [
+				'ajax_url' => admin_url('admin-ajax.php')
+			]);
 
 		}elseif ($screen->id === 'woocost_page_operation-cost') {
 
@@ -51,7 +62,7 @@ class Assets {
 			wp_enqueue_script('select2-js', '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js', array(), WOOCOST_VERSION,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
 
-			wp_enqueue_script( 'product-search', WOOCOST_ASSETS . '/js/product-search.js', array(), WOOCOST_VERSION,
+			wp_enqueue_script( 'product-search', WOOCOST_ASSETS . '/js/product-image-search.js', array(), WOOCOST_VERSION,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
 			wp_localize_script('product-search', 'product_object', [
 				'ajax_url' => admin_url('admin-ajax.php')

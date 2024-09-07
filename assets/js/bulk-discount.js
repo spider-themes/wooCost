@@ -88,7 +88,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 // product exclude js
-
     const toggleSwitch = document.getElementById('exclude-toggle-switch');
     const excludeActiveDiv = document.querySelector('.exclude-active');
 
@@ -106,12 +105,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Exclude Products based on selection
 
-    const specificProductsRadio = document.getElementById('exspecific-products');
+    const specificProductsRadio = document.getElementById('ex-specific-products');
     const specificProductsCatRadio = document.getElementById('specific-products-cat');
     const specificProductsTagRadio = document.getElementById('specific-products-tag');
 
     // Corresponding divs for each option
-    const specificProductsField = document.querySelector('.exspecific-products');
+    const specificProductsField = document.querySelector('.ex-specific-products');
     const specificProductsCatField = document.querySelector('.specific-products-cat');
     const specificProductsTagField = document.querySelector('.specific-products-tag');
 
@@ -209,3 +208,4 @@ document.addEventListener('DOMContentLoaded', function() {
 document.getElementById('toggle-switch').addEventListener('change', function() {
     document.getElementById('active-rule').value = this.checked ? 1 : 0;
 });
+

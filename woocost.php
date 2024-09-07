@@ -147,9 +147,9 @@ if ( ! class_exists( 'Woocost' ) ) {
 			require_once plugin_dir_path( __FILE__ ) . '/functions/custom-cost-field.php';
 			require_once plugin_dir_path( __FILE__ ) . '/functions/compare-monthly-orders.php';
 			require_once plugin_dir_path( __FILE__ ) . '/functions/order-page-custom-cost.php';
-			require_once plugin_dir_path( __FILE__ ) . '/functions/cost-operation-table.php';
-			require_once plugin_dir_path( __FILE__ ) . '/functions/bulk-discount-table.php';
-			require_once plugin_dir_path( __FILE__ ) . '/functions/product-search.php';
+			require_once plugin_dir_path( __FILE__ ) . '/functions/cost-operation.php';
+			require_once plugin_dir_path( __FILE__ ) . '/functions/bulk-discount.php';
+			require_once plugin_dir_path( __FILE__ ) . '/functions/product-image-search.php';
 
 		}
 

@@ -14,10 +14,10 @@ jQuery(document).ready(function ($) {
         if (query.length >= 3) {
             // Fetch products via AJAX
             $.ajax({
-                url: product_object.ajax_url, // Replace with your AJAX URL
+                url: product_object.ajax_url,
                 method: 'POST',
                 data: {
-                    action: 'get_product_names',
+                    action: 'woocost_get_product_names',
                     query: query
                 },
                 success: function (response) {
@@ -61,3 +61,5 @@ jQuery(document).ready(function ($) {
         }
     });
 });
+
+

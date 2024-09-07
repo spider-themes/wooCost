@@ -56,10 +56,10 @@
                 <div class="controls">
                     <div class="row">
                         <label for="valentineText">Banner Heading:</label>
-                        <input type="text" id="valentineText" placeholder="Banner Heading" />
+                        <input type="text" id="valentineText" contenteditable="true" placeholder="Banner Heading" />
 
-                        <label for="discountText">Discount :</label>
-                        <input type="text" id="discountText" placeholder="up to 45% OFF" />
+                        <label for="discountText" >Discount :</label>
+                        <input type="text" id="discountText" placeholder="Discount up to 45% OFF" />
 
 
                         <label for="buttonText">Button:</label>
@@ -95,13 +95,6 @@
                             <label for="specific-products">Specific products</label>
                             <small class="application-info">Choose to apply the rule to the specific product</small>
                         </div>
-                       <!-- <div class="product-search w-50">
-                            <div class="select-product-options">
-                                <input type="text" name="specific-products" placeholder="Type the Product name">
-                            </div>
-                            <span class="application-info"><small>Search the product name</small></span>
-                            <ul id="product-suggestions" style="display:none;"></ul>
-                        </div>-->
 
                     <div class="product-search w-50">
                         <label for="product-search-input">Apply rule to:</label>
@@ -113,9 +106,8 @@
                         <span class="application-info">
                             <small>Search the product name</small>
                         </span>
-                        </div>
                     </div>
-
+                </div>
             </div>
 
             <div id="step-4" class="tab-pane" role="tabpanel" aria-labelledby="step-4">
