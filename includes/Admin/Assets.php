@@ -72,7 +72,6 @@ class Assets {
 			wp_enqueue_style( 'woocost-style', WOOCOST_ASSETS . '/css/style.css' );
 			wp_enqueue_style( 'woocost-nice', WOOCOST_ASSETS . '/css/nice-select.css' );
 			wp_enqueue_style( 'google-font', '//fonts.googleapis.com/css?family=Montserrat' );
-			wp_enqueue_style( 'font-awesome', '//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css' );
 			wp_enqueue_script( 'jquery-ui-datepicker' );
 			wp_enqueue_style( 'jquery-ui', '//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css' );
 			wp_enqueue_script( 'tooltip', WOOCOST_ASSETS . '/js/tooltip.js', array( 'jquery' ), WOOCOST_VERSION,

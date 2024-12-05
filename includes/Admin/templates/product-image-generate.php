@@ -1,4 +1,4 @@
-<div class="mw-1200">
+<div class="mw-1400">
     <h2 class="wp-heading-inline">Generate Product Image</h2>
 
     <!-- SmartWizard html -->

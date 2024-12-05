@@ -40,7 +40,7 @@
     </div>
 </div>
 
-<div class="flex gap-5 w-100 justify-center">
+<div class="flex gap-10 w-100 justify-center">
     <div class="col-3">
         <div class="card">
             <div class="card-header flex space-between">
@@ -79,7 +79,7 @@
         </div>
     </div>
 </div>
-<div class="flex gap-5">
+<div class="flex gap-10">
     <div class="col-3">
         <div class="card">
             <div class="card-header flex space-between">

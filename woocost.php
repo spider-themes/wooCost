@@ -38,6 +38,28 @@ if ( ! class_exists( 'Woocost' ) ) {
 		public function __construct() {
 			add_action( 'init', array( $this, 'plugin_init' ) );
 			register_activation_hook( plugin_basename( __FILE__ ), [ $this, 'activate' ] );
+
+			/**
+			 * Removes admin notices on the WooCost plugin pages.
+			 *
+			 * This function is hooked to the 'admin_head' action and checks if the current
+			 * admin page is a WooCost plugin page. If it is, it removes all admin notices
+			 * to provide a cleaner interface for the plugin's pages.
+			 *
+			 * @return void
+			 */
+			add_action( 'admin_head', function () {
+				// Get the current screen
+				$screen = get_current_screen();
+
+				// Check if the current screen is for your plugin page
+				if ( isset( $_GET['page'] ) && in_array( $_GET['page'], [ 'woocost', 'bulk-discounts' ] ) ) {
+					// Remove admin notices
+					remove_all_actions( 'admin_notices' );
+					remove_all_actions( 'all_admin_notices' );
+				}
+			} );
+
 		}
 
 		/**
@@ -58,7 +80,6 @@ if ( ! class_exists( 'Woocost' ) ) {
 			flush_rewrite_rules();
 			$this->cost_operation_table();
 			$this->bulk_discounts_table();
-
 		}
 
 		/**
@@ -75,7 +96,6 @@ if ( ! class_exists( 'Woocost' ) ) {
 		}
 
 		public function plugin_init(): void {
-
 			/**
 			 * Settings filter
 			 */
@@ -83,7 +103,6 @@ if ( ! class_exists( 'Woocost' ) ) {
 
 			if ( is_admin() ) {
 				new wooCost\Admin();
-				new wooCost\Notices\Notices();
 			}
 			$this->define_constants();
 			$this->templates_include();
@@ -133,14 +152,13 @@ if ( ! class_exists( 'Woocost' ) ) {
 
 			// Include the WordPress file with the dbDelta function
 			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-			error_log("Table creation SQL: $sql");
+			error_log( "Table creation SQL: $sql" );
 			// Execute the query
 			dbDelta( $sql );
 		}
 
 
 		public function templates_include(): void {
-
 			require_once plugin_dir_path( __FILE__ ) . '/functions/cost-profit-metabox.php';
 			require_once plugin_dir_path( __FILE__ ) . '/functions/custom-columns-sortable.php';
 			require_once plugin_dir_path( __FILE__ ) . '/functions/order-by-date-range.php';
@@ -150,7 +168,6 @@ if ( ! class_exists( 'Woocost' ) ) {
 			require_once plugin_dir_path( __FILE__ ) . '/functions/cost-operation.php';
 			require_once plugin_dir_path( __FILE__ ) . '/functions/bulk-discount.php';
 			require_once plugin_dir_path( __FILE__ ) . '/functions/product-image-search.php';
-
 		}
 
 		/**
