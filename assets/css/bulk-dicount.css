@@ -1,5 +1,5 @@
 .bulk-container{
-    width: 1200px;
+    width: 96%;
     padding: 20px;
 }
 .bulk-border {
@@ -12,6 +12,35 @@
     align-items: flex-start;
     width: 100%;
     margin-bottom: 8px; /* Space between the switch and other content */
+}
+
+.all_discount_rules_div{
+    width: 100%; 
+    border: 1px solid lightgray; 
+    border-radius: 8px; 
+    margin-top: 10px;
+}
+
+.bulk_discount_field_set{
+   border: 1px solid black; 
+   padding: 10px; 
+   width: fit-content; 
+   border-radius: 6px; 
+}
+
+.bulk_discount_main_div{
+    margin-bottom: 30px; 
+    margin-top: 30px; 
+    width: 100%; 
+    display: inline-flex;
+}
+
+.bulk_discount_heading_div{
+    width: 30%; 
+    float: left; 
+    text-align: center; 
+    font-size: 16px; 
+    font-weight: bold;
 }
 
 /* Label styling */
@@ -187,6 +216,8 @@ input:checked + .slider::before {
 .save-button {
     display: flex;
     justify-content: end;
+    margin-right: 6px;
+    margin-top: 8px;
 }
 
 .flex{
@@ -274,7 +305,6 @@ a.add-rule.button-link{
 }
 .rule-input {
     margin-top: 10px;
-    display: none;
 }
 
 .rule-input > input[type="text"] {
@@ -364,5 +394,6 @@ a.add-rule.button-link{
 }
 
 
-
-
+.notice{
+    display: none !important;
+}

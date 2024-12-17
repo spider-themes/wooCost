@@ -6,17 +6,27 @@
  * @return void
  */
 function woocost_add_cost_field(): void {
-	woocommerce_wp_text_input(
-		array(
-			'id'          => '_woo_product_cost',
-			'label'       => esc_html__( 'Cost', 'woocost' ),
-			'placeholder' => 'Enter the cost price',
-			'desc_tip'    => 'true',
-			'description' => esc_html__( 'Enter the cost price of the product.', 'woocost' )
-		)
-	);
-	echo '<p id="product_profit_display" class="form-field description">'
-	     . esc_html__( 'Profit: 0.00 (' . esc_html( get_woocommerce_currency_symbol() ) . ' 0.00%)', 'woocost' ) . '</p>';
+	global $post;
+			
+	if ( $post && 'product' === $post->post_type && ( wc_get_product( $post->ID )->is_type( 'variable' ))) {
+		echo "";
+	}
+	else{
+		woocommerce_wp_text_input(
+			array(
+				'id'          => '_woo_product_cost',
+				'label'       => esc_html__( 'Cost', 'woocost' ),
+				'placeholder' => 'Enter the cost price',
+				'desc_tip'    => 'true',
+				'description' => esc_html__( 'Enter the cost price of the product.', 'woocost' )
+			)
+		);
+		echo '<p id="product_profit_display" class="form-field description">'
+			 . esc_html__( 'Profit: 0.00 (' . esc_html( get_woocommerce_currency_symbol() ) . ' 0.00%)', 'woocost' ) . '</p>';
+	}
+
+
+	
 
 }
 add_action( 'woocommerce_product_options_general_product_data',  'woocost_add_cost_field' ) ;
@@ -35,6 +45,32 @@ function woocost_save_cost_field( $post_id ): void {
 }
 
 add_action( 'woocommerce_process_product_meta','woocost_save_cost_field' ) ;
+
+
+function woocost_add_variation_cost_field( $loop, $variation_data, $variation ) {
+    woocommerce_wp_text_input( 
+        array( 
+            'id'          => '_woo_product_cost[' . $variation->ID . '] variation_cost_input', 
+            // 'label'       => esc_html__( 'Cost', 'woocost' ),
+			'style'       => 'width:100%',
+            'placeholder' => 'Enter the cost price',
+            'desc_tip'    => 'true',
+            'description' => esc_html__( 'Enter the cost price of the variation.', 'woocost' ),
+            'value'       => get_post_meta( $variation->ID, '_woo_product_cost', true )
+        )
+    );
+}
+add_action( 'woocommerce_variation_options_pricing', 'woocost_add_variation_cost_field', 10, 3 );
+
+function woocost_save_variation_cost_field( $variation_id, $i ) {
+    if ( isset( $_POST['_woo_product_cost'][$variation_id] ) ) {
+        $product_cost = sanitize_text_field( $_POST['_woo_product_cost'][$variation_id] );
+        update_post_meta( $variation_id, '_woo_product_cost', $product_cost );
+    }
+}
+add_action( 'woocommerce_save_product_variation', 'woocost_save_variation_cost_field', 10, 2 );
+
+
 
 
 /**

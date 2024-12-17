@@ -3,7 +3,7 @@ namespace wooCost\Admin;
 
 class Menu{
 
-	function __construct(){
+	public function __construct(){
 		add_action( 'admin_menu', [ $this, 'admin_menu' ], 99 );
 	}
 
@@ -31,7 +31,8 @@ class Menu{
 			esc_html( __( 'Overview', 'woocost' ) ),
 			'manage_woocommerce',
 			'woocost',
-			[ $this, 'woocost_page' ]
+			[ $this, 'woocost_page' ],
+			1
 		);
 
 		/**
@@ -43,20 +44,23 @@ class Menu{
 			esc_html( __( 'Bulk Discount', 'woocost' ) ),
 			'manage_woocommerce',
 			'bulk-discounts',
-			[ $this, 'bulk_discounts_page' ]
+			[ $this, 'bulk_discounts_page' ],
+			2
 		);
 
 		/**
 		 * Submenu: Operation Cost
 		 */
+		// add_submenu_page(
 		add_submenu_page(
-			'woocost',
-			esc_html( __( 'Cost of Operation', 'woocost' ) ),
-			esc_html( __( 'Cost of Operation', 'woocost' ) ),
-			'manage_woocommerce',
-			'operation-cost',
-			[ $this, 'operation_cost_page' ]
-		);
+        'woocost',
+        'Cost Operation',
+        'Cost Operation',
+        'manage_options',
+        'edit.php?post_type=cost_operation',
+        '',
+        3
+    );
 
 		/**
 		 * Submenu: generate image
@@ -67,7 +71,8 @@ class Menu{
 			esc_html( __( 'Generate Product Image', 'woocost' ) ),
 			'manage_woocommerce',
 			'image-generate',
-			[ $this, 'image_generate_page' ]
+			[ $this, 'image_generate_page' ],
+			4
 		);
 	}
 
@@ -83,7 +88,18 @@ class Menu{
 	}
 
 	public function bulk_discounts_page(): void {
-		include_once plugin_dir_path( __FILE__ ) . 'templates/bulk-discount.php';
+
+		?>
+
+		<form method="post">
+			
+			<?php include_once plugin_dir_path( __FILE__ ) . 'templates/bulk-discount.php'; ?>
+
+		</form>
+		
+		<?php
+
+
 	}
 
 	public function operation_cost_page(): void {

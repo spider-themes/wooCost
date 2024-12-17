@@ -2,28 +2,12 @@
     max-width: 1400px;
 }
 
-table {
+#costTable {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
 }
 
-th, td {
-    padding: 10px;
-    text-align: left;
-    border: 1px solid #ccc;
-    vertical-align: middle;
-}
-
-th {
-    background-color: #f2f2f2;
-}
-
-
-input[type="text"], input[type="number"] {
-    width: 95%;
-    padding: 5px;
-}
 textarea{
     width: 100%;
 }
@@ -46,4 +30,8 @@ textarea{
 
 #save-btn {
     float: right;
+}
+
+.notice{
+    display: none !important;
 }

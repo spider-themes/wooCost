@@ -64,52 +64,90 @@ if ( isset($_GET['edit_id']) ) {
         </div>
     </form>
 
+    <h2>Cost Details</h2>
 
-        <h2>Cost Details</h2>
-        <table class="widefat fixed">
-            <thead>
-            <tr>
-                <th>Cost Type Name</th>
-                <th>Cost</th>
-                <th>Account</th>
-                <th>Notes</th>
-                <th>Cost Memo</th>
-                <th>Date</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-		    <?php
-		    $cost_entries = $wpdb->get_results( "SELECT * FROM $table_name" );
-		    if ( $cost_entries ) {
-			    foreach ( $cost_entries as $entry ) {
-				    $delete_url = esc_url( admin_url( 'admin-post.php?action=delete_cost&cost_id=' . esc_attr( $entry->id ) . '&_wpnonce=' . wp_create_nonce( 'delete_cost_' . $entry->id ) ) );
-				    echo '<tr>';
-				    echo '<td>' . esc_html( $entry->cost_type_name ) . '</td>';
-				    echo '<td>' . esc_html( $entry->cost ) . '</td>';
-				    echo '<td>' . esc_html( $entry->account ) . '</td>';
-				    echo '<td>' . esc_html( $entry->notes ) . '</td>';
-				    echo '<td>';
-				    if (!empty( $entry->memo )) {
-					    echo '<a href="' . esc_url( $entry->memo ) . '" target="_blank">' . esc_html( basename( $entry->memo ) ) . '</a>';
-				    } else {
-					    echo 'No file';
-				    }
-				    echo '</td>';
-				    echo '<td>' . esc_html( $entry->date ) . '</td>';
-				    echo '<td>';
-				    echo '<a href="?page=operation-cost&edit_id=' . esc_attr( $entry->id ) . '">Edit</a> | ';
-				    echo '<a href="' . $delete_url . '" onclick="return confirm(\'Are you sure you want to delete this entry?\');">Delete</a>';
-				    echo '</td>';
-				    echo '</tr>';
-			    }
-		    } else {
-			    echo '<tr><td colspan="6">No cost entries found.</td></tr>';
-		    }
-		    ?>
-            </tbody>
-        </table>
+<div id="custom-filters">
+    <label for="filter-start-date">Start Date:</label>
+    <input type="date" id="filter-start-date">
 
+    <label for="filter-end-date">End Date:</label>
+    <input type="date" id="filter-end-date">
 
+    <label for="filter-account-type">Account Type:</label>
+    <select id="filter-account-type">
+        <option value="">All</option>
+        <option value="cash">Cash</option>
+        <option value="bank-account">Bank Account</option>
+        <option value="card">Card</option>
+    </select>
 </div>
 
+    <table id="custom-data-table" class="display">
+        <thead>
+        <tr>
+            <th>Cost Type Name</th>
+            <th>Cost</th>
+            <th>Account</th>
+            <th>Notes</th>
+            <th>Cost Memo</th>
+            <th>Date</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+	    <?php
+        $cost_entries = $wpdb->get_results( "SELECT * FROM $table_name" );
+
+            if ( $cost_entries ) {
+                foreach ( $cost_entries as $entry ) {
+
+                    if (is_array($entry)) {
+                        $delete_url = esc_url( admin_url( 'admin-post.php?action=delete_cost&cost_id=' . esc_attr( $entry['id'] ) . '&_wpnonce=' . wp_create_nonce( 'delete_cost_' . $entry['id'] ) ) );
+                        echo '<tr>';
+                        echo '<td>' . esc_html( $entry['cost_type_name'] ) . '</td>';
+                        echo '<td>' . esc_html( $entry['cost'] ) . '</td>';
+                        echo '<td>' . esc_html( $entry['account'] ) . '</td>';
+                        echo '<td>' . esc_html( $entry['notes'] ) . '</td>';
+                        echo '<td>';
+                        if (!empty( $entry['memo'] )) {
+                            echo '<a href="' . esc_url( $entry['memo'] ) . '" target="_blank">' . esc_html( basename( $entry['memo'] ) ) . '</a>';
+                        } else {
+                            echo 'No file';
+                        }
+                        echo '</td>';
+                        echo '<td>' . esc_html( $entry['date'] ) . '</td>';
+                        echo '<td>';
+                        echo '<a href="?page=operation-cost&edit_id=' . esc_attr( $entry['id'] ) . '">Edit</a> | ';
+                        echo '<a href="' . $delete_url . '" onclick="return confirm(\'Are you sure you want to delete this entry?\');">Delete</a>';
+                        echo '</td>';
+                        echo '</tr>';
+                    }else{
+                        $delete_url = esc_url( admin_url( 'admin-post.php?action=delete_cost&cost_id=' . esc_attr( $entry->id ) . '&_wpnonce=' . wp_create_nonce( 'delete_cost_' . $entry->id ) ) );
+                        echo '<tr>';
+                        echo '<td>' . esc_html( $entry->cost_type_name ) . '</td>';
+                        echo '<td>' . esc_html( $entry->cost ) . '</td>';
+                        echo '<td>' . esc_html( $entry->account ) . '</td>';
+                        echo '<td>' . esc_html( $entry->notes ) . '</td>';
+                        echo '<td>';
+                        if (!empty( $entry->memo )) {
+                            echo '<a href="' . esc_url( $entry->memo ) . '" target="_blank">' . esc_html( basename( $entry->memo ) ) . '</a>';
+                        } else {
+                            echo 'No file';
+                        }
+                        echo '</td>';
+                        echo '<td>' . esc_html( $entry->date ) . '</td>';
+                        echo '<td>';
+                        echo '<a href="?page=operation-cost&edit_id=' . esc_attr( $entry->id ) . '">Edit</a> | ';
+                        echo '<a href="' . $delete_url . '" onclick="return confirm(\'Are you sure you want to delete this entry?\');">Delete</a>';
+                        echo '</td>';
+                        echo '</tr>';
+                    }
+                }
+            } else {
+                echo '<tr><td colspan="6">No cost entries found.</td></tr>';
+            }
+	    ?>
+        </tbody>
+    </table>
+
+</div>

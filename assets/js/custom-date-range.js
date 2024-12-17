@@ -1,388 +1,463 @@
-;(function ($) {
-    'use strict';
-
-    jQuery(document).ready(function ($) {
 
 
-        // Helper function to format dates as DD-MM-YYYY
-        function formatDate(date) {
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-            const year = date.getFullYear();
-            return `${year}-${month}-${day}`;
+jQuery(document).ready(function ($) {
+
+    
+    const select = $('#date-range-select');
+
+
+    function showOpenText() {
+        select.find('option').each(function() {
+            $(this).text($(this).data('open-text'));
+        });
+    }
+
+    function showClosedText() {
+        select.find('option').each(function() {
+            $(this).text($(this).data('closed-text'));
+        });
+    }
+
+    select.on('mousedown', function() {
+        showOpenText();
+    });
+
+    select.on('change', function() {
+        setTimeout(showClosedText, 100);
+    });
+
+    showClosedText();
+
+
+
+    // Event listener for date range selection
+    $(document).on('change', '#start_date , #end_date , #prev_start_date , #prev_end_date', loadData);
+
+
+    loadData();
+    function loadData() {
+        const start_date = $('#start_date').val();
+        const end_date   = $('#end_date').val();
+
+
+        if (('custom-date' == $('#previous-date-range-select').val()) && (!$('#prev_start_date').val() || !$('#prev_end_date').val())) {
+
+            return;
+        }
+        if ('custom-date' == $('#date-range-select').val() && (!start_date || !end_date)) {
+            return;
+        }
+        let date_detail = updateDateRangeFields();
+
+
+        $.ajax({
+            url: ajax_params.ajaxurl,
+            method: 'POST',
+            data: {
+                action: 'woocost_get_orders_by_date_range',
+                start_date: start_date,
+                end_date: end_date,
+                date_range: $('#date-range-select').val(),
+                prevStartDate: date_detail.startDate,
+                prevEndDate: date_detail.endDate,
+                comparison: $('#previous-date-range-select').val(),
+            },
+            success: function (response) {
+                // const data = JSON.parse(response);
+
+
+
+                if (response.data) {
+
+
+                    $('#orders-list').text(response.data.total_orders);
+                    $('#total-sales').html(response.data.total_sales);  // Use html() for price data
+                    $('#total-cost').html(response.data.total_cost);    // Use html() for price data
+                    $('#average-profit').html(response.data.average_daily_profit); // Use html() for price data
+                    $('#average-order-profit').html(response.data.average_order_profit); // Use html() for price data
+                    $('#profit').html(response.data.total_profit); // Use html() for price data
+
+                    // Check if 'no-comparison' is selected
+                    if ($('#previous-date-range-select').val() == 'no-comparison') {
+                        // Clear comparison fields
+                        $('#pre-orders-list').text('');
+                        $('#pre-total-sales').text('');
+                        $('#pre-total-cost').text('');
+                        $('#pre-average-daily-profit').text('');
+                        $('#pre-average-order-profit').text('');
+                        $('#pre-profit').text('');
+
+                        // Clear percentage change badges
+                        $('#order-percentage-change ,#total-sales-percentage-change,#total-cost-percentage-change,#average-daily-profit-percentage-change,#average-order-profit-percentage-change,#total-profit-percentage-change').text('').hide('slow');
+                    } else {
+                        // Set comparison values if the fields have the 'badge' class
+                        if ($('#order-percentage-change').hasClass('badge')) {
+                            $('#order-percentage-change').text(response.data.order_percentage_change + '%').show('slow');
+                        }
+                        if ($('#total-sales-percentage-change').hasClass('badge')) {
+                            $('#total-sales-percentage-change').text(response.data.total_sales_percentage_change + '%').show('slow');
+                        }
+                        if ($('#total-cost-percentage-change').hasClass('badge')) {
+                            $('#total-cost-percentage-change').text(response.data.total_cost_percentage_change + '%').show('slow');
+                        }
+                        if ($('#average-daily-profit-percentage-change').hasClass('badge')) {
+                            $('#average-daily-profit-percentage-change').text(response.data.average_daily_profit_percentage_change + '%').show('slow');
+                        }
+                        if ($('#average-order-profit-percentage-change').hasClass('badge')) {
+                            $('#average-order-profit-percentage-change').text(response.data.average_order_profit_percentage_change + '%').show('slow');
+                        }
+                        if ($('#total-profit-percentage-change').hasClass('badge')) {
+                            $('#total-profit-percentage-change').text(response.data.total_profit_percentage_change + '%').show('slow');
+                        }
+
+                    }
+
+                }
+            },
+            error: function (error) {
+                console.log('Error:', error);
+            }
+        });
+    }
+
+
+    function formatDate(date) {
+        const d = new Date(date);
+        const year = d.getFullYear();
+        const month = ('0' + (d.getMonth() + 1)).slice(-2); // Ensure two digits for month
+        const day = ('0' + d.getDate()).slice(-2); // Ensure two digits for day
+        return `${year}-${month}-${day}`;
+    }
+
+
+
+    $(document).on('change', '#date-range-select', handle_date_change) ;
+
+    handle_date_change();
+
+    function handle_date_change(){
+        const today = new Date();
+        let start, end;
+    
+        switch ($('#date-range-select').val()) {
+            case 'custom-date':
+                break;
+            case 'today':
+                start = end = formatDate1(today);
+                break;
+            case 'yesterday':
+                start = formatDate1(new Date(today.setDate(today.getDate() - 1)));
+                end = formatDate1(new Date());
+                break;
+            case 'last-7-days':
+                start = formatDate1(new Date(today.setDate(today.getDate() - 7)));
+                end = formatDate1(new Date());
+                break;
+            case 'last-14-days':
+                start = formatDate1(new Date(today.setDate(today.getDate() - 14)));
+                end = formatDate1(new Date());
+                break;
+            case 'this-month':
+                start = formatDate1(new Date(today.getFullYear(), today.getMonth(), 1));
+                end = formatDate1(new Date());
+                break;
+            case 'last-month':
+                const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                start = formatDate1(lastMonth);
+                end = formatDate1(new Date(lastMonth.getFullYear(), lastMonth.getMonth() + 1, 0));
+                break;
+            default:
+                // Reset both dates for all other cases
+                $('#start_date').val(null);
+                $('#end_date').val(null);
+                loadData();
+                return;
+        }
+    
+        // Set the start and end dates if a range was selected
+        if (start && end) {
+            $('#start_date').val(start);
+            $('#end_date').val(end);
+        }
+    
+        loadData();
+    }
+    
+    // Helper function to format date as yyyy-mm-dd
+    function formatDate1(date) {
+        return date.toLocaleDateString('en-CA'); 
+    }
+    
+
+    $(document).on('change', '#previous-date-range-select', function () {
+
+        // console.log($(this).val());
+        switch ($(this).val()) {
+            case 'no-comparison':
+            case 'previous-month':
+            case 'previous-period':
+            case 'previous-quarter':
+
+
+                // $('#prev_start_date').val(null);
+                // $('#prev_end_date').val(null);
+                // break;
+
+            default:
+                break;
         }
 
-        $('select').niceSelect();
+        loadData();
+    });
 
-        // Event listener for date range selection
-        $('#date-range-select').on('change', function () {
-            const selectedRange = $(this).val();
+
+
+
+    // Function to update date range fields and display selected option
+    function updateDateRangeFields() {
+
+        const selectedValue = $('#previous-date-range-select').val();
+
+        // Date input fields.
+        const prevStartDateInput = $('#prev_start_date').val();
+        const prevEndDateInput = $('#prev_end_date').val();
+
+        let startDate = null, endDate = null;
+
+        // Get today's date.
+        const today = new Date();
+
+        const startDate1 = $('#start_date').val();
+        const endDate1 = $('#end_date').val();
+        const today1 = formatDate1(new Date());
+        const yesterday = formatDate1(new Date(new Date().setDate(new Date().getDate() - 1)));
+        const last7Days = formatDate1(new Date(new Date().setDate(new Date().getDate() - 7)));
+        const last14Days = formatDate1(new Date(new Date().setDate(new Date().getDate() - 14)));
+        const firstOfThisMonth = formatDate1(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
+        const lastMonthStart = formatDate1(new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1));
+        const lastMonthEnd = formatDate1(new Date(new Date().getFullYear(), new Date().getMonth(), 0));
+
+        if (
+            (startDate1 === today1 && endDate1 === today1) ||
+            (startDate1 === yesterday && endDate1 === today1) ||
+            (startDate1 === last7Days && endDate1 === today1) ||
+            (startDate1 === last14Days && endDate1 === today1) ||
+            (startDate1 === firstOfThisMonth && endDate1 === today1) ||
+            (startDate1 === lastMonthStart && endDate1 === lastMonthEnd)
+        ) {
+            $('#date-range-select option[value="custom-date"]').remove();
+
+        } else {
+           if ($('#start_date').val() && $('#end_date').val() && 'custom-date' != $('#date-range-select').val()) {
+                if ($('#date-range-select option[value="custom-date"]').length === 0) {
+                    $('#date-range-select').append(
+                        '<option value="custom-date" data-closed-text="Custom Date" data-open-text="Custom Date">Custom Date</option>'
+                    );
+                }
+                $('#date-range-select').val('custom-date').change(); // Trigger change event if needed.
+            }
+        }
+        
+
+
+        if (prevStartDateInput && prevEndDateInput && 'custom-date' != selectedValue) {
+
+            $('#previous-date-range-select').val('custom-date').change(); // Trigger change event if needed.
+        }
+        
+        switch ($('#previous-date-range-select').val()) {
+            case 'custom-date':
+                startDate = prevStartDateInput;
+                endDate = prevEndDateInput;
+                break;
+            case 'previous-month':
+                startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1); // First day of previous month.
+                endDate = new Date(today.getFullYear(), today.getMonth(), 0); // Last day of previous month.
+                break;
+
+            case 'previous-period':
+                const daysInCurrentMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+                startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - daysInCurrentMonth); // Start of previous period.
+                endDate = today; // Current date for end of the period.
+                break;
+
+            case 'previous-quarter':
+                const currentQuarter = Math.floor((today.getMonth() + 3) / 3);
+                const startMonth = (currentQuarter - 2) * 3; // Start month of the previous quarter.
+                startDate = new Date(today.getFullYear(), startMonth - 3, 1); // First day of previous quarter.
+                endDate = new Date(today.getFullYear(), startMonth, 0); // Last day of previous quarter.
+                break;
+
+            default:
+                // Reset dates if "No comparison" or invalid option is selected.
+                startDate = null;
+                endDate = null;
+                break;
+        }
+
+        // Update input fields if dates are set.
+
+        if (startDate && endDate) {
+            console.log(startDate);
+            const newStartDate =formatDate(startDate)
+            const newEndDate =formatDate(endDate)
+
+            // console.log(newStartDate);
+
+            // $('#prev_start_date').val(newStartDate);
+            // $('#prev_end_date').val(newEndDate);
+            // Update the text after the select element.
+            // $('.nice-select .current').text(`${$('#previous-date-range-select').find("option:selected").text()} (From ${formatDate(startDate)} to ${formatDate(endDate)})`);
+
+        } else {
+            // Reset input fields and text for "No comparison" option.
+            // $('.nice-select .current').text('No comparison');
+        }
+
+        return {
+            'startDate': startDate,
+            'endDate': endDate,
+        };
+    }
+
+
+    $(document).ready(function() {
+        $('#date-range-select, #previous-date-range-select, #start_date, #end_date').change(function() {
+
+            toggleCustomDateRange();
+
             const today = new Date();
             let startDate, endDate;
-
-            switch (selectedRange) {
-                case 'today':
-                    startDate = new Date(today);
-                    endDate = startDate;
-                    break;
-                case 'yesterday':
-                    const yesterday = new Date(today);
-                    yesterday.setDate(today.getDate() - 1);
-                    startDate = yesterday;
-                    endDate = startDate;
-                    break;
-                case 'last-7-days':
-                    startDate = new Date(today);
-                    startDate.setDate(today.getDate() - 7);
-                    endDate = new Date(today);
-                    break;
-                case 'last-14-days':
-                    startDate = new Date(today);
-                    startDate.setDate(today.getDate() - 14);
-                    endDate = new Date(today);
-                    break;
-                case 'this-month':
-                    startDate = new Date(today.getFullYear(), today.getMonth(), 1);
-                    endDate = new Date(today);
-                    break;
-                case 'last-month':
-                    startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-                    endDate = new Date(today.getFullYear(), today.getMonth(), 0);
-                    break;
-                default:
-                    startDate = new Date(today);
-                    endDate = startDate;
-            }
-
-            // Set the start and end date in the input fields
-            $('#start_date').val(formatDate(startDate));
-            $('#end_date').val(formatDate(endDate));
-
-
-            // Call the loadData function to update the data
-            loadData();
-        });
-
-        // Initialize the date pickers
-
-        function loadData() {
-            const start_date = $('#start_date').val();
-            const end_date = $('#end_date').val();
-            const date_range = $('#date-range-select').val();
-
-            $.ajax({
-                url: ajax_params.ajaxurl,
-                method: 'POST',
-                data: {
-                    action: 'woocost_get_orders_by_date_range',
-                    start_date: start_date,
-                    end_date: end_date,
-                    date_range: date_range
-                },
-                success: function (response) {
-                    const data = JSON.parse(response);
-
-                    $('#orders-list').html(data.total_orders || 0);
-                    $('#total-sales').html(data.total_sales || 0);
-                    $('#net-sales').html(data.net_sales || 0);
-                    $('#total-cost').html(data.total_cost || 0);
-                    $('#profit').html(data.profit).attr('class', data.profit_class || '');
-                    $('#average-profit').html(data.average_profit || 0);
-                    $('#average-order-profit').html(data.average_order_profit || 0);
-                    $('#profit-percentage').html(`(<span id="profit-percentage">${data.profit_percentage || 0}</span>)`);
-
-                },
-                error: function (error) {
-                    console.log('Error:', error);
-                }
-            });
-        }
-
-
-
-        // Function to calculate the end date of the previous range based on the selected start and end dates
-        function calculatePreviousRange(startDate, endDate, type) {
-            const start = new Date(startDate);
-            const end = new Date(endDate);
-            let prevStartDate, prevEndDate;
-            const duration = (end - start) / (1000 * 60 * 60 * 24) + 1; // Calculate duration in days
-
-            switch (type) {
-                case 'month':
-                    const prevMonthStart = new Date(start.getFullYear(), start.getMonth() - 1, start.getDate());
-                    const prevMonthEnd = new Date(prevMonthStart.getFullYear(), prevMonthStart.getMonth() + 1, prevMonthStart.getDate() - 1);
-                    prevStartDate = new Date(prevMonthStart);
-                    prevEndDate = new Date(prevStartDate);
-                    prevEndDate.setDate(prevStartDate.getDate() + duration - 1);
-                    if (prevEndDate > prevMonthEnd) prevEndDate = prevMonthEnd; // Ensure end date does not exceed the last day of the month
-                    break;
-                case 'period':
-                    const prevPeriodStart = new Date(start.getFullYear(), start.getMonth() - 2, start.getDate());
-                    const prevPeriodEnd = new Date(prevPeriodStart.getFullYear(), prevPeriodStart.getMonth() + 1, prevPeriodStart.getDate() - 1);
-                    prevStartDate = new Date(prevPeriodStart);
-                    prevEndDate = new Date(prevStartDate);
-                    prevEndDate.setDate(prevStartDate.getDate() + duration - 1);
-                    if (prevEndDate > prevPeriodEnd) prevEndDate = prevPeriodEnd; // Ensure end date does not exceed the last day of the period
-                    break;
-                case 'quarter':
-                    const currentQuarter = Math.floor((start.getMonth() + 3) / 3);
-                    const prevQuarterStart = new Date(start.getFullYear(), (currentQuarter - 2) * 3, start.getDate());
-                    const prevQuarterEnd = new Date(prevQuarterStart.getFullYear(), (currentQuarter - 1) * 3, prevQuarterStart.getDate() - 1);
-                    prevStartDate = new Date(prevQuarterStart);
-                    prevEndDate = new Date(prevStartDate);
-                    prevEndDate.setDate(prevStartDate.getDate() + duration - 1);
-                    if (prevEndDate > prevQuarterEnd) prevEndDate = prevQuarterEnd; // Ensure end date does not exceed the last day of the quarter
-                    break;
-                default:
-                    prevStartDate = '';
-                    prevEndDate = '';
-            }
-
-            return {
-                startDate: formatDate(prevStartDate),
-                endDate: formatDate(prevEndDate)
-            };
-        }
-
-
-
-// Function to update the date range fields based on the selected comparison option
-        function updateDateRangeFields() {
-            var $select = $('#previous-date-range-select');
-            var selectedOption = $select.find('option:selected');
-            var optionValue = selectedOption.val();
-            var optionText = selectedOption.text().trim();
-            var smallText = '';
-
-            // Extract the start and end dates from the input fields
-            var startDate = $('#start_date').val();
-            var endDate = $('#end_date').val();
-
-            // Default start and end date for comparison
-            var prevStartDate = '';
-            var prevEndDate = '';
-
-            // Calculate the previous date ranges based on the selected option
-            if (optionValue === 'previous-month') {
-                var dates = calculatePreviousRange(startDate, endDate, 'month');
-                prevStartDate = dates.startDate;
-                prevEndDate = dates.endDate;
-
-                smallText = `From ${prevStartDate} to ${prevEndDate}`;
-            } else if (optionValue === 'previous-period') {
-                var dates = calculatePreviousRange(startDate, endDate, 'period');
-                prevStartDate = dates.startDate;
-                prevEndDate = dates.endDate;
-               smallText = `From ${prevStartDate} to ${prevEndDate}`;
-            } else if (optionValue === 'previous-quarter') {
-                var dates = calculatePreviousRange(startDate, endDate, 'quarter');
-                prevStartDate = dates.startDate;
-                prevEndDate = dates.endDate;
-                smallText = `From ${prevStartDate} to ${prevEndDate}`;
-            }
-
-            // Update the input fields with the extracted dates
-            $('#prev_start_date').val(prevStartDate);
-            $('#prev_end_date').val(prevEndDate);
-
-            // Update the Nice Select current span with the formatted date range
-            $('.nice-select').each(function () {
-                var $current = $(this).find('.current');
-                if ($current.closest('#previous-date-range-form').length) {
-                    if (optionValue === 'no-comparison') {
-                        $current.text(optionText); // Remove the smallText part for "No comparison"
-                    } else {
-                        $current.text(`${optionText} (${smallText})`);
-                    }
-                }
-            });
-
-            // Update the <small> tags within the dropdown options
-            $select.find('.option').each(function () {
-                var value = $(this).data('value');
-                var $smallTag = $(this).find('small');
-
-                if (value === 'previous-month' || value === 'previous-period' || value === 'previous-quarter') {
-                    $smallTag.text(smallText);
-                } else {
-                    $smallTag.text('');
-                }
-            });
-        }
-
-
-        $('#previous-date-range-select').on('change', updateDateRangeFields);
-        updateDateRangeFields();
-
-        $("#custom-date-range-form").submit(function (event) {
-            event.preventDefault();
-            loadData();
-        });
-
-        $('#start_date').change(loadData);
-        $('#end_date').change(loadData);
-
-        $('#date-range-select').val('today').change();
-
-        $('select.nice-select').niceSelect();
-
-        $('#custom-date-range').hide();
-
-        // onload badge class will be hide
-        $('.badge').hide();
-        $('[id^=pre-]').hide();
-
-        $('#previous-date-range-select').on('change', function () {
-            updateDateRangeFields();
-            const selectedValue = $(this).val();
-            const selectedOption = $(this).find('option:selected');
-
-            if (selectedValue === 'no-comparison') {
-                $('.badge').hide();
-                $('[id^=pre-]').hide();
-                $('#custom-date-range').hide();
-                $('#prev_start_date').val('');
-                $('#prev_end_date').val('');
-            } else if (selectedValue === 'previous-month' || selectedValue === 'previous-period' || selectedValue === 'previous-quarter') {
-                $('#custom-date-range').hide();
-                const smallElement = selectedOption.find('small');
-
-                if (smallElement.length > 0) {
-                    const dateText = smallElement.text().split(' to ');
-                    $('#prev_start_date').val(dateText[0].trim());
-                    $('#prev_end_date').val(dateText[1].trim());
-                }
-
-                $('.badge').show();
-                $('[id^=pre-]').show();
-                compareData();
-            } else {
-                $('#custom-date-range').show();
-            }
-        });
-
-        $('#prev_start_date, #prev_end_date').datepicker({
-            // dateFormat: 'yy-mm-dd',
-            onSelect: function () {
-                const startDate = $('#prev_start_date').val();
-                const endDate = $('#prev_end_date').val();
-                if (startDate && endDate) {
-                    $('.badge').show();
-                    $('[id^=pre-]').show();
-                    compareData();
-                }
-            }
-        });
-
-        function updateData(previousMonth, currencySymbol) {
-            if (typeof previousMonth !== 'object' || previousMonth === null) {
-                return;
-            }
-
-            const validateNumber = (num) => typeof num === 'number' && !isNaN(num);
-
-            jQuery("#pre-orders-list").html(validateNumber(previousMonth.total_orders) ? previousMonth.total_orders : 0);
-            jQuery("#pre-total-sales").html(validateNumber(previousMonth.total_sales) ? `${currencySymbol}${previousMonth.total_sales.toFixed(2)}` : `${currencySymbol}0.00`);
-            jQuery("#pre-total-cost").html(validateNumber(previousMonth.total_cost) ? `${currencySymbol}${previousMonth.total_cost.toFixed(2)}` : `${currencySymbol}0.00`);
-            jQuery("#pre-average-order-profit").html(validateNumber(previousMonth.average_order_profit) ? `${currencySymbol}${previousMonth.average_order_profit.toFixed(2)}` : `${currencySymbol}0.00`);
-            jQuery("#pre-profit").html(validateNumber(previousMonth.total_profit) ? `${currencySymbol}${previousMonth.total_profit.toFixed(2)}` : `${currencySymbol}0.00`);
-            jQuery("#pre-average-daily-profit").html(validateNumber(previousMonth.average_daily_profit) ? `${currencySymbol}${previousMonth.average_daily_profit.toFixed(2)}` : `${currencySymbol}0.00`);
-        }
-
-        function updatePercentageChanges(response) {
-            const setPercentageChange = (selector, value) => {
-                const element = jQuery(selector);
-
-                if (typeof value !== 'number' || isNaN(value)) {
-                    element.html('N/A');
-                    return;
-                }
-
-                let formattedValue = value > 0 ? `+${value.toFixed(1)}%` : `${value.toFixed(1)}%`;
-
-                if (value < 0) {
-                    element.css('background-color', '#E68E00');
-                } else if (value === 0) {
-                    element.css('background-color', '#50809f');
-                    formattedValue = '0.0%';
-                } else {
-                    element.css('background-color', '');
-                }
-
-                element.html(formattedValue);
-            };
-
-            setPercentageChange("#order-percentage-change", response.order_percentage_change);
-            setPercentageChange("#total-sales-percentage-change", response.total_sales_percentage_change);
-            setPercentageChange("#total-cost-percentage-change", response.total_cost_percentage_change);
-            setPercentageChange("#average-daily-profit-percentage-change", response.average_daily_profit_percentage_change);
-            setPercentageChange("#average-order-profit-percentage-change", response.average_order_profit_percentage_change);
-            setPercentageChange("#total-profit-percentage-change", response.total_profit_percentage_change);
-        }
-
-        function compareData() {
-            const currentStartDate = $('#start_date').val();
-            const currentEndDate = $('#end_date').val();
-            const prevStartDate = $('#prev_start_date').val();
-            const prevEndDate = $('#prev_end_date').val();
-
-            if (!currentStartDate || !currentEndDate || !prevStartDate || !prevEndDate) {
-                console.error('Please select valid date ranges.');
-                return;
-            }
-
-            $.ajax({
-                url: ajax_params.ajaxurl,
-                method: "POST",
-                data: {
-                    action: "woocost_compare_monthly_orders",
-                    nonce: ajax_params.nonce,
-                    current_start_date: currentStartDate,
-                    current_end_date: currentEndDate,
-                    prev_start_date: prevStartDate,
-                    prev_end_date: prevEndDate
-                },
-                success: function (response) {
-                    try {
-                        if (response && response.success) {
-                            const previousMonth = response.data.previous_month;
-                            const currencySymbol = response.data.currency_symbol || '$';
-                            updateData(previousMonth, currencySymbol);
-                            updatePercentageChanges(response.data);
+    
+            const dateRange = $('#date-range-select').val();
+            const comparisonRange = $('#previous-date-range-select').val();
+    
+            if (comparisonRange === 'previous-month' || comparisonRange === 'previous-quarter' || comparisonRange === 'previous-period') {
+                 $('#prev_start_date').val(null);
+                    $('#prev_end_date').val(null);
+                let targetMonthOffset = comparisonRange === 'previous-month' ? -1 : comparisonRange === 'previous-quarter' ? -3 : 0;
+    
+                switch (dateRange) {
+                    case 'today':
+                        if (comparisonRange === 'previous-period') {
+                            const previousDay = new Date(today);
+                            previousDay.setDate(today.getDate() - 1);
+                            startDate = endDate = previousDay;
                         } else {
-                            console.error('Failed to fetch comparison data:', response);
-                            handleEmptyResponse('$');
+                            startDate = endDate = new Date(today.getFullYear(), today.getMonth() + targetMonthOffset, today.getDate());
                         }
-                    } catch (error) {
-                        console.error('Error parsing response:', error);
-                        handleEmptyResponse('$');
-                    }
-                },
-                error: function (error) {
-                    console.error('Error:', error);
-                    handleEmptyResponse('$');
+                        break;
+    
+                    case 'yesterday':
+                        const yesterday = new Date(today);
+                        yesterday.setDate(today.getDate() - 1);
+                        if (comparisonRange === 'previous-period') {
+                            startDate = new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate() - 1);
+                            endDate = yesterday;
+                        } else {
+                            startDate = new Date(yesterday.getFullYear(), yesterday.getMonth() + targetMonthOffset, yesterday.getDate());
+                            endDate = new Date(today.getFullYear(), today.getMonth() + targetMonthOffset, today.getDate());
+                        }
+                        break;
+    
+                    case 'last-7-days':
+                        if (comparisonRange === 'previous-period') {
+                            startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 14);
+                            endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+                        } else {
+                            startDate = new Date(today.getFullYear(), today.getMonth() + targetMonthOffset, today.getDate() - 7);
+                            endDate = new Date(today.getFullYear(), today.getMonth() + targetMonthOffset, today.getDate());
+                        }
+                        break;
+    
+                    case 'last-14-days':
+                        if (comparisonRange === 'previous-period') {
+                            startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 28);
+                            endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 14);
+                        } else {
+                            startDate = new Date(today.getFullYear(), today.getMonth() + targetMonthOffset, today.getDate() - 14);
+                            endDate = new Date(today.getFullYear(), today.getMonth() + targetMonthOffset, today.getDate());
+                        }
+                        break;
+    
+                    case 'this-month':
+                        if (comparisonRange === 'previous-period') {
+                            const firstDayOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+                            const daysPassed = today.getDate() - 1;
+                            startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                            endDate = new Date(today.getFullYear(), today.getMonth() - 1, daysPassed + 1);
+                        } else {
+                            startDate = new Date(today.getFullYear(), today.getMonth() + targetMonthOffset, 1);
+                            endDate = new Date(today.getFullYear(), today.getMonth() + targetMonthOffset + 1,today.getDate() );
+                        }
+                        break;
+    
+                    case 'last-month':
+                        if (comparisonRange === 'previous-period') {
+                            const firstDayOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                            const lastDayOfLastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                            const daysInLastMonth = lastDayOfLastMonth.getDate();
+                            startDate = new Date(today.getFullYear(), today.getMonth() - 2, 1);
+                            endDate = new Date(today.getFullYear(), today.getMonth() - 2, daysInLastMonth);
+                        } else {
+                            startDate = new Date(today.getFullYear(), today.getMonth() + targetMonthOffset - 1, 1);
+                            endDate = new Date(today.getFullYear(), today.getMonth() + targetMonthOffset, 0);
+                        }
+                        break;
+    
+                    case 'custom-date':
+                        const customStartDate = new Date($('#start_date').val());
+                        const customEndDate = new Date($('#end_date').val());
+                        
+                        if (!isNaN(customStartDate) && !isNaN(customEndDate)) {
+                            if (comparisonRange === 'previous-period') {
+                                const diffDays = (customEndDate - customStartDate) / (1000 * 60 * 60 * 24) + 1;
+                                startDate = new Date(customStartDate);
+                                startDate.setDate(startDate.getDate() - diffDays);
+                                endDate = new Date(customEndDate);
+                                endDate.setDate(endDate.getDate() - diffDays);
+                            } else {
+                                startDate = new Date(customStartDate.getFullYear(), customStartDate.getMonth() + targetMonthOffset, customStartDate.getDate());
+                                endDate = new Date(customEndDate.getFullYear(), customEndDate.getMonth() + targetMonthOffset, customEndDate.getDate());
+                            }
+                        }
+                        break;
                 }
-            });
-        }
+    
+                if (startDate && endDate) {
+                    const formattedStartDate = formatDate(startDate);
+                    const formattedEndDate = formatDate(endDate);
 
-        function handleEmptyResponse(currencySymbol) {
-            jQuery("#pre-orders-list").html(0);
-            jQuery("#pre-total-sales").html(`${currencySymbol}0.00`);
-            jQuery("#pre-total-cost").html(`${currencySymbol}0.00`);
-            jQuery("#pre-average-order-profit").html(`${currencySymbol}0.00`);
-            jQuery("#pre-profit").html(`${currencySymbol}0.00`);
-            jQuery("#pre-average-daily-profit").html(`${currencySymbol}0.00`);
-            updatePercentageChanges({
-                order_percentage_change: 0,
-                total_sales_percentage_change: 0,
-                total_cost_percentage_change: 0,
-                average_daily_profit_percentage_change: 0,
-                average_order_profit_percentage_change: 0,
-                total_profit_percentage_change: 0
-            });
-        }
+                    $('.nice-select1 .current').text(`(From ${formattedStartDate} to ${formattedEndDate})`);
 
-        compareData();
-        $('#date-range-select, #previous-date-range-select').on('change', compareData);
-    });
-})(jQuery);
+                    // $('#prev_start_date').val(formattedStartDate);
+                    // $('#prev_end_date').val(formattedEndDate);
+                }
+
+            }
+            });
+        });
+        
+        toggleCustomDateRange();
+        function toggleCustomDateRange() {
+            const selectedValue = $('#previous-date-range-select').val();
+            if (selectedValue === 'custom-date') {
+                $('#custom-date-range').show(); 
+                $('.nice-select1').hide();
+            } else {
+                $('#custom-date-range').hide();
+                $('.nice-select1').show();
+
+            }
+
+
+            if(selectedValue==='no-comparison'){
+                $('.nice-select1').hide();
+                $('#custom-date-range').hide(); 
+
+
+            }
+        }
+    
+
+});

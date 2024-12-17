@@ -4,9 +4,9 @@ function woocost_save_bulk_discounts() {
 	global $wpdb;
 
 	// Verify nonce
-	if ( ! isset( $_POST['woocost_nonce'] ) || ! wp_verify_nonce( $_POST['woocost_nonce'], 'bulk_discounts' ) ) {
-		wp_die( __( 'Nonce verification failed!', 'woocost' ) );
-	}
+	// if ( ! isset( $_POST['woocost_nonce'] ) || ! wp_verify_nonce( $_POST['woocost_nonce'], 'bulk_discounts' ) ) {
+	// 	wp_die( __( 'Nonce verification failed!', 'woocost' ) );
+	// }
 
 
 	$active_rule      = isset( $_POST['active-rule'] ) ? intval( $_POST['active-rule'] ) : 0;

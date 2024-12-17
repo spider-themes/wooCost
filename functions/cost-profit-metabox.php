@@ -36,7 +36,7 @@ function woocost_cost_profit_meta_box_html( $post ): void {
 	// Get the order object
 	$order = wc_get_order( $post->ID );
 	if ( ! $order ) {
-		error_log( 'Order not found' ); // Debug log
+		// error_log( 'Order not found' ); // Debug log
 
 		return;
 	}
