@@ -15,68 +15,68 @@ $page_content = ob_get_clean(); // Get buffered content
         <div class="flex gap-10">
             <div class="col-4 card">
                 <div class="card-header flex">
-                    <h2 class="text-white title">
+                    <h4 class="text-white title">
                         Total Stock
                         <span class="tooltip" data-tooltip="Total Stock refers to the total number of all items currently available in the store.">
                         <i class="dashicons dashicons-info-outline"></i>
                     </span>
-                    </h2>
+                    </h4>
                 </div>
                 <div class="card-body">
-                    <p class="text-white">
+                    <p class="text-white data-card-value">
 						<?php echo esc_html( $woocost->total_stock() ); ?>
                     </p>
                 </div>
             </div>
             <div class="col-4 card">
                 <div class="card-header flex">
-                    <h2 class="text-white title">
+                    <h4 class="text-white title">
                         Total Price
                         <span class="tooltip" data-tooltip="Total Price represents the combined retail price of all products currently in stock.">
                         <i class="dashicons dashicons-info-outline"></i>
                     </span>
-                    </h2>
+                    </h4>
                 </div>
                 <div class="card-body">
-                    <p class="text-white">
+                    <p class="text-white data-card-value">
 						<?php echo get_woocommerce_currency_symbol() . esc_html( number_format( $woocost->total_price(), 2 ) ); ?>
                     </p>
                 </div>
             </div>
             <div class="col-4 card">
                 <div class="card-header flex">
-                    <h2 class="text-white title">
+                    <h4 class="text-white title">
                         Total Cost
                         <span class="tooltip" data-tooltip="Total Cost refers to the cumulative cost of all products currently in stock.">
                         <i class="dashicons dashicons-info-outline"></i>
                     </span>
-                    </h2>
+                    </h4>
                 </div>
                 <div class="card-body">
-                    <p class="text-white">
+                    <p class="text-white data-card-value">
 						<?php echo get_woocommerce_currency_symbol(). esc_html( number_format( $woocost->total_cost(), 2 ) ); ?>
                     </p>
                 </div>
             </div>
             <div class="col-4 card">
                 <div class="card-header flex">
-                    <h2 class="text-white title">
+                    <h4 class="text-white title">
                         Total Potential Profit
                         <span class="tooltip" data-tooltip="Total Potential Profit refers to the estimated profit that can be made from selling all items currently in stock at their listed prices.">
                         <i class="dashicons dashicons-info-outline"></i>
                     </span>
-                    </h2>
+                    </h4>
                 </div>
                 <div class="card-body">
 					<?php
 					if ( $woocost->total_profit() > 0 ) { ?>
-                        <p class="profit-positive">
+                        <p class="profit-positive data-card-value">
 							<?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $woocost->total_profit(), 2 ) ); ?>
                         </p>
 						<?php
 					} else {
 						?>
-                        <p class="profit-negative">
+                        <p class="profit-negative data-card-value">
 							<?php echo esc_html( get_woocommerce_currency_symbol() ) . esc_html( number_format( $woocost->total_profit(), 2 ) ); ?>
                         </p> <?php
 					}
