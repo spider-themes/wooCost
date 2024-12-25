@@ -94,7 +94,9 @@ class Assets {
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
 			wp_enqueue_script( 'custom-date-range-script', WOOCOST_ASSETS . '/js/custom-date-range.js', array( 'jquery' ), WOOCOST_VERSION,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
-			wp_enqueue_script( 'nice-select', WOOCOST_ASSETS . '/js/jquery.nice-select.min.js', array(), WOOCOST_VERSION,
+			wp_enqueue_script( 'woocost-nice-select', WOOCOST_ASSETS . '/js/jquery.nice-select.min.js', array(), WOOCOST_VERSION,
+				[ 'in_footer' => true, 'strategy' => 'defer' ] );
+			wp_enqueue_script( 'woocost-dashboard', WOOCOST_ASSETS . '/js/dashboard.js', array( 'jquery' ), WOOCOST_VERSION,
 				[ 'in_footer' => true, 'strategy' => 'defer' ] );
 			wp_localize_script( 'custom-date-range-script', 'ajax_params', array(
 				'ajaxurl' => admin_url( 'admin-ajax.php' ),

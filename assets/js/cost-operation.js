@@ -261,12 +261,12 @@ jQuery(document).ready(function($){
             if ( typeof( post_id ) == 'object' ) { 
                 post_id = parseInt( this.getId( post_id ) );
             }
-    
+
             // add rows to variables
             const edit_row = $( '#edit-' + post_id )
             const post_row = $( '#post-' + post_id )
-    
-            const cost       = $( '.column-operation_cost', post_row ).text() 
+
+            const cost       = $( '.column-operation_cost', post_row ).text()
             const account    = $('.column-operation_account',post_row).text()
             const date       = $('.column-operation_date',post_row).text()
             const cost_note  = $('.column-operation_notes',post_row).text()
@@ -275,7 +275,6 @@ jQuery(document).ready(function($){
             $( ':input[name="cost_account"]', edit_row ).val( account );
             $( ':input[name="cost_date"]', edit_row ).val( date );
             $( ':input[name="cost_notes"]', edit_row ).val( cost_note );
-
 
             
 

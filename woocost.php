@@ -62,6 +62,11 @@ if ( ! class_exists( 'Woocost' ) ) {
 
 			add_action('manage_cost_operation_posts_custom_column', array($this, 'custom_cost_operation_column' ), 10, 2);
 
+
+
+
+
+
 			add_action('add_meta_boxes', array( $this, 'add_cost_operation_meta_box' ) );
 
 			add_action('save_post', array( $this, 'save_cost_operation' ) );
@@ -143,7 +148,7 @@ if ( ! class_exists( 'Woocost' ) ) {
 
 						wp_safe_redirect('edit.php?post_type=cost_operation');
 						exit();
-					
+
 					 }else {
 
 						$post_id = wp_insert_post(
@@ -302,10 +307,10 @@ if ( ! class_exists( 'Woocost' ) ) {
 
 		public function save_cost_operation( $post_id ){
 
-			// error_log(print_r($_POST,true));
 
 			$cost_number = $_POST['cost_number'] ?? '';
 			update_post_meta( $post_id, 'cost_number', $cost_number);
+
 
 			$cost_account = $_POST['cost_account'] ?? '';
 			update_post_meta( $post_id, 'cost_account', $cost_account);
@@ -346,6 +351,8 @@ if ( ! class_exists( 'Woocost' ) ) {
 
 			$cost_date = isset($_POST['cost_date']) ? $_POST['cost_date'] : '';
 			update_post_meta( $post_id, 'cost_date', $cost_date);
+
+
 		}
 
 		public function cost_of_operation_custom_post() {
@@ -371,7 +378,7 @@ if ( ! class_exists( 'Woocost' ) ) {
 				if ( isset( $_GET['id'] ) ) {
 
 					$rule_id = $_GET['id'];
-					
+
 					$cost_type_name = get_the_title( $rule_id );
 
 					$cost = get_post_meta( $rule_id, 'cost_number', true );
@@ -407,11 +414,11 @@ if ( ! class_exists( 'Woocost' ) ) {
 			            <tr>
 
 			                <td style="padding: 10px; text-align: left; border: 1px solid #ccc; vertical-align: middle;">
-			                	<input type="text" name="cost-type-name" placeholder="Enter cost type name" required value="<?php echo $cost_type_name ?>"> 
+			                	<input type="text" name="cost-type-name" placeholder="Enter cost type name" required value="<?php echo $cost_type_name ?>">
 			                </td>
 
 			                <td style="padding: 10px; text-align: left; border: 1px solid #ccc; vertical-align: middle;">
-			                	<input type="number" name="cost" placeholder="Enter cost" class="cost-input" required value="<?php echo $cost ?>"> 
+			                	<input type="number" name="cost" placeholder="Enter cost" class="cost-input" required value="<?php echo $cost ?>">
 			                </td>
 
 			                <td style="padding: 10px; text-align: left; border: 1px solid #ccc; vertical-align: middle;">
@@ -428,7 +435,7 @@ if ( ! class_exists( 'Woocost' ) ) {
 			                    <?php if ( ! empty( $memo ) ): ?>
 			                    	<a href="" style="color: red" class="cost_operation_remove_file_btn">Remove</a>
 			                    <?php endif ?>
-								
+
 			                </td>
 			                <td style="padding: 10px; text-align: left; border: 1px solid #ccc; vertical-align: middle;"><input type="date" name="date" class="input-date" value="<?php echo $date ?>"></td>
 
@@ -556,10 +563,10 @@ if ( ! class_exists( 'Woocost' ) ) {
 
 					$file_url = get_post_meta($post_id, 'cost_file', true);
 					$filename = basename($file_url);
-				
+
 					if ($filename) {
 						echo '<a href="' . esc_url($file_url) . '" target="_blank">' . esc_html($filename) . '</a>';
-					} 
+					}
 					break;
 
 		        case 'operation_date':
@@ -999,7 +1006,6 @@ if ( ! class_exists( 'Woocost' ) ) {
 				$is_cog_activated = class_exists( 'Alg_WC_Cost_of_Goods_Core' );
 
 				$meta_key = '_woo_product_cost';
-
 				if ( $is_cog_activated ) {
 					$meta_key = '_alg_wc_cog_cost';
 				}
@@ -1023,6 +1029,7 @@ if ( ! class_exists( 'Woocost' ) ) {
 						// Check if '_woo_product_cost' is set
 						$woo_cost = (float) get_post_meta( get_the_ID(), '_woo_product_cost', true );
 
+
 						if ( $is_cog_activated ) {
 							// If 'Cost of Goods for WooCommerce' is activated, use '_alg_wc_cog_cost'
 							$cost = (float) get_post_meta( get_the_ID(), '_alg_wc_cog_cost', true );
@@ -1034,11 +1041,66 @@ if ( ! class_exists( 'Woocost' ) ) {
 						$total_cost += $cost;
 					}
 				}
+
+
+
 				wp_reset_postdata();
 			}
 
+            // Fetch cost_operation data
+            $argsCost = array(
+                'post_type'      => 'cost_operation',
+                'posts_per_page' => -1, // Retrieve all posts
+            );
+
+            $queryCost = new WP_Query($argsCost);
+            $total_cost_operation = 0; // Initialize the total cost variable
+
+            if ($queryCost->have_posts()) {
+
+                while ($queryCost->have_posts()) {
+                    $queryCost->the_post();
+                    $post_id = get_the_ID();
+                    $cost_number = get_post_meta($post_id, 'cost_number', true);
+
+                    // Add the cost number to the total (convert to number to avoid issues)
+                    $total_cost_operation += floatval($cost_number);
+                }
+            }
 			return $total_cost;
 		}
+
+
+        public function total_operation_cost(): float|int {
+
+            // Fetch cost_operation data
+            $args = array(
+                'post_type'      => 'cost_operation',
+                'posts_per_page' => -1, // Retrieve all posts
+            );
+
+            $query = new WP_Query($args);
+            $total_cost_operation = 0; // Initialize the total cost variable
+
+            if ($query->have_posts()) {
+
+                while ($query->have_posts()) {
+                    $query->the_post();
+                    $post_id = get_the_ID();
+                    $cost_number = get_post_meta($post_id, 'cost_number', true);
+
+                    // Add the cost number to the total (convert to number to avoid issues)
+                    $total_cost_operation += floatval($cost_number);
+                }
+            }
+
+
+            wp_reset_postdata();
+
+
+			return $total_cost_operation;
+		}
+
 
 		/**
 		 * Total profit Calculate
@@ -1135,7 +1197,7 @@ function remove_extra_columns_quick_edit()
 
     global $current_screen;
     if( 'edit-cost_operation' != $current_screen->id )
-        return;
+        {return;}
     ?>
     <script type="text/javascript">         
         jQuery(document).ready( function($) {
@@ -1158,3 +1220,15 @@ function remove_extra_columns_quick_edit()
     </script>
     <?php
 }
+
+
+
+
+
+
+
+
+
+
+
+

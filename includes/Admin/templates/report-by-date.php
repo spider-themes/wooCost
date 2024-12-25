@@ -29,6 +29,7 @@ $lastOfPreviousMonth = new DateTime('last day of last month');
     </div>
     <div class="card w-100 neg-margin align-items-center">
         <form name="custom-date-range-form" class="custom-date-range-form" id="custom-date-range-form" method="post">
+
             <div class="flex gap-10">
                 <select id="date-range-select" class="nice-select">
                     <option value="today" data-display="Today" data-open-text="<?php echo formatDate($today); ?> - <?php echo formatDate($today); ?>">
@@ -43,7 +44,7 @@ $lastOfPreviousMonth = new DateTime('last day of last month');
                     <option value="last-14-days" data-display="Last 14 Days" data-open-text="<?php echo formatDate($fourteenDaysBack); ?> - <?php echo formatDate($today); ?>">
                         Last 14 Days
                     </option>
-                    <option value="this-month" data-display="Month to Date" data-open-text="<?php echo formatDate($firstOfCurrentMonth); ?> - <?php echo formatDate($today); ?>">
+                    <option value="this-month" data-display="Month to Date" selected data-open-text="<?php echo formatDate($firstOfCurrentMonth); ?> - <?php echo formatDate($today); ?>">
                         Month to Date
                     </option>
                     <option value="last-month" data-display="Last Month" data-open-text="<?php echo formatDate($firstOfPreviousMonth); ?> - <?php echo formatDate($lastOfPreviousMonth); ?>">
@@ -59,18 +60,23 @@ $lastOfPreviousMonth = new DateTime('last day of last month');
         <div class="flex">
             <form action="" method="post"  class="custom-date-range-form flex" id="previous-date-range-form">
                 <h4 class="compare-text title">Compare to</h4>
+
+
                 <select id="previous-date-range-select" class="previous-date-range-select nice-select">
-                    <option value="no-comparison" data-display="No comparison" selected><?php esc_html_e('No comparison', 'woocost'); ?></option>
-                    <option value="previous-month" data-display="Previous Month"><?php esc_html_e('Previous Month', 'woocost'); ?><small
-                            class="small"> </small></option>
-                    <option value="previous-period" data-display="Previous Period"><?php esc_html_e('Previous Period', 'woocost'); ?><small
-                            class="small"> </small></option>
-                    <option value="previous-quarter" data-display="Previous Quarter"><?php esc_html_e('Previous Quarter', 'woocost'); ?><small
-                            class="small"> </small></option>
+                    <option value="no-comparison" data-display="No comparison" selected>
+                        <?php esc_html_e('No comparison', 'woocost'); ?>
+                    </option>
+                    <option value="previous-month" data-display="Previous Month">
+                        <?php esc_html_e('Previous Month', 'woocost'); ?> <small class="small"> </small>
+                    </option>
+                    <option value="previous-period" data-display="Previous Period">
+                        <?php esc_html_e('Previous Period', 'woocost'); ?> <small class="small"> </small>
+                    </option>
+                    <option value="previous-quarter" data-display="Previous Quarter">
+                        <?php esc_html_e('Previous Quarter', 'woocost'); ?> <small class="small"> </small>
+                    </option>
                 </select>
-
             </form>
-
         </div>
         <!--end comparison tab-->
     </div>

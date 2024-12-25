@@ -26,8 +26,6 @@ function woocost_add_cost_field(): void {
 	}
 
 
-	
-
 }
 add_action( 'woocommerce_product_options_general_product_data',  'woocost_add_cost_field' ) ;
 

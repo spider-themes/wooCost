@@ -81,17 +81,17 @@ body {
 
 .neg-margin {
     margin-left: -25px;
-    margin-right: -50px;
-    padding-right: 90px !important;
-    padding-left: 25px !important;
-    padding-bottom: 0 !important;
-    padding-top: 0 !important;
+    padding: 0 90px 0 25px !important;
     display: flex;
-    border-radius: 0 !important;
+    border-radius: 0 10px 10px 0 !important;
     border-left: 0 !important;
     border-right: 0 !important;
     max-width: inherit;
     width: inherit;
+
+    .form-check{
+        margin-left: 30px;
+    }
 }
 
 .p-0 {
@@ -180,6 +180,10 @@ input[type=text], select {
     min-width: 70px;
     padding: 0 5px;
     text-align: right;
+
+    &.negative{
+        background-color: #924141;
+    }
 }
 
 .text-off-white {
@@ -320,7 +324,7 @@ input[type=text], select {
 }
 
 .profit-positive {
-    color: #008000FF;
+    color: #68a102;
 }
 
 .profit-negative {
@@ -361,9 +365,7 @@ span.apexcharts-legend-text {
             max-height: 250px;
             overflow-y: auto;
             box-shadow: 0 0 0 1px #2f5575, 0 15px 35px 0 #0003, 0 5px 15px 0 #0000001f;
-            border-radius: 10px;
-            border-bottom-right-radius: 6px;
-            border-top-right-radius: 6px;
+            border-radius: 10px 6px 6px 10px;
             background: #032538;
 
             &::-webkit-scrollbar-track {

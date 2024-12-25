@@ -54,8 +54,8 @@ function woocost_get_orders_by_date_range(): void
 			break;
 
 		default:
-			$start_date = isset($_POST['start_date']) && !empty($_POST['start_date']) ? sanitize_text_field($_POST['start_date']) : gmdate('Y-m-d');
-			$end_date = isset($_POST['end_date']) && !empty($_POST['end_date']) ? sanitize_text_field($_POST['end_date']) : gmdate('Y-m-d');
+			$start_date = !empty($_POST['start_date']) ? sanitize_text_field($_POST['start_date']) : gmdate('Y-m-d');
+			$end_date = !empty($_POST['end_date']) ? sanitize_text_field($_POST['end_date']) : gmdate('Y-m-d');
 			break;
 	}
 
@@ -149,13 +149,11 @@ function woocost_get_orders_by_date_range(): void
 	// Calculate average order profit
 	$average_order_profit = ($total_orders > 0) ? ($total_profit / $total_orders) : 0;
 
-
-
 	// --------------- Comparision Values -----------------.
 	// Set comparison dates based on user input or fallback to selected date range
-	$comparison = isset($_POST['comparison']) && !empty($_POST['comparison']) ? sanitize_text_field($_POST['comparison']) : 'custom-date';
-	$prevStartDate = isset($_POST['prevStartDate']) && !empty($_POST['prevStartDate']) ? sanitize_text_field($_POST['prevStartDate']) : $start_date;
-	$prevEndDate = isset($_POST['prevEndDate']) && !empty($_POST['prevEndDate']) ? sanitize_text_field($_POST['prevEndDate']) : $end_date;
+	$comparison = !empty($_POST['comparison']) ? sanitize_text_field($_POST['comparison']) : 'custom-date';
+	$prevStartDate = !empty($_POST['prevStartDate']) ? sanitize_text_field($_POST['prevStartDate']) : $start_date;
+	$prevEndDate = !empty($_POST['prevEndDate']) ? sanitize_text_field($_POST['prevEndDate']) : $end_date;
 
 	// Fetch comparison data
 	$comparison_orders = wc_get_orders(array(
@@ -170,9 +168,9 @@ function woocost_get_orders_by_date_range(): void
 
 	if (!empty($comparison_orders)) {
 		foreach ($comparison_orders as $order_ids) {
+
 			$order = wc_get_order($order_ids);
 			$comp_total_sales += $order->get_total();
-
 			foreach ($order->get_items() as $item) {
 				$product_id = $item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id();
 
@@ -247,6 +245,7 @@ function woocost_get_orders_by_date_range(): void
 		'comp_total_profit' => wc_price($comp_total_profit),
 		'comp_average_daily_profit' => wc_price($comp_average_daily_profit),
 		'comp_average_order_profit' => wc_price($comp_average_order_profit),
+		'testing_info' => $comparison_orders,
 	);
 
 	// Send the data as JSON
@@ -267,3 +266,7 @@ add_action( 'in_admin_header', function () {
         remove_all_actions( 'all_admin_notices' );
     }
 }, 20 );
+
+
+
+
